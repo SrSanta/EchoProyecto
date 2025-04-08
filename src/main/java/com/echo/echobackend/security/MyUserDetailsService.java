@@ -28,7 +28,7 @@ public class MyUserDetailsService implements UserDetailsService {
         return userOptional.map(user -> new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                new ArrayList<>() // Lista de roles (por ahora vacía)
+                new ArrayList<>()
         )).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el nombre de usuario: " + username));
     }
 }

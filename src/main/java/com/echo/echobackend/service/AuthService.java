@@ -1,11 +1,11 @@
 package com.echo.echobackend.service;
 
-import com.echo.echobackend.model.User;
 import com.echo.echobackend.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,8 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
             if (authentication.isAuthenticated()) {
+                // Establecer la autenticación en el SecurityContextHolder
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 return jwtUtil.generateToken(userDetails);
             }
@@ -38,6 +40,12 @@ public class AuthService {
         }
         return null;
     }
+    public String generateToken(UserDetails userDetails) {
+        return jwtUtil.generateToken(userDetails);
+    }
+
+
+
 
     // Otros métodos relacionados con la autenticación podrían ir aquí
     // como la invalidación de tokens (si se implementa)

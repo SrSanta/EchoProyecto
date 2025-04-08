@@ -23,5 +23,6 @@ public class PlaylistSong {
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;
 
-    private Integer order;
+    @Column(name = "song_order") // Renombrar la columna
+    private Integer songOrder;
 }

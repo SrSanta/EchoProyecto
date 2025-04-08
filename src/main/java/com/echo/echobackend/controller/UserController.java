@@ -30,5 +30,6 @@ public class UserController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+
     // Otros endpoints para la gestión de perfiles (actualización, etc.) podrían ir aquí
 }

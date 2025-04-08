@@ -3,6 +3,7 @@ package com.echo.echobackend.service;
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,@Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -37,7 +38,7 @@ public class UserService {
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password)); // Hashea la contraseña antes de guardar
+        newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRegistrationDate(LocalDateTime.now());
         return userRepository.save(newUser);
     }
