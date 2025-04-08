@@ -40,5 +40,13 @@ public class SongController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSong(@PathVariable Long id) {
+        if (songService.findById(id).isPresent()) {
+            songService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     // Otros endpoints para actualizar, eliminar canciones, etc.
 }

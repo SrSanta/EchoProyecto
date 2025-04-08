@@ -33,4 +33,6 @@ public class GenreService {
     public Optional<Genre> findById(Long id) {
         return genreRepository.findById(id);
     }
+
+    public void deleteById(Long id) {}
 }

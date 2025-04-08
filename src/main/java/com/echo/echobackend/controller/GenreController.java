@@ -39,6 +39,15 @@ public class GenreController {
         return genre.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
+        if (genreService.findById(id).isPresent()) {
+            genreService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     // Otros endpoints para actualizar, eliminar géneros, etc.
 }
