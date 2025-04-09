@@ -8,8 +8,8 @@ import java.util.List;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
-    List<Song> findByGenre_Name(String genreName);
-
-    List<Song> findByArtist(String artist);
+    List<Song> findByGenre_Name(String genreName); // Búsqueda EXACTA por nombre de género
+    List<Song> findByArtistContainingIgnoreCase(String artist); // Búsqueda PARCIAL e INSENSIBLE a mayúsculas/minúsculas por artista
+    List<Song> findByTitleContainingIgnoreCase(String title);  // Búsqueda PARCIAL e INSENSIBLE a mayúsculas/minúsculas por título
     // Puedes añadir métodos personalizados aquí si los necesitas
 }

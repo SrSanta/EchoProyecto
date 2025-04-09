@@ -37,35 +37,24 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody Map<String, String> registrationRequest) {
 
         String username = registrationRequest.get("username");
-
         String email = registrationRequest.get("email");
-
         String password = registrationRequest.get("password");
 
 
         if (userService.existsByUsername(username)) {
-
             return new ResponseEntity<>("Nombre de usuario ya registrado", HttpStatus.BAD_REQUEST);
-
         }
 
         if (userService.existsByEmail(email)) {
-
             return new ResponseEntity<>("Email ya registrado", HttpStatus.BAD_REQUEST);
-
         }
 
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() || email == null || email.trim().isEmpty()) {
-
             return new ResponseEntity<>("Todos los campos son obligatorios", HttpStatus.BAD_REQUEST);
-
         }
 
-
         User newUser = userService.registerNewUser(username, email, password);
-
         return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
-
     }
 
     @PostMapping("/login")
@@ -79,12 +68,12 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String jwtToken = authService.generateToken(userDetails); // Llamamos al método generateToken
+            String jwtToken = authService.generateToken(userDetails);
 
             return ResponseEntity.ok(Map.of("token", jwtToken));
 
         } catch (Exception e) {
-        e.printStackTrace(); // Esto imprimirá la causa real del 401
+        e.printStackTrace();
         return new ResponseEntity<>("Credenciales inválidas", HttpStatus.UNAUTHORIZED);
     }
 

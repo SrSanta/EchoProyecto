@@ -50,10 +50,14 @@ public class SongService {
     }
 
     public List<Song> findByGenre(String genreName) {
-        return songRepository.findByGenre_Name(genreName);
+        return songRepository.findByGenre_Name(genreName); // Búsqueda EXACTA por nombre de género
     }
 
     public List<Song> findByArtist(String artist) {
-        return songRepository.findByArtist(artist);
+        return songRepository.findByArtistContainingIgnoreCase(artist);
+    }
+
+    public List<Song> findByTitle(String title) {
+        return songRepository.findByTitleContainingIgnoreCase(title);
     }
 }

@@ -1,5 +1,6 @@
 package com.echo.echobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class User {
     private boolean isProfilePublic;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Song> songs;
 
     @OneToMany(mappedBy = "user") // Futuro

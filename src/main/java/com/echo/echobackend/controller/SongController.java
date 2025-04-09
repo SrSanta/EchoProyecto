@@ -57,8 +57,10 @@ public class SongController {
     @GetMapping("/search")
     public ResponseEntity<List<Song>> searchSongs(
             @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String artist) {
+            @RequestParam(required = false) String artist,
+            @RequestParam(required = false) String title) {
 
+        if (title != null) return ResponseEntity.ok(songService.findByTitle(title));
         if (genre != null) return ResponseEntity.ok(songService.findByGenre(genre));
         if (artist != null) return ResponseEntity.ok(songService.findByArtist(artist));
         return ResponseEntity.badRequest().build();
