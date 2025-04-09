@@ -1,7 +1,6 @@
 package com.echo.echobackend.controller;
 
 import com.echo.echobackend.model.Like;
-import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.LikeService;
 import com.echo.echobackend.service.UserService; // Necesitas inyectar UserService
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,9 @@
 package com.echo.echobackend.service;
 
+import com.echo.echobackend.model.Role;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.model.User;
+import com.echo.echobackend.repository.RoleRepository;
 import com.echo.echobackend.repository.SongRepository;
 import com.echo.echobackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,13 @@ public class SongService {
 
     private final SongRepository songRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public SongService(SongRepository songRepository, UserRepository userRepository) {
+    public SongService(SongRepository songRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public Song saveSong(Song song, Long userId) {
@@ -28,13 +32,24 @@ public class SongService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Establecer el perfil del usuario como público
+        // Verificar si es la primera canción del usuario
+        boolean isFirstSong = user.getSongs().isEmpty();  // Si la lista de canciones del usuario está vacía
+
+        // Si es la primera canción, asignar el rol de ARTISTA
+        if (isFirstSong) {
+            Role artistRole = roleRepository.findByName("ROLE_ARTIST")
+                    .orElseThrow(() -> new RuntimeException("Rol ARTISTA no encontrado"));
+
+            user.getRoles().add(artistRole);  // Agregar el rol de ARTISTA al usuario
+            userRepository.save(user);  // Guardar los cambios del usuario
+        }
+
+        // Establecer el perfil del usuario como público (si es necesario)
         user.setProfilePublic(true);
-        userRepository.save(user); // Guardar los cambios del usuario
 
         // Establecer la fecha de carga de la canción
         song.setUploadDate(LocalDateTime.now());
-        song.setUser(user); // Asumimos que la canción tiene un campo de usuario (User user)
+        song.setUser(user); // Asociar la canción con el usuario/artista
 
         // Guardar la canción
         return songRepository.save(song);
@@ -55,7 +70,7 @@ public class SongService {
     public Song updateSong(Long id, Song songDetails) {
         return songRepository.findById(id).map(song -> {
             song.setTitle(songDetails.getTitle());
-            song.setArtist(songDetails.getArtist());
+            song.setUser(songDetails.getUser());
             song.setGenre(songDetails.getGenre());
             return songRepository.save(song);
         }).orElseThrow(() -> new RuntimeException("Canción no encontrada"));
@@ -70,7 +85,7 @@ public class SongService {
     }
 
     public List<Song> findByArtist(String artist) {
-        return songRepository.findByArtistContainingIgnoreCase(artist);
+        return songRepository.findByUserUsernameContainingIgnoreCase(artist);
     }
 
     public List<Song> findByTitle(String title) {
