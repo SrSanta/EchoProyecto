@@ -52,7 +52,7 @@ public class SongController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
     public ResponseEntity<Song> updateSong(@PathVariable Long id, @RequestBody Song song) {
         return ResponseEntity.ok(songService.updateSong(id, song));
     }

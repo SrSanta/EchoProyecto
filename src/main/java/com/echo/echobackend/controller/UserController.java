@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
         try {
             User savedUser = userService.updateUser(id, updatedUser);
@@ -49,7 +49,7 @@ public class UserController {
 
 
     @PutMapping("/{id}/password")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
     public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {
         String newPassword = passwordRequest.get("newPassword");
         if (newPassword == null || newPassword.trim().isEmpty()) {
