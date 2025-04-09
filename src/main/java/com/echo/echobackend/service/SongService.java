@@ -70,7 +70,6 @@ public class SongService {
     public Song updateSong(Long id, Song songDetails) {
         return songRepository.findById(id).map(song -> {
             song.setTitle(songDetails.getTitle());
-            song.setUser(songDetails.getUser());
             song.setGenre(songDetails.getGenre());
             return songRepository.save(song);
         }).orElseThrow(() -> new RuntimeException("Canción no encontrada"));
