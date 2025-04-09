@@ -47,6 +47,21 @@ public class SongController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Song> updateSong(@PathVariable Long id, @RequestBody Song song) {
+        return ResponseEntity.ok(songService.updateSong(id, song));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Song>> searchSongs(
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String artist) {
+
+        if (genre != null) return ResponseEntity.ok(songService.findByGenre(genre));
+        if (artist != null) return ResponseEntity.ok(songService.findByArtist(artist));
+        return ResponseEntity.badRequest().build();
+    }
     // Otros endpoints para actualizar, eliminar canciones, etc.
 }

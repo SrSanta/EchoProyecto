@@ -43,11 +43,26 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        return userRepository.findById(id).map(user -> {
+            user.setUsername(userDetails.getUsername());
+            user.setEmail(userDetails.getEmail());
+            return userRepository.save(user);
+        }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    public void changePassword(Long userId, String newPassword) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        });
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }

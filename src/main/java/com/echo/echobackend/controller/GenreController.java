@@ -22,9 +22,11 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<Genre> createGenre(@RequestBody Genre genre) {
-        Genre savedGenre = genreService.saveGenre(genre);
-        return new ResponseEntity<>(savedGenre, HttpStatus.CREATED);
+    public ResponseEntity<?> createGenre(@RequestBody Genre genre) {
+        if (genreService.existsByName(genre.getName())) {
+            return ResponseEntity.badRequest().body("El género ya existe");
+        }
+        return ResponseEntity.ok(genreService.saveGenre(genre));
     }
 
     @GetMapping
@@ -48,6 +50,12 @@ public class GenreController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre genre) {
+        return ResponseEntity.ok(genreService.updateGenre(id, genre));
+    }
+
 
     // Otros endpoints para actualizar, eliminar géneros, etc.
 }

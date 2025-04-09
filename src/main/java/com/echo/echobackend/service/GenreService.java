@@ -34,5 +34,18 @@ public class GenreService {
         return genreRepository.findById(id);
     }
 
-    public void deleteById(Long id) {}
+    public Genre updateGenre(Long id, Genre genreDetails) {
+        return genreRepository.findById(id).map(genre -> {
+            genre.setName(genreDetails.getName());
+            return genreRepository.save(genre);
+        }).orElseThrow(() -> new RuntimeException("Género no encontrado"));
+    }
+
+    public void deleteById(Long id) {
+        genreRepository.deleteById(id);
+    }
+
+    public boolean existsByName(String name) {
+        return genreRepository.findByName(name).isPresent();
+    }
 }

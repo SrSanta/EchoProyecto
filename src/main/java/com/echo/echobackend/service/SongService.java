@@ -36,5 +36,24 @@ public class SongService {
         songRepository.deleteById(id);
     }
 
-    public void deleteById(Long id) {}
+    public Song updateSong(Long id, Song songDetails) {
+        return songRepository.findById(id).map(song -> {
+            song.setTitle(songDetails.getTitle());
+            song.setArtist(songDetails.getArtist());
+            song.setGenre(songDetails.getGenre());
+            return songRepository.save(song);
+        }).orElseThrow(() -> new RuntimeException("Canción no encontrada"));
+    }
+
+    public void deleteById(Long id) {
+        songRepository.deleteById(id);
+    }
+
+    public List<Song> findByGenre(String genreName) {
+        return songRepository.findByGenre_Name(genreName);
+    }
+
+    public List<Song> findByArtist(String artist) {
+        return songRepository.findByArtist(artist);
+    }
 }
