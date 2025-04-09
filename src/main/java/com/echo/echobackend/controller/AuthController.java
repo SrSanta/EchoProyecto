@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,12 +35,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Map<String, String> registrationRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody Map<String, Object> registrationRequest) {
 
-        String username = registrationRequest.get("username");
-        String email = registrationRequest.get("email");
-        String password = registrationRequest.get("password");
+        String username = (String) registrationRequest.get("username");
+        String email = (String) registrationRequest.get("email");
+        String password = (String) registrationRequest.get("password");
+        List<Map<String, String>> rolesData = (List<Map<String, String>>) registrationRequest.get("roles"); // Obtén la lista de roles
 
+        // Validación de campos obligatorios
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() || email == null || email.trim().isEmpty() || rolesData == null || rolesData.isEmpty()) {
+            return new ResponseEntity<>("Todos los campos y al menos un rol son obligatorios", HttpStatus.BAD_REQUEST);
+        }
+
+        // Validación de formato de roles (opcional, pero recomendado)
+        for (Map<String, String> roleData : rolesData) {
+            if (roleData == null || roleData.get("name") == null || roleData.get("name").trim().isEmpty()) {
+                return new ResponseEntity<>("Formato de roles inválido. Se espera: [{name: 'ROLE_USER'}, ...]", HttpStatus.BAD_REQUEST);
+            }
+        }
 
         if (userService.existsByUsername(username)) {
             return new ResponseEntity<>("Nombre de usuario ya registrado", HttpStatus.BAD_REQUEST);
@@ -49,11 +62,7 @@ public class AuthController {
             return new ResponseEntity<>("Email ya registrado", HttpStatus.BAD_REQUEST);
         }
 
-        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() || email == null || email.trim().isEmpty()) {
-            return new ResponseEntity<>("Todos los campos son obligatorios", HttpStatus.BAD_REQUEST);
-        }
-
-        User newUser = userService.registerNewUser(username, email, password);
+        User newUser = userService.registerNewUser(username, email, password, rolesData); // Pasa la lista de roles al servicio
         return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
     }
 

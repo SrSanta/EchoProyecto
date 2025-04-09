@@ -26,6 +26,14 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @ManyToMany(fetch = FetchType.EAGER) // Cargar los roles al cargar el usuario
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles;
+
     private LocalDateTime registrationDate;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")

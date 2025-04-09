@@ -5,6 +5,7 @@ import com.echo.echobackend.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class SongController {
     }
 
     @PostMapping
-    public ResponseEntity<Song> uploadSong(@RequestBody Song song) {
-        Song savedSong = songService.saveSong(song);
+    public ResponseEntity<Song> uploadSong(@RequestBody Song song, @RequestParam Long userId) {
+        Song savedSong = songService.saveSong(song, userId);
         return new ResponseEntity<>(savedSong, HttpStatus.CREATED);
     }
 
@@ -41,6 +42,7 @@ public class SongController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteSong(@PathVariable Long id) {
         if (songService.findById(id).isPresent()) {
             songService.deleteById(id);
@@ -50,6 +52,7 @@ public class SongController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Song> updateSong(@PathVariable Long id, @RequestBody Song song) {
         return ResponseEntity.ok(songService.updateSong(id, song));
     }

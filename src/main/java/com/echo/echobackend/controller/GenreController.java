@@ -5,6 +5,7 @@ import com.echo.echobackend.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class GenreController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
         if (genreService.findById(id).isPresent()) {
             genreService.deleteById(id);
@@ -52,6 +54,7 @@ public class GenreController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre genre) {
         return ResponseEntity.ok(genreService.updateGenre(id, genre));
     }

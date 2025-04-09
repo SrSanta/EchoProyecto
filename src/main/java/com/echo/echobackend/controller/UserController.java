@@ -5,6 +5,7 @@ import com.echo.echobackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
         try {
             User savedUser = userService.updateUser(id, updatedUser);
@@ -40,12 +42,14 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
 
     @PutMapping("/{id}/password")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {
         String newPassword = passwordRequest.get("newPassword");
         if (newPassword == null || newPassword.trim().isEmpty()) {
