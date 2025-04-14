@@ -43,12 +43,15 @@ public class User {
     @JsonIgnore
     private List<Song> songs;
 
-    @OneToMany(mappedBy = "user") // Futuro
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Playlist> playlists;
 
-    @OneToMany(mappedBy = "user") // Futuro
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Like> likes;
 
-    @OneToMany(mappedBy = "user") // Futuro
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<PlaybackHistory> playbackHistory;
 }

@@ -1,10 +1,10 @@
 package com.echo.echobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import java.io.Serializable;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +17,7 @@ public class PlaybackHistory {
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @Id
@@ -24,5 +25,6 @@ public class PlaybackHistory {
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;
 
+    @Column(nullable = false)
     private LocalDateTime playbackTimestamp;
 }

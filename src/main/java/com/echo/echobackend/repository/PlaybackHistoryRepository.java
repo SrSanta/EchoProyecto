@@ -2,10 +2,11 @@ package com.echo.echobackend.repository;
 
 import com.echo.echobackend.model.PlaybackHistory;
 import com.echo.echobackend.model.PlaybackHistoryId;
+import com.echo.echobackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
 public interface PlaybackHistoryRepository extends JpaRepository<PlaybackHistory, PlaybackHistoryId> {
-    // Métodos para buscar el historial de un usuario, etc.
+    List<PlaybackHistory> findByUserOrderByPlaybackTimestampDesc(User user);
 }
