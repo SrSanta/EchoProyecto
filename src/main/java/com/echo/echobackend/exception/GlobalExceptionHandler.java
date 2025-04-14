@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         return buildResponse("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Método auxiliar para armar la respuesta
+    // Metodo auxiliar para armar la respuesta
     private ResponseEntity<Object> buildResponse(String message, HttpStatus status) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
