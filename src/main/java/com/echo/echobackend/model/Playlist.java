@@ -1,5 +1,6 @@
 package com.echo.echobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,12 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "playlist")
+    @JsonIgnore
     private List<PlaylistSong> playlistSongs;
 }
