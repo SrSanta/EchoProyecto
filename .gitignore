@@ -1,75 +1,61 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
+# IDEs (General)
 .idea/
+*.iml
+*.iws
+*.ipr
 .project
 .classpath
+.settings/
+.apt_generated/
+.factorypath/
+.springBeans/
+.sts4-cache/
 .c9/
 *.launch
-.settings/
 *.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
+.history/
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
+# --- Ignorar archivos específicos del Backend (Spring Boot) ---
+echo-backend/target/
+echo-backend/.mvn/wrapper/maven-wrapper.jar
+echo-backend/build/
 
-# System files
-.DS_Store
-Thumbs.db
+# --- Ignorar archivos específicos del Frontend (Angular) ---
+echo-frontend/node_modules/
+echo-frontend/dist/
+echo-frontend/.angular/cache/
+echo-frontend/.env
+echo-frontend/yarn-error.log*
+echo-frontend/npm-debug.log*
+echo-frontend/package-lock.json
+echo-frontend/yarn.lock
+
+# --- Archivos generales que podrían estar en la raíz o en subcarpetas ---
+*.log
+*.tmp
+*.swp
+*.bak
+*~
+~$*
+*.lock
+*.patch
+*.rej
+.gradle/
+local.properties
+
+# --- Secretos y configuración local (¡MUCHO CUIDADO!) ---
+# Considera mover archivos de configuración específicos a la raíz
+# o usar archivos de ejemplo.
+# *.env # Si tienes archivos .env en la raíz (¡cuidado con secretos!)
+# config/local.ini
+# secrets.json
+# credentials.json
