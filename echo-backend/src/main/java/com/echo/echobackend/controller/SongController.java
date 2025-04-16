@@ -1,5 +1,6 @@
 package com.echo.echobackend.controller;
 
+import com.echo.echobackend.exception.SongNotFoundException;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class SongController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSongById(@PathVariable Long id) {
-        Optional<Song> song = songService.findById(id);
-        return song.map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Song> getSongById(@PathVariable Long id) {
+        Song song = songService.findById(id)
+                .orElseThrow(() -> new SongNotFoundException(id));
+        return ResponseEntity.ok(song);
     }
 
     @DeleteMapping("/{id}")

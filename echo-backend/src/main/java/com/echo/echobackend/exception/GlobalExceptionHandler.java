@@ -46,4 +46,9 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(body, status);
     }
+
+    @ExceptionHandler(SongNotFoundException.class)
+    public ResponseEntity<String> handleSongNotFound(SongNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
