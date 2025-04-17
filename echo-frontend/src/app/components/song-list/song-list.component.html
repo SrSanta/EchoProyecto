@@ -1,21 +1,22 @@
 @if (loading) {
-    <div>Cargando canciones...</div>
+  <div>Cargando canciones...</div>
+} @else {
+  @if (error) {
+    <div>{{ error }}</div>
   } @else {
-    @if (error) {
-      <div>{{ error }}</div>
+    @if (songs.length > 0) {
+      <h2>Lista de canciones</h2>
+      <ul>
+        @for (song of songs; track song.id) {
+          <li (click)="playSong(song)" style="cursor: pointer;">
+            <strong>{{ song.title }}</strong> - {{ song.user.username }} ({{ song.genre.name }})
+          </li>
+        }
+      </ul>
     } @else {
-      @if (songs.length > 0) {
-        <h2>Lista de canciones</h2>
-        <ul>
-          @for (song of songs; track song.id) {
-            <li>
-              <strong>{{ song.title }}</strong> - {{ song.user.username }} ({{ song.genre.name }})
-            </li>
-          }
-        </ul>
-      } @else {
-        <div>No hay canciones disponibles.</div>
-      }
+      <div>No hay canciones disponibles.</div>
     }
   }
-  
+}
+
+<app-song-player *ngIf="selectedSong" [song]="selectedSong"></app-song-player>

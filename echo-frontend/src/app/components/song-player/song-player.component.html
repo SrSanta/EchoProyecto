@@ -1,0 +1,12 @@
+@if (song) {
+  <h3>{{ song.title }} - {{ song.user.username }}</h3>
+  <audio [src]="audioUrl" controls autoplay></audio>
+
+  <button (click)="toggleLike()">
+    @if (isLiked) {
+      <span>💔 Quitar Like</span>
+    } @else {
+      <span>❤️ Dar Like</span>
+    }
+  </button>
+}
