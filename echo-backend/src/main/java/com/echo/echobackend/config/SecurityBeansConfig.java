@@ -3,24 +3,32 @@ package com.echo.echobackend.config;
 import com.echo.echobackend.security.JwtRequestFilter;
 import com.echo.echobackend.security.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // <-- Importar HttpMethod
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer; // <-- Importar Customizer
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration; // <-- Importar CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource; // <-- Importar CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource; // <-- Importar UrlBasedCorsConfigurationSource
 
-import java.util.Arrays;
+import java.util.Arrays; // <-- Importar Arrays
+import java.util.List; // <-- Importar List
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityBeansConfig {
 
     private final MyUserDetailsService userDetailsService;
@@ -50,35 +58,49 @@ public class SecurityBeansConfig {
         return new BCryptPasswordEncoder();
     }
 
-//autentificacion del toker desabilitada
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                // 1. Habilitar configuración CORS usando el bean 'corsConfigurationSource'
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // 2. Permitir peticiones OPTIONS anónimamente (para preflight)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Rutas públicas existentes
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/audio/**").permitAll()
+                        // Todas las demás requieren autenticación
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                // Aplicar jwtRequestFilter *solo* a las rutas que no son de autenticación
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // 3. Definir el Bean de configuración CORS
     @Bean
-    public FilterRegistrationBean<JwtRequestFilter> jwtRequestFilterRegistration(JwtRequestFilter filter) {
-        FilterRegistrationBean<JwtRequestFilter> registrationBean = new FilterRegistrationBean<>(filter);
-        registrationBean.setFilter(filter);
-        // Excluye el filtro para la ruta de login
-        registrationBean.setUrlPatterns(Arrays.asList("/api/*")); // Aplica a todas las rutas API
-        registrationBean.setOrder(1); // Asegúrate de que el orden sea apropiado
-        registrationBean.setName("jwtRequestFilter");
-        registrationBean.addInitParameter("excludeUrls", "/api/auth/login"); // Especifica las URLs a excluir
-        return registrationBean;
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Especifica el origen de tu frontend Angular
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // ¡Asegúrate que sea el puerto correcto!
+        // Métodos HTTP permitidos
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        // Cabeceras permitidas (¡IMPORTANTE incluir 'Authorization'!)
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "Accept"));
+        // Permitir credenciales (necesario para cabeceras como Authorization)
+        configuration.setAllowCredentials(true);
+        // Puedes configurar maxAge si quieres que el navegador cachee la respuesta preflight
+        // configuration.setMaxAge(3600L); // 1 hora
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Aplica esta configuración a todas las rutas del backend
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
