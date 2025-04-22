@@ -9,7 +9,6 @@ import com.echo.echobackend.repository.GenreRepository;
 import com.echo.echobackend.repository.RoleRepository;
 import com.echo.echobackend.repository.SongRepository;
 import com.echo.echobackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;

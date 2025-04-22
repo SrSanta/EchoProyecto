@@ -1,20 +1,27 @@
 package com.echo.echobackend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Paths;
+
 @Configuration
-// Implementa WebMvcConfigurer para permitir la personalización de la configuración de Spring MVC.
 public class WebConfig implements WebMvcConfigurer {
 
-    // Sobrescribe este método para añadir manejadores de recursos estáticos.
+    @Value("${file.uploadDir}")
+    private String uploadDir;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Configura un manejador para las peticiones que empiecen con "/audio/**".
+        String resolvedUploadDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
+
+        String resourceLocation = "file:" + resolvedUploadDir.replace("\\", "/") + (resolvedUploadDir.endsWith("/") || resolvedUploadDir.endsWith("\\") ? "" : "/");
+
+        System.out.println("--- [WebConfig] Mapeando /audio/** a la ubicación física: " + resourceLocation);
+
         registry.addResourceHandler("/audio/**")
-                // Indica que los archivos para esas peticiones se deben buscar en la carpeta "uploads/audio/" dentro del classpath.
-                // Esto permite servir archivos estáticos (como los de audio subidos) directamente.
-                .addResourceLocations("classpath:/uploads/audio/");
+                .addResourceLocations(resourceLocation);
     }
 }
