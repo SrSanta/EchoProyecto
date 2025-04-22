@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,7 +26,14 @@ public class LikeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> likeSong(@RequestParam("songId") Long songId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> likeSong(@RequestBody Map<String, Long> payload, @AuthenticationPrincipal UserDetails userDetails) {
+        Long songId = payload.get("songId");
+        if (songId == null) {
+             return new ResponseEntity<>("songId is required in the request body", HttpStatus.BAD_REQUEST);
+        }
+        if (userDetails == null) {
+             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         String username = userDetails.getUsername();
         return userService.findByUsername(username)
                 .map(user -> {
@@ -38,8 +46,12 @@ public class LikeController {
                 .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> unlikeSong(@RequestParam("songId") Long songId, @AuthenticationPrincipal UserDetails userDetails) {
+    // --- MODIFICADO ---
+    @DeleteMapping("/{songId}")
+    public ResponseEntity<?> unlikeSong(@PathVariable Long songId, @AuthenticationPrincipal UserDetails userDetails) {
+         if (userDetails == null) {
+             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         String username = userDetails.getUsername();
         return userService.findByUsername(username)
                 .map(user -> {
@@ -52,6 +64,18 @@ public class LikeController {
                 .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
+    @GetMapping("/songs/{songId}/liked")
+    public ResponseEntity<Boolean> isSongLikedByUser(@PathVariable Long songId, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.ok(false);
+        }
+        String username = userDetails.getUsername();
+        return userService.findByUsername(username)
+                .map(user -> ResponseEntity.ok(likeService.isSongLikedByUser(user.getId(), songId)))
+                .orElse(ResponseEntity.ok(false));
+    }
+
+
     @GetMapping("/songs/{songId}/count")
     public ResponseEntity<Long> getLikeCount(@PathVariable Long songId) {
         return ResponseEntity.ok(likeService.getLikeCountForSong(songId));
@@ -59,6 +83,9 @@ public class LikeController {
 
     @GetMapping("/users/me")
     public ResponseEntity<List<Long>> getLikedSongIds(@AuthenticationPrincipal UserDetails userDetails) {
+         if (userDetails == null) {
+             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String username = userDetails.getUsername();
         return userService.findByUsername(username)
                 .map(user -> {

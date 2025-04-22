@@ -100,6 +100,7 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userId = payload.userId || payload.id || payload.sub;
+      console.log('userId service:', userId);
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       return typeof numericUserId === 'number' && !isNaN(numericUserId) ? numericUserId : null;
     } catch (err) {

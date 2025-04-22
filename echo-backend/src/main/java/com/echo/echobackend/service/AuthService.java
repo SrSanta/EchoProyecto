@@ -1,12 +1,17 @@
 package com.echo.echobackend.service;
 
+import com.echo.echobackend.model.User;
 import com.echo.echobackend.security.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -14,11 +19,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final MyUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    public AuthService(AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, JwtUtil jwtUtil) {
+    public AuthService(AuthenticationManager authenticationManager, MyUserDetailsService userDetailsService, JwtUtil jwtUtil, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     public String authenticateAndGenerateToken(String username, String password) {
@@ -29,14 +36,21 @@ public class AuthService {
             if (authentication.isAuthenticated()) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                return jwtUtil.generateToken(userDetails);
+                return this.generateToken(userDetails);
             }
         } catch (Exception e) {
             return null;
         }
         return null;
     }
+
     public String generateToken(UserDetails userDetails) {
-        return jwtUtil.generateToken(userDetails);
+        User user = userService.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found while generating token for: " + userDetails.getUsername())); // Lanza excepción si no se encuentra
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", user.getId());
+
+        return jwtUtil.generateToken(extraClaims, userDetails);
     }
 }
