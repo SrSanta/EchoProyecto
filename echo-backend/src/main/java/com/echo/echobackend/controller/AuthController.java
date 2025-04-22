@@ -59,7 +59,7 @@ public class AuthController {
         }
 
         User newUser = userService.registerNewUser(username, email, password, rolesData);
-        return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

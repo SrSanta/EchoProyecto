@@ -1,9 +1,9 @@
-// src/app/services/auth.service.ts
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, tap, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,8 +54,8 @@ export class AuthService {
       }
     }
   }
-
-  login(username: string, password: string) {
+  
+  login(username: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { username, password }).pipe(
       tap(response => {
         if (response && response.token) {
@@ -70,6 +70,10 @@ export class AuthService {
       })
     );
   }
+
+  register(userData: Omit<User, 'id' | 'registrationDate' | 'isProfilePublic'> & { roles: { name: string }[] }): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register`, userData);
+}
 
   logout() {
     this.removeItemFromLocalStorage(this.tokenKey);
@@ -93,15 +97,14 @@ export class AuthService {
     if (!token || !isPlatformBrowser(this.platformId)) {
         return null;
     }
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const userId = payload.userId || payload.id;
-      return typeof userId === 'number' ? userId : null;
+      const userId = payload.userId || payload.id || payload.sub;
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      return typeof numericUserId === 'number' && !isNaN(numericUserId) ? numericUserId : null;
     } catch (err) {
       console.error('Error al decodificar el token para obtener userId:', err);
-      this.removeItemFromLocalStorage(this.tokenKey);
-      this.currentUserSubject.next(null);
+      this.logout();
       return null;
     }
   }
@@ -111,7 +114,6 @@ export class AuthService {
     if (!token || !isPlatformBrowser(this.platformId)) {
         return null;
     }
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.sub || null;

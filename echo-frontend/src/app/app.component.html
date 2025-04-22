@@ -7,7 +7,7 @@
     border-bottom: 1px solid #ccc;
   "
 >
-  <h1>Bienvenido a Echo 🎶</h1>
+  <h1><a routerLink="/">Bienvenido a Echo 🎶</a></h1>
 
   @if (isLoggedIn$ | async) {
   <div>
@@ -19,6 +19,11 @@
     <div>
       <a routerLink="/login">Iniciar Sesión</a>
     </div>
+    <div>
+      <a routerLink="/register">Registrarse</a>
+    </div>
+  
+  
   }
 </header>
 

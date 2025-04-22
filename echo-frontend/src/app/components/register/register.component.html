@@ -1,0 +1,57 @@
+<!-- src/app/auth/register/register.component.html -->
+<h2>Crear una cuenta nueva</h2>
+
+<form (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="username">Nombre de usuario:</label>
+    <input
+      type="text"
+      id="username"
+      name="username"
+      [(ngModel)]="registrationData.username"
+      required
+      [disabled]="isLoading"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="email">Correo electrónico:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      [(ngModel)]="registrationData.email"
+      required
+      email
+      [disabled]="isLoading"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="password">Contraseña:</label>
+    <input
+      type="password"
+      id="password"
+      name="password"
+      [(ngModel)]="registrationData.password"
+      required
+      minlength="6"
+      [disabled]="isLoading"
+    />
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <button type="submit" [disabled]="isLoading">
+    {{ isLoading ? 'Registrando...' : 'Registrarse' }}
+  </button>
+</form>
+
+<p>
+  ¿Ya tienes una cuenta? <a routerLink="/login">Inicia Sesión aquí</a>
+</p>
+
