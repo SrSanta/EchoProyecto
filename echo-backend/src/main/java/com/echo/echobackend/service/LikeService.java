@@ -4,9 +4,8 @@ import com.echo.echobackend.model.Like;
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.repository.LikeRepository;
-import com.echo.echobackend.repository.UserRepository; // Necesario para obtener el User
-import com.echo.echobackend.repository.SongRepository;   // Necesario para obtener la Song
-import org.springframework.beans.factory.annotation.Autowired;
+import com.echo.echobackend.repository.UserRepository;
+import com.echo.echobackend.repository.SongRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,6 @@ public class LikeService {
     private final UserRepository userRepository;
     private final SongRepository songRepository;
 
-    @Autowired
     public LikeService(LikeRepository likeRepository, UserRepository userRepository, SongRepository songRepository) {
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
@@ -31,7 +29,7 @@ public class LikeService {
     @Transactional
     public boolean likeSong(Long userId, Long songId) {
         if (likeRepository.existsByUser_IdAndSong_Id(userId, songId)) {
-            return false; // El usuario ya dio like a esta canción
+            return false;
         }
 
         Optional<User> userOptional = userRepository.findById(userId);
@@ -45,7 +43,7 @@ public class LikeService {
             likeRepository.save(like);
             return true;
         }
-        return false; // Usuario o canción no encontrados
+        return false;
     }
 
     @Transactional
@@ -54,7 +52,7 @@ public class LikeService {
             likeRepository.deleteByUser_IdAndSong_Id(userId, songId);
             return true;
         }
-        return false; // El usuario no ha dado like a esta canción
+        return false;
     }
 
     public long getLikeCountForSong(Long songId) {

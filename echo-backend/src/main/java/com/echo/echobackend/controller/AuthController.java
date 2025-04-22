@@ -3,7 +3,6 @@ package com.echo.echobackend.controller;
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.AuthService;
 import com.echo.echobackend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,9 +24,8 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
-    private final AuthenticationManager authenticationManager; // Inyectamos el AuthenticationManager
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
     public AuthController(UserService userService, AuthService authService, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authService = authService;
@@ -40,14 +38,12 @@ public class AuthController {
         String username = (String) registrationRequest.get("username");
         String email = (String) registrationRequest.get("email");
         String password = (String) registrationRequest.get("password");
-        List<Map<String, String>> rolesData = (List<Map<String, String>>) registrationRequest.get("roles"); // Obtén la lista de roles
+        List<Map<String, String>> rolesData = (List<Map<String, String>>) registrationRequest.get("roles");
 
-        // Validación de campos obligatorios
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() || email == null || email.trim().isEmpty() || rolesData == null || rolesData.isEmpty()) {
             return new ResponseEntity<>("Todos los campos y al menos un rol son obligatorios", HttpStatus.BAD_REQUEST);
         }
 
-        // Validación de formato de roles (opcional, pero recomendado)
         for (Map<String, String> roleData : rolesData) {
             if (roleData == null || roleData.get("name") == null || roleData.get("name").trim().isEmpty()) {
                 return new ResponseEntity<>("Formato de roles inválido. Se espera: [{name: 'ROLE_USER'}, ...]", HttpStatus.BAD_REQUEST);
@@ -62,7 +58,7 @@ public class AuthController {
             return new ResponseEntity<>("Email ya registrado", HttpStatus.BAD_REQUEST);
         }
 
-        User newUser = userService.registerNewUser(username, email, password, rolesData); // Pasa la lista de roles al servicio
+        User newUser = userService.registerNewUser(username, email, password, rolesData);
         return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.CREATED);
     }
 

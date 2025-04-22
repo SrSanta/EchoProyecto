@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SongService } from './../../services/song.service';
 import { Song } from './../../models/song.model';
-import { SongPlayerComponent } from '../song-player/song-player.component'; // importa si es standalone
+import { SongPlayerComponent } from '../song-player/song-player.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

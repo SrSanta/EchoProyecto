@@ -1,11 +1,8 @@
 package com.echo.echobackend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "playlist_songs")
@@ -24,6 +21,6 @@ public class PlaylistSong {
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;
 
-    @Column(name = "song_order") // Renombrar la columna
+    @Column(name = "song_order")
     private Integer songOrder;
 }

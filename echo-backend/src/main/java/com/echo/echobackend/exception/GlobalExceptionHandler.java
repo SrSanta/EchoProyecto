@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     // Otros errores no controlados
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex) {
-        ex.printStackTrace(); // Para debug en consola (opcional)
+        ex.printStackTrace();
         return buildResponse("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

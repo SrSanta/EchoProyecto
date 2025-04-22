@@ -2,8 +2,7 @@ package com.echo.echobackend.controller;
 
 import com.echo.echobackend.model.Like;
 import com.echo.echobackend.service.LikeService;
-import com.echo.echobackend.service.UserService; // Necesitas inyectar UserService
-import org.springframework.beans.factory.annotation.Autowired;
+import com.echo.echobackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,9 +17,8 @@ import java.util.stream.Collectors;
 public class LikeController {
 
     private final LikeService likeService;
-    private final UserService userService; // Inyecta UserService
+    private final UserService userService;
 
-    @Autowired
     public LikeController(LikeService likeService, UserService userService) {
         this.likeService = likeService;
         this.userService = userService;
@@ -37,7 +35,7 @@ public class LikeController {
                         return new ResponseEntity<>("Ya has dado like a esta canción o la canción no existe", HttpStatus.BAD_REQUEST);
                     }
                 })
-                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED)); // Si no se encuentra el usuario
+                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
     @DeleteMapping
@@ -51,7 +49,7 @@ public class LikeController {
                         return new ResponseEntity<>("No has dado like a esta canción o la canción no existe", HttpStatus.NOT_FOUND);
                     }
                 })
-                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED)); // Si no se encuentra el usuario
+                .orElse(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
     }
 
     @GetMapping("/songs/{songId}/count")

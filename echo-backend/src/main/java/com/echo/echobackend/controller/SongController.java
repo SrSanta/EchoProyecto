@@ -3,14 +3,12 @@ package com.echo.echobackend.controller;
 import com.echo.echobackend.exception.SongNotFoundException;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.service.SongService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/songs")
@@ -18,7 +16,6 @@ public class SongController {
 
     private final SongService songService;
 
-    @Autowired
     public SongController(SongService songService) {
         this.songService = songService;
     }
@@ -69,5 +66,4 @@ public class SongController {
         if (artist != null) return ResponseEntity.ok(songService.findByArtist(artist));
         return ResponseEntity.badRequest().build();
     }
-    // Otros endpoints para actualizar, eliminar canciones, etc.
 }

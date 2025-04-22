@@ -7,7 +7,6 @@ import com.echo.echobackend.model.User;
 import com.echo.echobackend.repository.PlaybackHistoryRepository;
 import com.echo.echobackend.repository.SongRepository;
 import com.echo.echobackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +19,6 @@ public class PlaybackHistoryService {
     private final UserRepository userRepository;
     private final SongRepository songRepository;
 
-    @Autowired
     public PlaybackHistoryService(PlaybackHistoryRepository playbackHistoryRepository,
                                   UserRepository userRepository,
                                   SongRepository songRepository) {

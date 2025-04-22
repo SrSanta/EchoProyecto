@@ -2,7 +2,6 @@ package com.echo.echobackend.controller;
 
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +16,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -58,5 +56,4 @@ public class UserController {
         userService.changePassword(id, newPassword);
         return ResponseEntity.ok("Contraseña actualizada exitosamente");
     }
-    // Otros endpoints para la gestión de perfiles (actualización, etc.) podrían ir aquí
 }

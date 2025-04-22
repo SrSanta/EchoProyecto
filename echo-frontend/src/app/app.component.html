@@ -1,34 +1,32 @@
-<!-- src/app/app.component.html -->
-
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ccc;">
+<header
+  style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  "
+>
   <h1>Bienvenido a Echo 🎶</h1>
 
-  <!-- Contenedor que solo se muestra si el usuario está logueado, usando @if -->
   @if (isLoggedIn$ | async) {
-    <div>
-      <!-- Muestra el nombre de usuario (opcional) -->
-      <span style="margin-right: 15px;">Hola, {{ username$ | async }}</span>
-      <!-- Botón de Logout -->
-      <button (click)="logout()">Cerrar Sesión</button>
-    </div>
+  <div>
+    <span style="margin-right: 15px">Hola, {{ username$ | async }}</span>
+    <button (click)="logout()">Cerrar Sesión</button>
+  </div>
   }
-  <!-- Opcionalmente, podrías añadir un @else para mostrar algo si no está logueado -->
-  <!-- @else {
+  @else {
     <div>
       <a routerLink="/login">Iniciar Sesión</a>
     </div>
-  } -->
-
+  }
 </header>
 
-<main style="padding: 15px;">
-  <!-- Aquí se renderizará el componente de la ruta activa -->
+<main style="padding: 15px">
   <router-outlet></router-outlet>
 </main>
 
-<!-- Puedes tener elementos comunes aquí, como un pie de página -->
-<!--
 <footer>
   <p>Pie de página</p>
 </footer>
--->
+

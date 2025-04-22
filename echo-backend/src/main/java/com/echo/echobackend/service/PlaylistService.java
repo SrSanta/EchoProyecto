@@ -11,14 +11,12 @@ import com.echo.echobackend.repository.PlaylistSongRepository;
 import com.echo.echobackend.repository.SongRepository;
 import com.echo.echobackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlaylistService {
@@ -30,7 +28,6 @@ public class PlaylistService {
     private final UserRepository userRepository;
     private final SongRepository songRepository;
 
-    @Autowired
     public PlaylistService(PlaylistRepository playlistRepository, PlaylistSongRepository playlistSongRepository, UserRepository userRepository, SongRepository songRepository) {
         this.playlistRepository = playlistRepository;
         this.playlistSongRepository = playlistSongRepository;
@@ -67,7 +64,6 @@ public class PlaylistService {
 
     @Transactional
     public void deletePlaylist(Long id, String username) {
-        Playlist playlist = validatePlaylistOwnership(id, username);
         playlistSongRepository.deleteByPlaylistId(id);
         playlistRepository.deleteById(id);
         logger.info("Usuario {} eliminó la playlist con ID: {}", username, id);
@@ -87,7 +83,6 @@ public class PlaylistService {
         playlistSong.setPlaylist(playlist);
         playlistSong.setSong(song);
 
-        // Si no se pasa orden, lo calculamos
         if (songOrder == null) {
             songOrder = playlistSongRepository.findMaxOrderByPlaylist(playlist).orElse(0) + 1;
         }

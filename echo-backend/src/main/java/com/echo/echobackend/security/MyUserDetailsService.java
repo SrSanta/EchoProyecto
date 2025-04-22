@@ -2,7 +2,6 @@ package com.echo.echobackend.security;
 
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +16,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
 
-    @Autowired
     public MyUserDetailsService(UserService userService) {
         this.userService = userService;
     }
