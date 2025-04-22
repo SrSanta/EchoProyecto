@@ -16,7 +16,7 @@ export class SongPlayerComponent implements OnInit {
   @Input() song!: Song;
   isLiked = false;
   audioUrl = "";
-  private userId: number | null = null;
+  protected userId: number | null = null;
 
   private likeService = inject(LikeService);
   private authService = inject(AuthService);

@@ -31,4 +31,8 @@ export class AppComponent {
     this.router.navigate(['/login']);
     console.log('Usuario desconectado');
   }
+
+  getYear(): number {
+    return new Date().getFullYear();
+  }
 }

@@ -3,35 +3,36 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 10px 20px; /* Más padding */
     border-bottom: 1px solid #ccc;
+    background-color: #f8f8f8; /* Fondo ligero */
   "
 >
-  <h1><a routerLink="/">Bienvenido a Echo 🎶</a></h1>
+  <h1><a routerLink="/" style="text-decoration: none; color: #333;">Echo 🎶</a></h1>
 
-  @if (isLoggedIn$ | async) {
-  <div>
-    <span style="margin-right: 15px">Hola, {{ username$ | async }}</span>
-    <button (click)="logout()">Cerrar Sesión</button>
-  </div>
-  }
-  @else {
-    <div>
-      <a routerLink="/login">Iniciar Sesión</a>
-    </div>
-    <div>
-      <a routerLink="/register">Registrarse</a>
-    </div>
-  
-  
-  }
+  <nav style="display: flex; align-items: center; gap: 15px;">
+    <a routerLink="/songs">Canciones</a>
+
+    @if (isLoggedIn$ | async; as loggedIn) {
+      <a routerLink="/upload-song">Subir Canción</a>
+      <div style="display: flex; align-items: center; gap: 10px; margin-left: 20px;">
+         <span>Hola, {{ username$ | async }}</span>
+         <button (click)="logout()">Cerrar Sesión</button>
+      </div>
+
+    } @else {
+       <div style="margin-left: 20px; display: flex; gap: 10px;">
+         <a routerLink="/login">Iniciar Sesión</a>
+         <a routerLink="/register">Registrarse</a>
+       </div>
+    }
+  </nav>
 </header>
 
-<main style="padding: 15px">
+<main style="padding: 20px;">
   <router-outlet></router-outlet>
 </main>
 
-<footer>
-  <p>Pie de página</p>
+<footer style="text-align: center; margin-top: 30px; padding: 15px; border-top: 1px solid #eee; color: #777;">
+  <p>&copy; {{ getYear() }} Echo App. Todos los derechos reservados.</p>
 </footer>
-

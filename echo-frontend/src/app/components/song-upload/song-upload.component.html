@@ -1,0 +1,66 @@
+<h2>Subir Nueva Canción</h2>
+
+<form (submit)="onSubmit()">
+  <div class="form-group">
+    <label for="songTitle">Título:</label>
+    <input
+      type="text"
+      id="songTitle"
+      name="songTitle"
+      [(ngModel)]="songTitle"
+      required
+      [disabled]="isLoading"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="songGenre">Género:</label>
+    <select
+      id="songGenre"
+      name="songGenre"
+      [(ngModel)]="selectedGenreId"
+      required
+      [disabled]="isLoading"
+    >
+      <option value="" disabled>-- Selecciona un Género --</option>
+      @if (genres$ | async; as genres) {
+        @for (genre of genres; track genre.id) {
+          <option [value]="genre.id">{{ genre.name }}</option>
+        }
+      } @else {
+        <option value="" disabled>Cargando géneros...</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="songFile">Archivo de Audio:</label>
+    <input
+      type="file"
+      id="songFile"
+      name="songFile"
+      (change)="onFileSelected($event)"
+      accept="audio/*"
+      required
+      [disabled]="isLoading"
+    />
+    @if (selectedFile) {
+      <p>Archivo seleccionado: {{ selectedFile.name }}</p>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-message" style="color: red; margin-top: 10px;">
+      {{ errorMessage }}
+    </div>
+  }
+  @if (successMessage) {
+    <div class="success-message" style="color: green; margin-top: 10px;">
+      {{ successMessage }}
+    </div>
+  }
+
+  <button type="submit" [disabled]="isLoading || !selectedFile || !songTitle.trim() || !selectedGenreId">
+    {{ isLoading ? 'Subiendo...' : 'Subir Canción' }}
+  </button>
+</form>
