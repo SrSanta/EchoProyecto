@@ -1,11 +1,12 @@
 @if (song) {
   <h3>{{ song.title }} - {{ song.user.username }}</h3>
+  <div>
+    <audio [src]="audioUrl" controls autoplay>
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+  </div>
   @if (userId !== null) {
     <div>
-      <audio [src]="audioUrl" controls autoplay>
-        Tu navegador no soporta el elemento de audio.
-      </audio>
-
       <button (click)="toggleLike()">
         @if (isLiked) {
           <span>💔 Quitar Like</span>
@@ -16,7 +17,7 @@
     </div>
   } @else {
     <div>
-      <p>Inicia sesión para reproducir y dar 'Me gusta'.</p>
+      <p>Inicia sesión para dar 'Me gusta'.</p>
       <a routerLink="/login">Iniciar Sesión</a>
     </div>
   }
