@@ -13,5 +13,4 @@ export interface Song {
   releaseYear?: number;
   tags?: string[];
   uploadDate?: string;
-  publishDate?: string;
 }

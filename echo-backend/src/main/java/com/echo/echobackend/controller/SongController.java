@@ -1,26 +1,26 @@
 package com.echo.echobackend.controller;
 
-import com.echo.echobackend.config.FileStorageProperties; 
+import com.echo.echobackend.config.FileStorageProperties;
 import com.echo.echobackend.exception.SongNotFoundException;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.service.SongService;
-import org.springframework.core.io.Resource; 
-import org.springframework.core.io.UrlResource; 
-import org.springframework.http.HttpHeaders; 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType; 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal; 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException; 
-import java.net.MalformedURLException; 
-import java.nio.file.Files; 
-import java.nio.file.Path; 
-import java.nio.file.Paths; 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -40,13 +40,19 @@ public class SongController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> uploadSong(@RequestParam("file") MultipartFile file,
                                         @RequestParam("title") String title,
+                                        @RequestParam("thumbnailFile") MultipartFile thumbnailFile,
+                                        @RequestParam(value = "videoFile", required = false) MultipartFile videoFile,
                                         @RequestParam("genreId") Long genreId,
+                                        @RequestParam(value = "releaseYear", required = false) Integer releaseYear,
                                         @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return new ResponseEntity<>("User not authenticated", HttpStatus.UNAUTHORIZED);
         }
         if (file.isEmpty()) {
             return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
+        }
+        if (thumbnailFile.isEmpty()) {
+            return new ResponseEntity<>("Thumbnail file is empty or not provided", HttpStatus.BAD_REQUEST);
         }
         if (title == null || title.trim().isEmpty()) {
              return new ResponseEntity<>("Title is required", HttpStatus.BAD_REQUEST);
@@ -56,7 +62,7 @@ public class SongController {
         }
 
         try {
-            Song savedSong = songService.storeAndSaveSong(file, title, userDetails.getUsername(), genreId);
+            Song savedSong = songService.storeAndSaveSong(file, thumbnailFile, videoFile, title, userDetails.getUsername(), genreId, releaseYear);
             return new ResponseEntity<>(savedSong, HttpStatus.CREATED);
         } catch (IOException e) {
             System.err.println("Upload failed (IO): " + e.getMessage());

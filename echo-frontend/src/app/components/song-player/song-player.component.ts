@@ -17,6 +17,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   @Input() song!: Song;
   isLiked = false;
   audioUrl = "";
+  thumbnailUrl = "";
   protected userId: number | null = null;
 
   private likeService = inject(LikeService);
@@ -29,7 +30,12 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['song'] && changes['song'].currentValue) {
       console.log("Song input changed:", this.song);
-      this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+      if (this.song.audioFilename) {
+        this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+      }
+      if (this.song.thumbnailFilename) {
+        this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
+      }
       this.isLiked = false;
 
       if (this.userId !== null && this.song.id !== undefined) {
@@ -53,6 +59,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       }
     } else if (changes['song'] && !changes['song'].currentValue) {
         this.audioUrl = "";
+        this.thumbnailUrl = "";
         this.isLiked = false;
     }
   }

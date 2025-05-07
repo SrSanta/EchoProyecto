@@ -1,27 +1,18 @@
-<header
-  style="
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px; /* Más padding */
-    border-bottom: 1px solid #ccc;
-    background-color: #f8f8f8; /* Fondo ligero */
-  "
->
-  <h1><a routerLink="/" style="text-decoration: none; color: #333;">Echo 🎶</a></h1>
+<header>
+  <h1><a routerLink="/">Echo 🎶</a></h1>
 
-  <nav style="display: flex; align-items: center; gap: 15px;">
+  <nav>
     <a routerLink="/songs">Canciones</a>
 
     @if (isLoggedIn$ | async; as loggedIn) {
       <a routerLink="/upload-song">Subir Canción</a>
-      <div style="display: flex; align-items: center; gap: 10px; margin-left: 20px;">
+      <div>
          <span>Hola, {{ username$ | async }}</span>
          <button (click)="logout()">Cerrar Sesión</button>
       </div>
 
     } @else {
-       <div style="margin-left: 20px; display: flex; gap: 10px;">
+       <div>
          <a routerLink="/login">Iniciar Sesión</a>
          <a routerLink="/register">Registrarse</a>
        </div>
@@ -29,10 +20,15 @@
   </nav>
 </header>
 
-<main style="padding: 20px;">
+<main class="container">
   <router-outlet></router-outlet>
 </main>
 
-<footer style="text-align: center; margin-top: 30px; padding: 15px; border-top: 1px solid #eee; color: #777;">
+<footer>
   <p>&copy; {{ getYear() }} Echo App. Todos los derechos reservados.</p>
 </footer>
+
+<!-- Reproductor de música global -->
+@if (currentSongForPlayer$ | async; as currentSong) {
+  <app-song-player [song]="currentSong"></app-song-player>
+}

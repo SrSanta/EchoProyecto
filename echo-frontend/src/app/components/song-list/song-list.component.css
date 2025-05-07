@@ -1,0 +1,27 @@
+/* c:\Users\SrSanta\Documents\proyectos\EchoProyecto\echo-frontend\src\app\components\song-list\song-list.component.css */
+.song-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .song-item:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .song-thumbnail-small {
+    width: 50px; /* Ajusta el tamaño según necesites */
+    height: 50px; /* Ajusta el tamaño según necesites */
+    object-fit: cover; /* Para que la imagen se ajuste bien sin deformarse */
+    margin-right: 10px;
+    border-radius: 4px; /* Opcional: para bordes redondeados */
+    border: 1px solid #ddd; /* Opcional: un borde sutil */
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  

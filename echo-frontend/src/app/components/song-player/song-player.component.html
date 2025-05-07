@@ -1,5 +1,12 @@
 @if (song) {
-  <h3>{{ song.title }} - {{ song.user.username }}</h3>
+  <div class="player-header">
+    @if (thumbnailUrl) {
+      <img [src]="thumbnailUrl" alt="Portada de {{song.title}}" class="song-thumbnail-large">
+    } @else {
+      <img src="assets/images/placeholder-thumbnail.png" alt="Sin portada" class="song-thumbnail-large">
+    }
+    <h3>{{ song.title }} - {{ song.user.username }}</h3>
+  </div>
   <div>
     <audio [src]="audioUrl" controls autoplay>
       Tu navegador no soporta el elemento de audio.

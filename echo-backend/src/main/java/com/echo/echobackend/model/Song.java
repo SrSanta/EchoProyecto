@@ -38,5 +38,4 @@ public class Song {
     private String tags;
 
     private LocalDateTime uploadDate;
-    private LocalDateTime publishDate;
 }

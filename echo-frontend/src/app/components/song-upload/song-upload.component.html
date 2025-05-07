@@ -49,6 +49,49 @@
     }
   </div>
 
+  <div class="form-group">
+    <label for="songReleaseYear">Año de Lanzamiento (Opcional):</label>
+    <input
+      type="number"
+      id="songReleaseYear"
+      name="songReleaseYear"
+      [(ngModel)]="songReleaseYear"
+      min="1900"
+      [max]="currentYear"
+      [disabled]="isLoading"
+    />
+  </div>
+  <div class="form-group">
+    <label for="songThumbnail">Portada (Imagen):</label>
+    <input
+      type="file"
+      id="songThumbnail"
+      name="songThumbnail"
+      (change)="onThumbnailSelected($event)"
+      accept="image/*"
+      required
+      [disabled]="isLoading"
+    />
+    @if (selectedThumbnailFile) {
+      <p>Portada seleccionada: {{ selectedThumbnailFile.name }}</p>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="songVideo">Video (Opcional):</label>
+    <input
+      type="file"
+      id="songVideo"
+      name="songVideo"
+      (change)="onVideoSelected($event)"
+      accept="video/*"
+      [disabled]="isLoading"
+    />
+    @if (selectedVideoFile) {
+      <p>Video seleccionado: {{ selectedVideoFile.name }}</p>
+    }
+  </div>
+
   @if (errorMessage) {
     <div class="error-message" style="color: red; margin-top: 10px;">
       {{ errorMessage }}
@@ -60,7 +103,7 @@
     </div>
   }
 
-  <button type="submit" [disabled]="isLoading || !selectedFile || !songTitle.trim() || !selectedGenreId">
+  <button type="submit" [disabled]="isLoading || !selectedFile || !songTitle.trim() || !selectedGenreId || !selectedThumbnailFile">
     {{ isLoading ? 'Subiendo...' : 'Subir Canción' }}
   </button>
 </form>
