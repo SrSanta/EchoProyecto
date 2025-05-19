@@ -5,7 +5,7 @@
     } @else {
       <img src="assets/images/placeholder-thumbnail.png" alt="Sin portada" class="song-thumbnail-large">
     }
-    <h3>{{ song.title }} - {{ song.user.username }}</h3>
+    <h3>{{ song.title }}<span *ngIf="song.user && song.user.username"> - {{ song.user.username }}</span></h3>
   </div>
   <div class="player-controls">
     <button (click)="playPrevious()">⏮️ Anterior</button>

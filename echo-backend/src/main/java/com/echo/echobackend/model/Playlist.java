@@ -27,7 +27,26 @@ public class Playlist {
 
     private LocalDateTime creationDate;
 
+    @Column(nullable = false)
+    private boolean isPublic = false;
+
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     @OneToMany(mappedBy = "playlist")
     @JsonIgnore
     private List<PlaylistSong> playlistSongs;
+
+    @Transient
+    public List<Song> getSongs() {
+        if (playlistSongs == null) return List.of();
+        return playlistSongs.stream()
+                .map(PlaylistSong::getSong)
+                .toList();
+    }
 }

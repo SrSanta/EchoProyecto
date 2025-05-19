@@ -34,10 +34,12 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['song'] && changes['song'].currentValue) {
       console.log("Song input changed:", this.song);
-      if (this.song.audioFilename) {
+      if (this.song && this.song.audioFilename) {
         this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+      } else {
+        this.audioUrl = '';
       }
-      if (this.song.thumbnailFilename) {
+      if (this.song && this.song.thumbnailFilename) {
         this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
       }
       this.isLiked = false;

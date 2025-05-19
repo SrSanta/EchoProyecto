@@ -9,6 +9,8 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 public class PlaylistSongId implements Serializable {
-    private Long playlist;
-    private Long song;
+    public Playlist playlist;
+    public Song song;
+
+    public PlaylistSongId() {}
 }

@@ -3,9 +3,11 @@
 
   <nav>
     <a routerLink="/songs">Canciones</a>
+    <a routerLink="/public-playlists">Explorar playlists públicas</a>
 
     @if (isLoggedIn$ | async; as loggedIn) {
       <a routerLink="/upload-song">Subir Canción</a>
+      <a routerLink="/playlists">Playlists</a>
       <div>
          <span>Hola, {{ username$ | async }}</span>
          <button (click)="logout()">Cerrar Sesión</button>
@@ -24,11 +26,13 @@
   <router-outlet></router-outlet>
 </main>
 
-<!-- Mini player flotante -->
-<div *ngIf="hasSongsInQueue" class="mini-player-float">
+<!-- Mini player flotante SIEMPRE visible -->
+<div class="mini-player-float">
   <app-playback-queue></app-playback-queue>
   @if (currentSongForPlayer$ | async; as currentSong) {
     <app-song-player [song]="currentSong"></app-song-player>
+  } @else {
+    <app-song-player></app-song-player>
   }
 </div>
 

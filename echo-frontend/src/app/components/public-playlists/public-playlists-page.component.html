@@ -1,0 +1,22 @@
+<div class="public-playlists-page">
+  <h2>Explorar Playlists Públicas</h2>
+  <div class="filters">
+    <input [(ngModel)]="search" (input)="applyFilters()" placeholder="Buscar por nombre..." />
+    <input [(ngModel)]="filterUser" (input)="applyFilters()" placeholder="Filtrar por usuario..." />
+    <input [(ngModel)]="filterSong" (input)="applyFilters()" placeholder="Filtrar por canción..." />
+  </div>
+  <ul *ngIf="filteredPlaylists.length; else noResults">
+    <li *ngFor="let playlist of filteredPlaylists">
+      <strong>{{ playlist.name }}</strong> por {{ playlist.user?.username || 'Desconocido' }}<br>
+      <span *ngIf="playlist.songs && playlist.songs.length">Canciones: {{ playlist.songs.length }}</span>
+      <span *ngIf="!playlist.songs || !playlist.songs.length">Sin canciones</span>
+      <ul *ngIf="playlist.songs && playlist.songs.length">
+        <li *ngFor="let song of playlist.songs">🎵 {{ song.title }}</li>
+      </ul>
+      <button (click)="playPlaylist(playlist)">Reproducir Playlist</button>
+    </li>
+  </ul>
+  <ng-template #noResults>
+    <div>No se encontraron playlists públicas con esos filtros.</div>
+  </ng-template>
+</div>

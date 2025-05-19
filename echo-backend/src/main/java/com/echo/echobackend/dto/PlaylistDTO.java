@@ -19,4 +19,6 @@ public class PlaylistDTO {
     private Long userId;
 
     private List<SongDTO> songs;
+
+    private boolean isPublic;
 }

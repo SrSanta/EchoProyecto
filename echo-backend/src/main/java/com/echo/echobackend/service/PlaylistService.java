@@ -38,8 +38,20 @@ public class PlaylistService {
     public Playlist createPlaylist(Playlist playlist, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + username));
+        // Validación de nombre
+        if (playlist.getName() == null || playlist.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la playlist no puede estar vacío");
+        }
+        // Verifica duplicados para el usuario
+        List<Playlist> userPlaylists = playlistRepository.findByUser(user);
+        if (userPlaylists.stream().anyMatch(p -> p.getName().equalsIgnoreCase(playlist.getName().trim()))) {
+            throw new IllegalArgumentException("Ya existe una playlist con ese nombre para el usuario");
+        }
         playlist.setUser(user);
         playlist.setCreationDate(LocalDateTime.now());
+        if (playlist.getName() != null) playlist.setName(playlist.getName().trim());
+        // Si no se especifica, por defecto es privada
+        if (playlist.getIsPublic() == false) playlist.setIsPublic(false);
         logger.info("Usuario {} creó una nueva playlist: {}", username, playlist.getName());
         return playlistRepository.save(playlist);
     }
@@ -50,6 +62,10 @@ public class PlaylistService {
         return playlistRepository.findByUser(user);
     }
 
+    public List<Playlist> getAllPublicPlaylists() {
+        return playlistRepository.findByIsPublicTrue();
+    }
+
     public Playlist getPlaylistById(Long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Playlist no encontrada con ID: " + id));
@@ -57,7 +73,18 @@ public class PlaylistService {
 
     public Playlist updatePlaylist(Long id, Playlist playlistDetails, String username) {
         Playlist playlist = validatePlaylistOwnership(id, username);
-        playlist.setName(playlistDetails.getName());
+        // Validación de nombre
+        if (playlistDetails.getName() == null || playlistDetails.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la playlist no puede estar vacío");
+        }
+        // Verifica duplicados para el usuario (excluyendo la actual)
+        List<Playlist> userPlaylists = playlistRepository.findByUser(playlist.getUser());
+        if (userPlaylists.stream().anyMatch(p -> !p.getId().equals(id) && p.getName().equalsIgnoreCase(playlistDetails.getName().trim()))) {
+            throw new IllegalArgumentException("Ya existe otra playlist con ese nombre para el usuario");
+        }
+        playlist.setName(playlistDetails.getName().trim());
+        // Actualiza visibilidad pública
+        playlist.setIsPublic(playlistDetails.getIsPublic());
         logger.info("Usuario {} actualizó la playlist: {}", username, playlist.getName());
         return playlistRepository.save(playlist);
     }

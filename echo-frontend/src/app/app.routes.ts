@@ -3,6 +3,8 @@ import { LoginComponent } from './components/login/login.component';
 import { SongListComponent } from './components/song-list/song-list.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SongUploadComponent } from './components/song-upload/song-upload.component';
+import { PlaylistsPageComponent } from './components/playlists/playlists-page.component';
+import { PublicPlaylistsPageComponent } from './components/public-playlists/public-playlists-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,6 +16,14 @@ export const routes: Routes = [
   {
     path: 'upload-song',
     component: SongUploadComponent,
+  },
+  {
+    path: 'playlists',
+    component: PlaylistsPageComponent,
+  },
+  {
+    path: 'public-playlists',
+    component: PublicPlaylistsPageComponent,
   },
   {
     path: '',

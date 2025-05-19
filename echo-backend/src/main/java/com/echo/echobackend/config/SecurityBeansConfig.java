@@ -71,6 +71,7 @@ public class SecurityBeansConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/audio/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/songs").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/playlists/public").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

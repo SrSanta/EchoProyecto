@@ -8,6 +8,7 @@ import { PlayerStateService } from './services/player-state.service'; // Importa
 import { Song } from './models/song.model'; // Importar Song
 import { SongPlayerComponent } from './components/song-player/song-player.component'; // Importar SongPlayerComponent
 import { PlaybackQueueComponent } from './components/playback-queue/playback-queue.component'; // Importar PlaybackQueueComponent
+import { PlaylistsPageComponent } from './components/playlists/playlists-page.component';
 
 import { PlaybackQueueService } from './services/playback-queue.service';
 import { takeUntil } from 'rxjs/operators';
@@ -16,7 +17,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, AsyncPipe, CommonModule, SongPlayerComponent, PlaybackQueueComponent], // Añadir CommonModule, SongPlayerComponent y PlaybackQueueComponent
+  imports: [RouterOutlet, RouterLink, AsyncPipe, CommonModule, SongPlayerComponent, PlaybackQueueComponent, PlaylistsPageComponent], // Añadir CommonModule, SongPlayerComponent, PlaybackQueueComponent y PlaylistsPageComponent
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
