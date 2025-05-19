@@ -1,0 +1,13 @@
+<div class="playback-queue">
+  <h3>Cola de reproducción</h3>
+  <div *ngIf="loading">Cargando...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+    <ul *ngIf="!loading && queue.length">
+      <li *ngFor="let item of queue" [ngClass]="{'playing': item.song.id === currentSongId}">
+        {{ item.song.title }}
+        <button (click)="item.song.id !== undefined && removeSong(item.song.id)">Quitar</button>
+      </li>
+    </ul>
+  <div *ngIf="!loading && !queue.length">La cola está vacía.</div>
+  <button (click)="clearQueue()" [disabled]="!queue.length">Limpiar cola</button>
+</div>

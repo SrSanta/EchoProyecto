@@ -1,7 +1,9 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, inject} from "@angular/core";
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from "@angular/core";
 import { Song } from "../../models/song.model";
 import { LikeService } from "../../services/like.service";
 import { AuthService } from "../../services/auth.service";
+import { PlaybackQueueService } from "../../services/playback-queue.service";
+import { PlayerStateService } from '../../services/player-state.service';
 import { CommonModule } from "@angular/common";
 import { environment } from "../../../environments/environment";
 
@@ -22,6 +24,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
 
   private likeService = inject(LikeService);
   private authService = inject(AuthService);
+  private playbackQueueService = inject(PlaybackQueueService);
+  private playerStateService = inject(PlayerStateService);
 
   ngOnInit(): void {
     this.userId = this.authService.getCurrentUserId();
@@ -90,4 +94,47 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       );
     }
   }
+
+  onSongEnded(): void {
+    this.playNext();
+  }
+
+  playNext(): void {
+    this.authService.currentUser$.subscribe(username => {
+      if (!username) return;
+      this.playbackQueueService.getQueue(username).subscribe({
+        next: (queue) => {
+          if (!queue || queue.length === 0) return;
+          const idx = queue.findIndex(item => item.song.id === this.song?.id);
+          if (idx !== -1 && idx + 1 < queue.length) {
+            const nextSong = queue[idx + 1].song;
+            this.playerStateService.playSong(nextSong);
+          }
+        },
+        error: (err) => {
+          console.error('Error obteniendo la cola de reproducción:', err);
+        }
+      });
+    });
+  }
+
+  playPrevious(): void {
+    this.authService.currentUser$.subscribe(username => {
+      if (!username) return;
+      this.playbackQueueService.getQueue(username).subscribe({
+        next: (queue) => {
+          if (!queue || queue.length === 0) return;
+          const idx = queue.findIndex(item => item.song.id === this.song?.id);
+          if (idx > 0) {
+            const prevSong = queue[idx - 1].song;
+            this.playerStateService.playSong(prevSong);
+          }
+        },
+        error: (err) => {
+          console.error('Error obteniendo la cola de reproducción:', err);
+        }
+      });
+    });
+  }
 }
+

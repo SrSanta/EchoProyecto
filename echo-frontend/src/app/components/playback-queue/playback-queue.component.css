@@ -1,0 +1,37 @@
+.playback-queue {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fafafa;
+  margin-bottom: 1rem;
+}
+.playback-queue h3 {
+  margin-top: 0;
+}
+.playback-queue ul {
+  list-style: none;
+  padding: 0;
+}
+.playback-queue li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+.playback-queue button {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.playback-queue button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.error {
+  color: #e74c3c;
+  margin-bottom: 0.5rem;
+}

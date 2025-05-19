@@ -7,10 +7,12 @@
     }
     <h3>{{ song.title }} - {{ song.user.username }}</h3>
   </div>
-  <div>
-    <audio [src]="audioUrl" controls autoplay>
+  <div class="player-controls">
+    <button (click)="playPrevious()">⏮️ Anterior</button>
+    <audio [src]="audioUrl" controls autoplay (ended)="onSongEnded()">
       Tu navegador no soporta el elemento de audio.
     </audio>
+    <button (click)="playNext()">Siguiente ⏭️</button>
   </div>
   @if (userId !== null) {
     <div>
@@ -21,6 +23,7 @@
           <span>❤️ Dar Like</span>
         }
       </button>
+
     </div>
   } @else {
     <div>

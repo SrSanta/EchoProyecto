@@ -24,11 +24,14 @@
   <router-outlet></router-outlet>
 </main>
 
+<!-- Mini player flotante -->
+<div *ngIf="hasSongsInQueue" class="mini-player-float">
+  <app-playback-queue></app-playback-queue>
+  @if (currentSongForPlayer$ | async; as currentSong) {
+    <app-song-player [song]="currentSong"></app-song-player>
+  }
+</div>
+
 <footer>
   <p>&copy; {{ getYear() }} Echo App. Todos los derechos reservados.</p>
 </footer>
-
-<!-- Reproductor de música global -->
-@if (currentSongForPlayer$ | async; as currentSong) {
-  <app-song-player [song]="currentSong"></app-song-player>
-}
