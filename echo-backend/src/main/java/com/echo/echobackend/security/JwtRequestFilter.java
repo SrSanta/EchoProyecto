@@ -30,8 +30,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Si la petición es para el endpoint de login, no necesitamos verificar un token JWT
-        if (request.getServletPath().startsWith("/api/auth/login")) {
+        // Permitir que cualquier petición OPTIONS pase sin validación JWT
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Si la petición es para cualquier endpoint de autenticación, no necesitamos verificar un token JWT
+        if (request.getServletPath().startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
