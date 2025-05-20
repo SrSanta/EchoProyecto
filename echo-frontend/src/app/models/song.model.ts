@@ -4,6 +4,7 @@ import { User } from './user.model';
 export interface Song {
   id?: number;
   title: string;
+  artist?: string;
   genre: Genre;
   user: User;
   audioFilename?: string;

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PlaybackHistoryComponent } from './components/playback-history/playback-history.component';
 import { LoginComponent } from './components/login/login.component';
 import { SongListComponent } from './components/song-list/song-list.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -24,6 +25,10 @@ export const routes: Routes = [
   {
     path: 'public-playlists',
     component: PublicPlaylistsPageComponent,
+  },
+  {
+    path: 'playback-history',
+    component: PlaybackHistoryComponent
   },
   {
     path: '',

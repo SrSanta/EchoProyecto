@@ -4,6 +4,7 @@ import { LikeService } from "../../services/like.service";
 import { AuthService } from "../../services/auth.service";
 import { PlaybackQueueService } from "../../services/playback-queue.service";
 import { PlayerStateService } from '../../services/player-state.service';
+import { PlaybackHistoryService } from '../../services/playback-history.service';
 import { CommonModule } from "@angular/common";
 import { environment } from "../../../environments/environment";
 
@@ -26,6 +27,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   private authService = inject(AuthService);
   private playbackQueueService = inject(PlaybackQueueService);
   private playerStateService = inject(PlayerStateService);
+  private playbackHistoryService = inject(PlaybackHistoryService);
 
   ngOnInit(): void {
     this.userId = this.authService.getCurrentUserId();
@@ -43,6 +45,16 @@ export class SongPlayerComponent implements OnInit, OnChanges {
         this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
       }
       this.isLiked = false;
+
+      // Registrar reproducción en historial
+      const username = this.authService.getUsername && this.authService.getUsername();
+      if (username && this.song && typeof this.song.id === 'number') {
+        this.playbackHistoryService.recordPlayback(username, this.song.id).subscribe({
+          error: (err) => {
+            console.error('Error registrando reproducción en historial:', err);
+          }
+        });
+      }
 
       if (this.userId !== null && this.song.id !== undefined) {
         this.likeService.isSongLikedByUser(this.song.id).subscribe({
