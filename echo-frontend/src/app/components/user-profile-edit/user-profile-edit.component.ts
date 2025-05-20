@@ -17,6 +17,12 @@ export class UserProfileEditComponent implements OnInit {
   loading = true;
   error: string | null = null;
   success: string | null = null;
+  // Campos y mensajes para cambio de contraseña
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  passwordError: string | null = null;
+  passwordSuccess: string | null = null;
 
   private toDisplayString(val: any): string {
     if (val == null) return '';
@@ -94,8 +100,54 @@ export class UserProfileEditComponent implements OnInit {
         this.success = 'Perfil actualizado con éxito';
       },
       error: (err: HttpErrorResponse) => {
-        this.error = this.toDisplayString(err.error);
+        // Si el backend devuelve un string plano de error, úsalo directamente
+        if (typeof err.error === 'string') {
+          this.error = err.error;
+        } else if (err.error && err.error.message) {
+          this.error = err.error.message;
+        } else {
+          this.error = 'Ocurrió un error inesperado.';
+        }
         this.success = null;
+      }
+    });
+  }
+
+  changePassword() {
+    this.passwordError = null;
+    this.passwordSuccess = null;
+    if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+      this.passwordError = 'Completa todos los campos';
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordError = 'Las contraseñas no coinciden';
+      return;
+    }
+    // Llama al endpoint de cambio de contraseña (ajusta la URL si es necesario)
+    this.http.put(`${environment.apiUrl}/api/users/${this.user.id}/password`, {
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    }).subscribe({
+      next: (res: any) => {
+        // Si el backend devuelve un string plano, úsalo directamente
+        // Siempre muestra el mensaje tal como lo envía el backend
+        this.passwordSuccess = typeof res === 'string' ? res : (res?.message || 'Contraseña cambiada con éxito');
+        this.passwordError = null;
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+      },
+      error: (err: HttpErrorResponse) => {
+        // Siempre muestra el mensaje tal como lo envía el backend
+        if (typeof err.error === 'string') {
+          this.passwordError = err.error;
+        } else if (err.error && err.error.message) {
+          this.passwordError = err.error.message;
+        } else {
+          this.passwordError = 'Ocurrió un error inesperado.';
+        }
+        this.passwordSuccess = null;
       }
     });
   }

@@ -104,11 +104,31 @@ public class UserController {
 
 
     @PutMapping("/{id}/password")
-    @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
-    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest, java.security.Principal principal) {
         String newPassword = passwordRequest.get("newPassword");
         if (newPassword == null || newPassword.trim().isEmpty()) {
             return new ResponseEntity<>("La nueva contraseña es obligatoria", HttpStatus.BAD_REQUEST);
+        }
+        // Solo el dueño del perfil o un admin puede cambiar la contraseña
+        String username = principal.getName();
+        Optional<User> authUserOpt = userService.findByUsername(username);
+        if (authUserOpt.isPresent()) {
+            User authUser = authUserOpt.get();
+            boolean isAdmin = authUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+            if (!isAdmin && !authUser.getId().equals(id)) {
+                return new ResponseEntity<>("No tienes permiso para cambiar la contraseña de este usuario", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Usuario autenticado no encontrado", HttpStatus.FORBIDDEN);
+        }
+        String currentPassword = passwordRequest.get("currentPassword");
+        if (currentPassword == null || currentPassword.trim().isEmpty()) {
+            return new ResponseEntity<>("La contraseña actual es obligatoria", HttpStatus.BAD_REQUEST);
+        }
+        User user = userService.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (!userService.checkPassword(user, currentPassword)) {
+            return new ResponseEntity<>("La contraseña actual no es correcta", HttpStatus.FORBIDDEN);
         }
         userService.changePassword(id, newPassword);
         return ResponseEntity.ok("Contraseña actualizada exitosamente");

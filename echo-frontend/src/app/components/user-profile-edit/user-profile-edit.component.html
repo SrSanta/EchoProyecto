@@ -9,6 +9,7 @@
   </form>
   <div *ngIf="success" class="success">{{ success }}</div>
   <form (submit)="$event.preventDefault(); saveChanges();">
+    <!-- Editar datos perfil -->
     <label for="username">Nombre de usuario:</label>
     <input type="text" id="username" [(ngModel)]="newUsername" name="username">
     <label for="email">Email:</label>
@@ -19,3 +20,17 @@
 </div>
 <div *ngIf="loading">Cargando perfil para editar...</div>
 <div *ngIf="error && !loading" class="error">{{ error }}</div>
+
+<!-- Cambiar contraseña -->
+<form (submit)="$event.preventDefault(); changePassword();" class="change-password-form">
+  <h3>Cambiar contraseña</h3>
+  <label for="currentPassword">Contraseña actual:</label>
+  <input type="password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required>
+  <label for="newPassword">Nueva contraseña:</label>
+  <input type="password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required>
+  <label for="confirmPassword">Confirmar nueva contraseña:</label>
+  <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+  <button type="submit">Cambiar contraseña</button>
+  <div *ngIf="passwordSuccess" class="success">{{ passwordSuccess }}</div>
+  <div *ngIf="passwordError" class="error">{{ passwordError }}</div>
+</form>
