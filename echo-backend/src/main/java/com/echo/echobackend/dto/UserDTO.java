@@ -11,6 +11,9 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
+    // Imagen de perfil opcional (nombre de archivo o URL relativa)
+    private String profileImage;
+
     private Long id;
 
     @NotNull(message = "Username cannot be null")

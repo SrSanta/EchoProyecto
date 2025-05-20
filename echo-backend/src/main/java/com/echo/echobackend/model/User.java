@@ -13,6 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
 
+    // Imagen de perfil opcional (nombre de archivo o URL relativa)
+    private String profileImage;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

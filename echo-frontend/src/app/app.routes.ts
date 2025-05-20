@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './components/user-profile-edit/user-profile-edit.component';
 import { PlaybackHistoryComponent } from './components/playback-history/playback-history.component';
 import { LoginComponent } from './components/login/login.component';
 import { SongListComponent } from './components/song-list/song-list.component';
@@ -29,6 +31,16 @@ export const routes: Routes = [
   {
     path: 'playback-history',
     component: PlaybackHistoryComponent
+  },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
+    children: [
+      {
+        path: 'edit',
+        component: UserProfileEditComponent
+      }
+    ]
   },
   {
     path: '',

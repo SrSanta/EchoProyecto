@@ -47,17 +47,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
+        System.out.println("[JWT DEBUG] Authorization header: " + authHeader);
+
         // Verificamos si la cabecera existe
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
-                // Usamos JwtUtil para extraer el nombre de usuario del token.
                 username = jwtUtil.extractUsername(jwt);
-            } catch (Exception e) {}
-        } else {}
+                System.out.println("[JWT DEBUG] Token extraído, usuario: " + username);
+            } catch (Exception e) {
+                System.out.println("[JWT DEBUG] Error al extraer usuario del token: " + e.getMessage());
+            }
+        } else {
+            System.out.println("[JWT DEBUG] No hay cabecera Authorization válida");
+        }
 
         // Validar el Token y Establecer la Autenticación en Spring Security
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            System.out.println("[JWT DEBUG] Intentando autenticar usuario " + username);
+
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

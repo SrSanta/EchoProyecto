@@ -63,6 +63,8 @@ public class UserService {
     }
 
     public User updateUser(Long id, User userDetails) {
+    // Permitir actualizar profileImage
+
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());

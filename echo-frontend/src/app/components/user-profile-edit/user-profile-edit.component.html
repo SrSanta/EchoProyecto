@@ -1,0 +1,21 @@
+<div class="profile-edit-container" *ngIf="!loading && user">
+  <h2>Editar perfil de {{ user.username }}</h2>
+  <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
+  <form (submit)="$event.preventDefault(); uploadProfileImage();">
+    <label for="profileImage">Cambiar imagen de perfil:</label>
+    <input type="file" id="profileImage" (change)="onFileSelected($event)" accept="image/*">
+    <button type="submit" [disabled]="uploading">Subir Imagen</button>
+    <span *ngIf="uploading">Subiendo...</span>
+  </form>
+  <div *ngIf="success" class="success">{{ success }}</div>
+  <form (submit)="$event.preventDefault(); saveChanges();">
+    <label for="username">Nombre de usuario:</label>
+    <input type="text" id="username" [(ngModel)]="newUsername" name="username">
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="newEmail" name="email">
+    <button type="submit">Guardar Cambios</button>
+  </form>
+  <div *ngIf="error && error.trim() && error !== '[object Object]' && error !== '{}'" class="error">{{ error }}</div>
+</div>
+<div *ngIf="loading">Cargando perfil para editar...</div>
+<div *ngIf="error && !loading" class="error">{{ error }}</div>

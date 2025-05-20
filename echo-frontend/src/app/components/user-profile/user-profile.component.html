@@ -1,0 +1,17 @@
+<div class="profile-container" *ngIf="!loading && user">
+  <h2>Perfil de {{ user.username }}</h2>
+  <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
+  <p>Email: {{ user.email }}</p>
+  <p *ngIf="user.isProfilePublic">Perfil público</p>
+
+  <a href="#" (click)="toggleEditMode(); $event.preventDefault()" class="edit-profile-btn">
+    {{ editMode ? 'Cerrar edición' : 'Editar perfil' }}
+  </a>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>
+<div *ngIf="loading">Cargando perfil...</div>
+<div *ngIf="error && !loading" class="error">{{ error }}</div>
+<!-- El formulario de edición solo aparece si editMode es true -->
+
+<app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
