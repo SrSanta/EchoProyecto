@@ -6,17 +6,19 @@ import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
+import { PlaylistsPageComponent } from '../playlists/playlists-page.component';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, UserProfileEditComponent],
+  imports: [CommonModule, RouterModule, UserProfileEditComponent, PlaylistsPageComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
   editMode = false;
+  showPlaylists = false;
   user: any = null;
   loading = true;
   error: string | null = null;
@@ -27,6 +29,14 @@ export class UserProfileComponent implements OnInit {
 
   toggleEditMode() {
     this.editMode = !this.editMode;
+    this.showPlaylists = false;
+  }
+
+  togglePlaylists() {
+    this.showPlaylists = !this.showPlaylists;
+    if (this.showPlaylists) {
+      this.editMode = false;
+    }
   }
 
   ngOnInit(): void {

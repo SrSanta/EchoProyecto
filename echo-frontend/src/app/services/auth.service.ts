@@ -92,6 +92,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  isAuthenticated(): boolean {
+    return this.getToken() !== null;
+  }
+
   getCurrentUserId(): number | null {
     const token = this.getToken();
     if (!token || !isPlatformBrowser(this.platformId)) {

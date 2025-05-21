@@ -1,17 +1,35 @@
 <div class="profile-container" *ngIf="!loading && user">
-  <h2>Perfil de {{ user.username }}</h2>
-  <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
-  <p>Email: {{ user.email }}</p>
-  <p *ngIf="user.isProfilePublic">Perfil público</p>
+  <div class="profile-header">
+    <div class="profile-info">
+      <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
+      <div class="profile-details">
+        <h2>{{ user.username }}</h2>
+        <p>Email: {{ user.email }}</p>
+        <p *ngIf="user.isProfilePublic" class="public-badge">Perfil público</p>
+      </div>
+    </div>
 
-  <a href="#" (click)="toggleEditMode(); $event.preventDefault()" class="edit-profile-btn">
-    {{ editMode ? 'Cerrar edición' : 'Editar perfil' }}
-  </a>
+    <div class="profile-actions">
+      <button (click)="toggleEditMode()" class="btn" [class.active]="editMode">
+        {{ editMode ? 'Cerrar edición' : 'Editar perfil' }}
+      </button>
+      <button (click)="togglePlaylists()" class="btn" [class.active]="showPlaylists">
+        {{ showPlaylists ? 'Ocultar playlists' : 'Mis playlists' }}
+      </button>
+    </div>
+  </div>
 
   <div *ngIf="error" class="error">{{ error }}</div>
 </div>
+
 <div *ngIf="loading">Cargando perfil...</div>
 <div *ngIf="error && !loading" class="error">{{ error }}</div>
-<!-- El formulario de edición solo aparece si editMode es true -->
 
+<!-- Formulario de edición -->
 <app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
+
+<!-- Sección de playlists -->
+<div *ngIf="showPlaylists" class="playlists-section">
+  <h3>Mis Playlists</h3>
+  <app-playlists-page></app-playlists-page>
+</div>

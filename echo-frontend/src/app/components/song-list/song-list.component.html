@@ -8,7 +8,7 @@
       <h2>Lista de canciones</h2>
       <ul>
         @for (song of songs; track song.id) {
-          <li class="song-item">
+          <li class="song-item" (contextmenu)="onSongContextMenu($event, song.id); $event.preventDefault()">
             <span (click)="playSong(song)" style="cursor:pointer;">
               @if (song.thumbnailFilename) {
                 <img [src]="environment.apiUrl + '/audio/' + song.thumbnailFilename" alt="Portada de {{song.title}}" class="song-thumbnail-small">
@@ -17,15 +17,7 @@
               }
               <strong>{{ song.title }}</strong> - {{ song.user.username }} ({{ song.genre.name }})
             </span>
-            <ng-container *ngIf="song.id as songId">
-              <button (click)="addToQueue(song); $event.stopPropagation();"
-                      [disabled]="isAddingToQueue[songId]"
-                      class="add-queue-btn">
-                Añadir a cola
-              </button>
-              <span *ngIf="addToQueueSuccess[songId] === true" class="success-feedback">✔️ Añadido</span>
-              <span *ngIf="addToQueueSuccess[songId] === false" class="error-feedback">❌ Error</span>
-            </ng-container>
+            <!-- Acciones de la canción eliminadas -->
           </li>
         }
       </ul>
@@ -33,4 +25,25 @@
       <div>No hay canciones disponibles.</div>
     }
   }
+}
+
+<!-- Menú contextual para añadir a playlist -->
+<app-context-menu
+  #contextMenu
+  *ngIf="showContextMenu && selectedSongId !== null"
+  [show]="showContextMenu"
+  [position]="contextMenuPosition"
+  [playlists]="userPlaylists"
+  [songId]="selectedSongId"
+  (addToPlaylist)="onAddToPlaylistHandler($event)"
+  (addToQueue)="onAddToQueueFromContextMenu($event)"
+  (closeMenu)="showContextMenu = false">
+</app-context-menu>
+
+<!-- Mensaje de error del menú contextual -->
+@if (contextMenuError) {
+  <div class="context-menu-error">
+    {{ contextMenuError }}
+    <button (click)="contextMenuError = null">×</button>
+  </div>
 }

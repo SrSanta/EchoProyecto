@@ -1,0 +1,67 @@
+<div 
+  class="context-menu" 
+  *ngIf="show" 
+  [ngStyle]="{'left.px': position.x, 'top.px': position.y}"
+  (click)="stopPropagation($event)">
+  
+  <!-- Opción para añadir a la cola -->
+  <div class="menu-item" (click)="onAddToQueue()" [class.disabled]="addingToQueue">
+    <div class="menu-item-content">
+      <i class="fas fa-list"></i>
+      <span>Añadir a la cola</span>
+    </div>
+    <div *ngIf="addingToQueue" class="menu-item-loader">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  
+  <div class="menu-divider"></div>
+  
+  <!-- Opción para añadir a playlist con submenú -->
+  <div class="menu-item has-submenu">
+    <div class="menu-item-content" (click)="togglePlaylistSubmenu($event)">
+      <i class="fas fa-plus"></i>
+      <span>Añadir a playlist</span>
+      <div class="menu-item-arrow">
+        <fa-icon [icon]="faChevronRight" size="xs"></fa-icon>
+      </div>
+    </div>
+    
+    <!-- Submenú de playlists -->
+    <div class="submenu" [class.show]="showPlaylistSubmenu">
+      <div class="submenu-header" (click)="$event.stopPropagation()">
+        <button class="back-button" (click)="showPlaylistSubmenu = false">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <span>Tus playlists</span>
+      </div>
+      
+      <div class="menu-items">
+        <div 
+          *ngFor="let playlist of playlists" 
+          class="menu-item"
+          (click)="onAddToPlaylist(playlist.id, $event)">
+          <div class="menu-item-content">
+            <i class="fas fa-music"></i>
+            <span>{{ playlist.name }}</span>
+          </div>
+          <div class="menu-item-badges">
+            <span *ngIf="playlist.isPublic" class="badge public">Pública</span>
+            <span *ngIf="!playlist.isPublic" class="badge private">Privada</span>
+          </div>
+        </div>
+        
+        <div *ngIf="playlists.length === 0" class="no-playlists">
+          <i class="fas fa-folder-plus"></i>
+          <p>No hay playlists disponibles.</p>
+          <small>Crea una desde tu perfil</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mensaje de error si es necesario -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+</div>

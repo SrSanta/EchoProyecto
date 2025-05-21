@@ -128,24 +128,33 @@ export class UserProfileEditComponent implements OnInit {
     this.http.put(`${environment.apiUrl}/api/users/${this.user.id}/password`, {
       currentPassword: this.currentPassword,
       newPassword: this.newPassword
+    }, {
+      responseType: 'text'  // Esperamos una respuesta de texto plano
     }).subscribe({
       next: (res: any) => {
-        // Si el backend devuelve un string plano, úsalo directamente
-        // Siempre muestra el mensaje tal como lo envía el backend
-        this.passwordSuccess = typeof res === 'string' ? res : (res?.message || 'Contraseña cambiada con éxito');
+        console.log('Respuesta exitosa del servidor:', res);
+        // Usamos el mensaje de la respuesta o uno por defecto
+        this.passwordSuccess = res || 'Contraseña actualizada exitosamente';
         this.passwordError = null;
         this.currentPassword = '';
         this.newPassword = '';
         this.confirmPassword = '';
       },
       error: (err: HttpErrorResponse) => {
+        console.error('Error del servidor:', err);
+        console.error('Error.error:', err.error);
+        console.error('Status:', err.status);
+        console.error('Status Text:', err.statusText);
+        
         // Siempre muestra el mensaje tal como lo envía el backend
         if (typeof err.error === 'string') {
           this.passwordError = err.error;
         } else if (err.error && err.error.message) {
           this.passwordError = err.error.message;
+        } else if (err.message) {
+          this.passwordError = err.message;
         } else {
-          this.passwordError = 'Ocurrió un error inesperado.';
+          this.passwordError = `Error inesperado (${err.status || 'sin código'})`;
         }
         this.passwordSuccess = null;
       }
