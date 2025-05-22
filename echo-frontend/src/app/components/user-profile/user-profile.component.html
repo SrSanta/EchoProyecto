@@ -1,35 +1,65 @@
-<div class="profile-container" *ngIf="!loading && user">
-  <div class="profile-header">
-    <div class="profile-info">
-      <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
-      <div class="profile-details">
-        <h2>{{ user.username }}</h2>
-        <p>Email: {{ user.email }}</p>
-        <p *ngIf="user.isProfilePublic" class="public-badge">Perfil público</p>
-      </div>
+<div class="vaporwave-effect">
+  <!-- Main Profile Container -->
+  <div class="profile-container" *ngIf="!loading && user">
+    <div class="window-titlebar">
+      <span>Perfil de {{ user.username }}</span>
+      <span class="window-controls">
+        <span class="window-minimize">-</span>
+        <span class="window-maximize">□</span>
+        <span class="window-close">✕</span>
+      </span>
     </div>
+    
+    <div class="window-content">
+      <div class="profile-header">
+        <div class="profile-info">
+          <div class="profile-image-container">
+            <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
+          </div>
+          <div class="profile-details">
+            <h2>{{ user.username }}</h2>
+            <p>📧 {{ user.email }}</p>
+            <p *ngIf="user.isProfilePublic" class="public-badge">🌐 Perfil público</p>
+          </div>
+        </div>
 
-    <div class="profile-actions">
-      <button (click)="toggleEditMode()" class="btn" [class.active]="editMode">
-        {{ editMode ? 'Cerrar edición' : 'Editar perfil' }}
-      </button>
-      <button (click)="togglePlaylists()" class="btn" [class.active]="showPlaylists">
-        {{ showPlaylists ? 'Ocultar playlists' : 'Mis playlists' }}
-      </button>
+        <div class="profile-actions">
+          <button (click)="toggleEditMode()" class="btn" [class.active]="editMode">
+            {{ editMode ? '❌ Cerrar edición' : '✏️ Editar perfil' }}
+          </button>
+          <button (click)="togglePlaylists()" class="btn" [class.active]="showPlaylists">
+            {{ showPlaylists ? '📚 Ocultar playlists' : '🎵 Mis playlists' }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="error" class="error">{{ error }}</div>
-</div>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-message">
+    <span class="blink">⏳</span> Cargando perfil...
+  </div>
 
-<div *ngIf="loading">Cargando perfil...</div>
-<div *ngIf="error && !loading" class="error">{{ error }}</div>
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    ⚠️ {{ error }}
+    <button (click)="error = null" class="close-btn">✕</button>
+  </div>
 
-<!-- Formulario de edición -->
-<app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
+  <!-- Profile Edit Form -->
+  <app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
 
-<!-- Sección de playlists -->
-<div *ngIf="showPlaylists" class="playlists-section">
-  <h3>Mis Playlists</h3>
-  <app-playlists-page></app-playlists-page>
+  <!-- Playlists Section -->
+  <div *ngIf="showPlaylists" class="playlists-section">
+    <div class="window-titlebar">
+      <span>Mis Playlists</span>
+      <span class="window-controls">
+        <span class="window-minimize">-</span>
+        <span class="window-close" (click)="showPlaylists = false">✕</span>
+      </span>
+    </div>
+    <div class="window-content">
+      <app-playlists-page></app-playlists-page>
+    </div>
+  </div>
 </div>
