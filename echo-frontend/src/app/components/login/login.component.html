@@ -1,7 +1,48 @@
-<form (ngSubmit)="login()">
-    <input type="text" [(ngModel)]="username" name="username" placeholder="Usuario" required />
-    <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
-    <button type="submit">Entrar</button>
-    <div *ngIf="error" style="color: red">{{ error }}</div>
-  </form>
-  
+<div class="window vaporwave-effect" style="max-width: 400px; margin: 50px auto;">
+  <div class="window-titlebar">
+    <span>Iniciar sesión en Echo</span>
+    <span style="font-family: 'Wingdings'">r</span>
+  </div>
+  <div class="window-content">
+    <form (ngSubmit)="login()" style="display: flex; flex-direction: column; gap: 15px;">
+      <div>
+        <label for="username" style="display: block; margin-bottom: 5px; font-weight: bold;">Usuario:</label>
+        <input 
+          type="text" 
+          id="username"
+          [(ngModel)]="username" 
+          name="username" 
+          placeholder="Nombre de usuario" 
+          required 
+          style="width: 100%;"
+        />
+      </div>
+      
+      <div>
+        <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Contraseña:</label>
+        <input 
+          type="password" 
+          id="password"
+          [(ngModel)]="password" 
+          name="password" 
+          placeholder="••••••••" 
+          required 
+          style="width: 100%;"
+        />
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn" (click)="navigateToRegister()" style="background: #c0c0c0;">
+          Registrar
+        </button>
+        <button type="submit" class="btn" style="background: #000080; color: white; border-color: #000080 #000060 #000060 #000080;">
+          Entrar
+        </button>
+      </div>
+      
+      <div *ngIf="error" class="error-message" style="margin-top: 15px; padding: 8px; background: #ffdddd; border: 2px solid #ff0000; color: #ff0000; font-weight: bold;">
+        ⚠ {{ error }}
+      </div>
+    </form>
+  </div>
+</div>
