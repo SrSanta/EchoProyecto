@@ -5,54 +5,62 @@
   
   @if (song) {
     <div class="cd-player-display">
-      <div class="track-info">
-        <div class="track-number">[{{ currentTrackNumber || '--' }}]</div>
-        <div class="time-display">{{ currentTime || '00:00' }}</div>
+      <div class="track-info-container">
+        <div class="track-details">
+          <div class="cd-player-artist">
+            <span class="label">Artist:</span>
+            <div class="value">{{ song.user.username || 'Unknown' }}</div>
+          </div>
+          
+          <div class="cd-player-title">
+            <span class="label">Title:</span>
+            <div class="value">{{ song.title || 'No title' }}</div>
+          </div>
+        </div>
+        
+        <div class="track-image" *ngIf="thumbnailUrl">
+          <img [src]="thumbnailUrl" alt="Album Art" class="album-art">
+        </div>
       </div>
-      
-      <div class="cd-player-artist">
-        <span class="label">Artist:</span>
-        <div class="value">{{ song.user.username || 'Unknown' }}</div>
-      </div>
-      
-      <div class="cd-player-title">
-        <span class="label">Title:</span>
-        <div class="value">{{ song.title || 'No title' }}</div>
-      </div>
-      
-
     </div>
     
     <div class="cd-player-controls">
-      <button class="control-btn" (click)="playPrevious()" title="Previous">
-        <span class="icon">⏮</span>
-      </button>
-      <button class="control-btn" (click)="playOrPause()" [class.playing]="isPlaying" title="Play/Pause">
-        <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
-      </button>
-      <button class="control-btn" (click)="stopPlayback()" title="Stop">
-        <span class="icon">⏹</span>
-      </button>
-      <button class="control-btn" (click)="playNext()" title="Next">
-        <span class="icon">⏭</span>
-      </button>
-      <button class="control-btn eject" (click)="eject()" title="Eject">
-        <span class="icon">⏏</span>
-      </button>
+      <div class="controls-wrapper">
+        <div class="controls-row">
+          <button class="control-btn" (click)="playPrevious()" title="Previous">
+            <span class="icon">⏮</span>
+          </button>
+          <button class="control-btn" (click)="playOrPause()" [class.playing]="isPlaying" title="Play/Pause">
+            <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
+          </button>
+          <button class="control-btn" (click)="stopPlayback()" title="Stop">
+            <span class="icon">⏹</span>
+          </button>
+          <button class="control-btn" (click)="playNext()" title="Next">
+            <span class="icon">⏭</span>
+          </button>
+          <button class="control-btn" [class.active]="isLoopEnabled" (click)="toggleLoop()" title="Toggle Loop">
+            <span class="icon">🔁</span>
+          </button>
+          <button class="control-btn" [class.active]="isShuffleEnabled" (click)="toggleShuffle()" title="Shuffle">
+            <span class="icon">🔀</span>
+          </button>
+          <button class="control-btn eject" (click)="clearQueue()" title="Clear Queue">
+            <span class="icon">⏏</span>
+          </button>
+        </div>
+      </div>
       
       <div class="progress-container">
-        <div class="progress-bar" [style.width.%]="progressPercentage"></div>
-      </div>
-    </div>
-    
-    <div class="cd-player-status">
-      <div class="status-item">
-        <span class="label">Total:</span>
-        <span class="value">{{ formatTime(duration) || '--:--' }}</span>
-      </div>
-      <div class="status-item">
-        <span class="label">Track:</span>
-        <span class="value">{{ currentTime || '00:00' }}</span>
+        <div class="progress-track" (click)="seek($event)">
+          <div class="progress-bar" [style.width.%]="progressPercentage">
+            <div class="progress-handle" *ngIf="song"></div>
+          </div>
+        </div>
+        <div class="progress-time">
+          <span>Track: {{ currentTime || '00:00' }}</span>
+          <span>Total: {{ durationDisplay || '00:00' }}</span>
+        </div>
       </div>
     </div>
     

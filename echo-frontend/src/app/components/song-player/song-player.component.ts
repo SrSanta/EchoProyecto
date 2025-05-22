@@ -30,6 +30,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   progressPercentage = 0;
   currentTrackNumber = 1;
   showQueue = false; // Controla si se muestra la cola de reproducción
+  isLoopEnabled = false; // Controla si está activado el bucle
+  isShuffleEnabled = false; // Controla si está activada la mezcla
   
   // URLs
   audioUrl = "";
@@ -213,6 +215,49 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   onMetadataLoaded(): void {
     if (!this.audioElement) return;
     this.duration = this.audioElement.duration;
+    this.formattedDuration = this.formatTime(this.duration);
+  }
+
+  // Propiedad para almacenar la duración formateada
+  formattedDuration: string = '00:00';
+
+  // Obtener el tiempo de duración formateado
+  get durationDisplay(): string {
+    return this.formattedDuration;
+  }
+
+  // Navegar a una posición específica en la canción
+  seek(event: MouseEvent): void {
+    if (!this.audioElement) return;
+    
+    const progressContainer = event.currentTarget as HTMLElement;
+    const rect = progressContainer.getBoundingClientRect();
+    const pos = (event.clientX - rect.left) / rect.width;
+    const seekTime = pos * this.duration;
+    
+    this.audioElement.currentTime = seekTime;
+    this.currentTime = this.formatTime(seekTime);
+    this.progressPercentage = (seekTime / this.duration) * 100;
+  }
+
+  // Retroceder 10 segundos
+  seekBackward(): void {
+    if (!this.audioElement) return;
+    
+    const newTime = Math.max(0, this.audioElement.currentTime - 10);
+    this.audioElement.currentTime = newTime;
+    this.currentTime = this.formatTime(newTime);
+    this.progressPercentage = (newTime / this.duration) * 100;
+  }
+
+  // Avanzar 10 segundos
+  seekForward(): void {
+    if (!this.audioElement) return;
+    
+    const newTime = Math.min(this.duration, this.audioElement.currentTime + 10);
+    this.audioElement.currentTime = newTime;
+    this.currentTime = this.formatTime(newTime);
+    this.progressPercentage = (newTime / this.duration) * 100;
   }
   
   // Play/Pause toggle
@@ -271,7 +316,44 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   
   onSongEnded(): void {
     this.isPlaying = false;
-    this.playNext();
+    if (this.isLoopEnabled) {
+      // Si el bucle está activado, reproducir la misma canción de nuevo
+      if (this.audioElement) {
+        this.audioElement.currentTime = 0;
+        this.audioElement.play().catch(console.error);
+        this.isPlaying = true;
+      }
+    } else {
+      // Si no hay bucle, pasar a la siguiente canción
+      this.playNext();
+    }
+  }
+
+  clearQueue(): void {
+    // Detenemos la reproducción
+    this.stopPlayback();
+    
+    // Limpiamos la cola
+    const username = this.authService.getUsername && this.authService.getUsername();
+    if (username) {
+      this.playbackQueueService.clearQueue(username).subscribe({
+        next: () => {
+          console.log('Queue cleared successfully');
+          this.playbackQueueService.notifyQueueUpdated();
+          
+          // Limpiamos la canción actual del reproductor
+          this.song = null as any;
+          this.audioUrl = '';
+          this.thumbnailUrl = '';
+          this.currentTime = '00:00';
+          this.progressPercentage = 0;
+          this.isPlaying = false;
+        },
+        error: (err) => {
+          console.error('Error clearing queue:', err);
+        }
+      });
+    }
   }
 
   playNext(): void {
@@ -311,5 +393,61 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       });
     });
   }
-}
 
+  // Alternar el estado de bucle
+  toggleLoop(): void {
+    this.isLoopEnabled = !this.isLoopEnabled;
+    if (this.audioElement) {
+      this.audioElement.loop = this.isLoopEnabled;
+    }
+  }
+
+  // Alternar el estado de mezcla
+  toggleShuffle(): void {
+    this.isShuffleEnabled = !this.isShuffleEnabled;
+    if (this.isShuffleEnabled) {
+      this.shuffleQueue();
+    }
+  }
+
+  // Mezclar la cola de reproducción
+  private shuffleQueue(): void {
+    const username = this.authService.getUsername();
+    if (!username) return;
+
+    this.playbackQueueService.getQueue(username).subscribe({
+      next: (queue) => {
+        if (queue.length > 1) {
+          // Crear una copia de la cola y mezclarla
+          const shuffledQueue = [...queue];
+          for (let i = shuffledQueue.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledQueue[i], shuffledQueue[j]] = [shuffledQueue[j], shuffledQueue[i]];
+          }
+          
+          // Actualizar el orden de las canciones
+          const updatedQueue = shuffledQueue.map((item, index) => ({
+            ...item,
+            songOrder: index
+          }));
+          
+          // Extraer los IDs en el nuevo orden
+          const songIds = updatedQueue.map(item => item.song?.id).filter((id): id is number => id !== undefined);
+          
+          if (songIds.length === 0) return;
+          
+          // Actualizar la cola en el servidor
+          this.playbackQueueService.setQueue(username, songIds).subscribe({
+            next: () => {
+              console.log('Cola mezclada correctamente');
+              // Notificar a los suscriptores que la cola ha sido actualizada
+              this.playbackQueueService.notifyQueueUpdated();
+            },
+            error: (err: any) => console.error('Error al mezclar la cola:', err)
+          });
+        }
+      },
+      error: (err: any) => console.error('Error al obtener la cola para mezclar:', err)
+    });
+  }
+}

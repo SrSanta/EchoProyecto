@@ -46,4 +46,11 @@ export class PlaybackQueueService {
       params: { username },
     });
   }
+
+  // Actualizar toda la cola de reproducción (usando reorder)
+  setQueue(username: string, songIds: number[]): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/reorder`, songIds, {
+      params: { username },
+    });
+  }
 }
