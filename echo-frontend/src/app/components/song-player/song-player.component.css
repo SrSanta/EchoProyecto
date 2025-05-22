@@ -288,16 +288,24 @@
 }
 
 /* Estilos para el panel de la cola de reproducción */
-/* Estilos para el panel de la cola */
 .playback-queue-panel {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s ease-out;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  margin-top: 5px;
+  padding: 0;
 }
 
-.queue-container.visible .playback-queue-panel {
-  max-height: 300px;
+.playback-queue-panel.visible {
+  max-height: 500px;
   overflow-y: auto;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  margin-top: 5px;
+  padding: 5px;
 }
 
 /* Estilos para el componente de cola de reproducción */

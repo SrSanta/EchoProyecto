@@ -82,7 +82,9 @@
     <button class="queue-toggle" (click)="showQueue = !showQueue">
       {{ showQueue ? '▲ Ocultar cola' : '▼ Mostrar cola' }}
     </button>
-    <app-playback-queue *ngIf="showQueue" class="playback-queue-panel"></app-playback-queue>
+    <div class="playback-queue-panel" [class.visible]="showQueue">
+      <app-playback-queue></app-playback-queue>
+    </div>
   </div>
 </div>
 

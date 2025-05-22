@@ -1,37 +1,76 @@
 .playback-queue {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
-  background: #fafafa;
-  margin-bottom: 1rem;
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
+  padding: 10px;
+  margin: 0;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 13px;
+  color: #000000;
 }
+
 .playback-queue h3 {
-  margin-top: 0;
+  margin: 0 0 10px 0;
+  padding: 5px 0;
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: 2px solid #808080;
 }
+
 .playback-queue ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
+
 .playback-queue li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  padding: 5px 8px;
+  margin: 4px 0;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  cursor: default;
 }
+
+.playback-queue li.playing {
+  background: #000080;
+  color: white;
+}
+
 .playback-queue button {
-  background: #e74c3c;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.3rem 0.8rem;
+  background: #c0c0c0;
+  color: #000000;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 3px 12px;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 12px;
   cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  margin-top: 10px;
 }
+
+.playback-queue button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
+}
+
 .playback-queue button:disabled {
-  background: #ccc;
+  color: #808080;
   cursor: not-allowed;
+  border-color: #c0c0c0 #808080 #808080 #c0c0c0;
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #808080, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #808080;
 }
+
 .error {
-  color: #e74c3c;
-  margin-bottom: 0.5rem;
+  color: #ff0000;
+  background: #ffd0d0;
+  padding: 5px 8px;
+  margin: 5px 0;
+  border: 1px solid #ff0000;
 }
