@@ -1,37 +1,90 @@
-@if (song) {
-  <div class="player-header">
-    @if (thumbnailUrl) {
-      <img [src]="thumbnailUrl" alt="Portada de {{song.title}}" class="song-thumbnail-large">
-    } @else {
-      <img src="assets/images/placeholder-thumbnail.png" alt="Sin portada" class="song-thumbnail-large">
-    }
-    <h3>{{ song.title }}<span *ngIf="song.user && song.user.username"> - {{ song.user.username }}</span></h3>
+<div class="cd-player">
+  <div class="cd-player-header">
+    <div class="cd-player-title">ECHO PLAYER</div>
   </div>
-  <div class="player-controls">
-    <button (click)="playPrevious()">⏮️ Anterior</button>
-    <audio [src]="audioUrl" controls autoplay (ended)="onSongEnded()">
-      Tu navegador no soporta el elemento de audio.
-    </audio>
-    <button (click)="playNext()">Siguiente ⏭️</button>
-  </div>
-  @if (userId !== null) {
-    <div>
-      <button (click)="toggleLike()">
-        @if (isLiked) {
-          <span>💔 Quitar Like</span>
-        } @else {
-          <span>❤️ Dar Like</span>
-        }
-      </button>
+  
+  @if (song) {
+    <div class="cd-player-display">
+      <div class="track-info">
+        <div class="track-number">[{{ currentTrackNumber || '--' }}]</div>
+        <div class="time-display">{{ currentTime || '00:00' }}</div>
+      </div>
+      
+      <div class="cd-player-artist">
+        <span class="label">Artist:</span>
+        <div class="value">{{ song.user.username || 'Unknown' }}</div>
+      </div>
+      
+      <div class="cd-player-title">
+        <span class="label">Title:</span>
+        <div class="value">{{ song.title || 'No title' }}</div>
+      </div>
+      
 
     </div>
+    
+    <div class="cd-player-controls">
+      <button class="control-btn" (click)="playPrevious()" title="Previous">
+        <span class="icon">⏮</span>
+      </button>
+      <button class="control-btn" (click)="playOrPause()" [class.playing]="isPlaying" title="Play/Pause">
+        <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
+      </button>
+      <button class="control-btn" (click)="stopPlayback()" title="Stop">
+        <span class="icon">⏹</span>
+      </button>
+      <button class="control-btn" (click)="playNext()" title="Next">
+        <span class="icon">⏭</span>
+      </button>
+      <button class="control-btn eject" (click)="eject()" title="Eject">
+        <span class="icon">⏏</span>
+      </button>
+      
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+      </div>
+    </div>
+    
+    <div class="cd-player-status">
+      <div class="status-item">
+        <span class="label">Total:</span>
+        <span class="value">{{ formatTime(duration) || '--:--' }}</span>
+      </div>
+      <div class="status-item">
+        <span class="label">Track:</span>
+        <span class="value">{{ currentTime || '00:00' }}</span>
+      </div>
+    </div>
+    
+    @if (userId !== null) {
+      <div class="like-button">
+        <button (click)="toggleLike()" [class.liked]="isLiked">
+          {{ isLiked ? '💔 Unlike' : '❤️ Like' }}
+        </button>
+      </div>
+    } @else {
+      <div>
+        <p>Inicia sesión para dar 'Me gusta'.</p>
+        <a routerLink="/login">Iniciar Sesión</a>
+      </div>
+    }
   } @else {
-    <div>
-      <p>Inicia sesión para dar 'Me gusta'.</p>
-      <a routerLink="/login">Iniciar Sesión</a>
+    <div class="no-song">
+      <div class="cd-player-display">
+        <div class="no-song-message">NO DISC</div>
+        <div class="no-song-sub">Insert a song to begin</div>
+      </div>
     </div>
   }
+</div>
 
-} @else {
-  <p>Selecciona una canción para reproducir.</p>
-}
+<audio #audioPlayer 
+       [src]="audioUrl" 
+       (timeupdate)="updateProgress()" 
+       (loadedmetadata)="onMetadataLoaded()"
+       (play)="onPlay()"
+       (pause)="onPause()"
+       (ended)="onSongEnded()"
+       style="display: none;">
+  Your browser does not support the audio element.
+</audio>

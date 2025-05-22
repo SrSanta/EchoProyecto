@@ -1,56 +1,334 @@
-/* Estilos para el reproductor fijo */
+/* Windows 95 Vaporwave Player Styling */
 :host {
-  width: 350px; /* Ajusta el ancho según necesites */
-  background-color: #2c3e50; /* Un fondo oscuro para que contraste */
-  color: #ecf0f1; /* Texto claro */
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  background: #c0c0c0;
+  color: #000000;
+  font-family: 'MS Sans Serif', sans-serif;
+  position: relative;
+  overflow: hidden;
+  line-height: 1.4;
+  box-sizing: border-box;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  padding: 3px;
 }
-/* c:\Users\SrSanta\Documents\proyectos\EchoProyecto\echo-frontend\src\app\components\song-player\song-player.component.css */
-.player-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .song-thumbnail-large {
-    width: 80px; /* Ajusta el tamaño según necesites */
-    height: 80px; /* Ajusta el tamaño según necesites */
-    object-fit: cover;
-    margin-right: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  
-  audio {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  button span {
-    margin-left: 5px;
-  }
 
-  /* Ajustes para el texto dentro del reproductor fijo */
-  h3 {
-    font-size: 1.1rem;
-    margin-bottom: 5px; /* Menos margen para el título */
-  }
+/* Reset default margins */
+:host * {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
 
-  p { margin-bottom: 8px; }
-  
+/* Vaporwave grid overlay */
+:host::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Player header */
+.cd-player-header {
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: white;
+  padding: 3px 6px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  position: relative;
+}
+
+.cd-player-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000000;
+  letter-spacing: 1px;
+}
+
+/* Display area */
+.cd-player-display {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 12px;
+  margin: 8px 0;
+  font-family: 'MS Sans Serif', sans-serif;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 0 0 #000000;
+  width: calc(100% - 4px);
+}
+
+.track-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  color: #00ffff;
+}
+
+.time-display {
+  font-family: 'Digital-7', 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+.cd-player-artist,
+.cd-player-title,
+.cd-player-track {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  color: #ff00ff;
+  margin-right: 10px;
+  font-size: 0.9em;
+  min-width: 50px;
+}
+
+.value {
+  flex: 1;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Track selector */
+.track-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-nav {
+  background: none;
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.track-nav:hover {
+  background: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Player controls */
+.cd-player-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  position: relative;
+}
+
+.control-btn {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  color: #000000;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0;
+  box-shadow: -1px -1px 0 0 #000000;
+  transition: all 0.1s;
+}
+
+.control-btn:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 0 #000000;
+}
+
+.control-btn:hover {
+  background: #e0e0e0;
+}
+
+.control-btn.playing {
+  background: #000080;
+  color: #ffffff;
+}
+
+.control-btn.eject {
+  margin-left: auto;
+  background: #ff00ff;
+  color: #000000;
+}
+
+/* Progress bar */
+.progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0000ff, #ff00ff);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* Status bar */
+.cd-player-status {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0 0 0;
+  padding: 8px 6px 6px 6px;
+  border-top: 2px solid #808080;
+  font-size: 0.9em;
+  border-bottom: 2px solid #ffffff;
+  background: #c0c0c0;
+  position: relative;
+  z-index: 1;
+  width: calc(100% - 12px);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-item .label {
+  color: #00ffff;
+}
+
+.status-item .value {
+  font-family: 'Digital-7', 'Courier New', monospace;
+  color: #fff;
+}
+
+/* No song state */
+.no-song {
+  text-align: center;
+  padding: 30px 20px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  margin: 8px 0;
+  box-shadow: inset 1px 1px 0 0 #000000;
+}
+
+.no-song-message {
+  font-size: 1.2em;
+  color: #000000;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+.no-song-sub {
+  color: #000080;
+  font-size: 0.9em;
+}
+
+/* Like button */
+.like-button {
+  margin: 15px 0 0 0;
+  text-align: center;
+}
+
+.like-button button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  color: #000000;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-weight: bold;
+  font-size: 0.9em;
+  box-shadow: -1px -1px 0 0 #000000;
+  transition: all 0.1s;
+}
+
+.like-button button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 0 0 #000000;
+}
+
+.like-button button:hover {
+  background: #e0e0e0;
+}
+
+.like-button button.liked {
+  background: #000080;
+  color: #ffffff;
+}
+
+/* Login prompt */
+.no-song a {
+  color: #0000ff;
+  text-decoration: underline;
+  padding: 2px 6px;
+  margin-top: 10px;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.no-song a:hover {
+  color: #ff00ff;
+  text-decoration: none;
+  background: #000080;
+  color: #ffffff;
+}
+
+/* Glitch effect on hover */
+@keyframes glitch {
+  0% { text-shadow: 0.05em 0 0 #ff00ff, -0.05em -0.025em 0 #00ffff; }
+  14% { text-shadow: 0.05em 0 0 #ff00ff, -0.05em -0.025em 0 #00ffff; }
+  15% { text-shadow: -0.05em -0.025em 0 #ff00ff, 0.025em 0.025em 0 #00ffff; }
+  49% { text-shadow: -0.05em -0.025em 0 #ff00ff, 0.025em 0.025em 0 #00ffff; }
+  50% { text-shadow: 0.025em 0.05em 0 #ff00ff, 0.05em 0 0 #00ffff, 0 -0.05em 0 #ff00ff; }
+  99% { text-shadow: 0.025em 0.05em 0 #ff00ff, 0.05em 0 0 #00ffff, 0 -0.05em 0 #ff00ff; }
+  100% { text-shadow: -0.025em 0 0 #ff00ff, -0.025em -0.025em 0 #00ffff; }
+}
+
+.cd-player-title:hover {
+  animation: glitch 1.5s infinite;
+}
+
+/* Ajustes para el texto dentro del reproductor fijo */
+h3 {
+  font-size: 1.1rem;
+  margin-bottom: 5px; /* Menos margen para el título */
+}
+
+p { margin-bottom: 8px; }
