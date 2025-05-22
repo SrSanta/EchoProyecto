@@ -1,31 +1,55 @@
-@if (loading) {
-  <div>Cargando canciones...</div>
-} @else {
-  @if (error) {
-    <div>{{ error }}</div>
+<div class="song-list-container">
+  @if (loading) {
+    <div class="loading-message">
+      <span class="blink">⏳</span> Cargando canciones...
+    </div>
   } @else {
-    @if (songs.length > 0) {
-      <h2>Lista de canciones</h2>
-      <ul>
-        @for (song of songs; track song.id) {
-          <li class="song-item" (contextmenu)="onSongContextMenu($event, song.id); $event.preventDefault()">
-            <span (click)="playSong(song)" style="cursor:pointer;">
-              @if (song.thumbnailFilename) {
-                <img [src]="environment.apiUrl + '/audio/' + song.thumbnailFilename" alt="Portada de {{song.title}}" class="song-thumbnail-small">
-              } @else {
-                <img src="assets/images/placeholder-thumbnail.png" alt="Sin portada" class="song-thumbnail-small">
-              }
-              <strong>{{ song.title }}</strong> - {{ song.user.username }} ({{ song.genre.name }})
-            </span>
-            <!-- Acciones de la canción eliminadas -->
-          </li>
-        }
-      </ul>
+    @if (error) {
+      <div class="error-message">
+        ⚠️ {{ error }}
+        <button (click)="error = null" class="close-btn">✕</button>
+      </div>
     } @else {
-      <div>No hay canciones disponibles.</div>
+      @if (songs.length > 0) {
+        <h2>🎵 Lista de canciones</h2>
+        <div class="song-list-window">
+          <ul>
+            @for (song of songs; track song.id) {
+              <li class="song-item" (contextmenu)="onSongContextMenu($event, song.id); $event.preventDefault()">
+                <div (click)="playSong(song)" class="song-content">
+                  <div class="song-thumbnail">
+                    @if (song.thumbnailFilename) {
+                      <img [src]="environment.apiUrl + '/audio/' + song.thumbnailFilename" 
+                           [alt]="'Portada de ' + song.title" 
+                           class="song-thumbnail-small">
+                    } @else {
+                      <img src="assets/images/placeholder-thumbnail.png" 
+                           alt="Sin portada" 
+                           class="song-thumbnail-small">
+                    }
+                  </div>
+                  <div class="song-info">
+                    <div class="song-title">{{ song.title }}</div>
+                    <div class="song-details">
+                      <span class="song-artist">👤 {{ song.user.username }}</span>
+                      <span class="song-separator">•</span>
+                      <span class="song-genre">🎵 {{ song.genre.name }}</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <div class="empty-message">
+          <p>📭 No hay canciones disponibles</p>
+          <p class="small">¡Sé el primero en subir una canción!</p>
+        </div>
+      }
     }
   }
-}
+</div>
 
 <!-- Menú contextual para añadir a playlist -->
 <app-context-menu
@@ -42,8 +66,13 @@
 
 <!-- Mensaje de error del menú contextual -->
 @if (contextMenuError) {
-  <div class="context-menu-error">
-    {{ contextMenuError }}
-    <button (click)="contextMenuError = null">×</button>
+  <div class="context-menu-error window">
+    <div class="window-titlebar">
+      <span>Error</span>
+      <button (click)="contextMenuError = null" class="close-btn">✕</button>
+    </div>
+    <div class="window-content">
+      <p>⚠️ {{ contextMenuError }}</p>
+    </div>
   </div>
 }

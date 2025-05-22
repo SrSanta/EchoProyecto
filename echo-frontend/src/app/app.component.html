@@ -1,42 +1,60 @@
-<header>
-  <h1><a routerLink="/">Echo 🎶</a></h1>
+<div class="vaporwave-effect">
+  <header>
+    <h1><a routerLink="/" class="window">Echo 🎵</a></h1>
+    
+    <nav>
+      <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
+      <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
+      
+      @if (isLoggedIn$ | async; as loggedIn) {
+        <a routerLink="/upload-song" routerLinkActive="active">⬆️ Subir Canción</a>
+        <a routerLink="/playback-history" routerLinkActive="active">⏱️ Historial</a>
+        <a routerLink="/profile" routerLinkActive="active">👤 Mi Perfil</a>
+        <div>
+          <span>👋 Hola, {{ username$ | async }}</span>
+          <button (click)="logout()" class="logout-btn">🚪 Cerrar Sesión</button>
+        </div>
+      } @else {
+        <div>
+          <a routerLink="/login" routerLinkActive="active">🔑 Iniciar Sesión</a>
+          <a routerLink="/register" routerLinkActive="active">📝 Registrarse</a>
+        </div>
+      }
+    </nav>
+  </header>
 
-  <nav>
-    <a routerLink="/songs">Canciones</a>
-    <a routerLink="/public-playlists">Explorar playlists públicas</a>
+  <main class="window" style="margin: 20px auto; min-height: 60vh;">
+    <div class="window-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 
-    @if (isLoggedIn$ | async; as loggedIn) {
-      <a routerLink="/upload-song">Subir Canción</a>
-      <a routerLink="/playback-history">Historial de reproducción</a>
-      <a routerLink="/profile">Mi perfil</a>
-      <div>
-         <span>Hola, {{ username$ | async }}</span>
-         <button (click)="logout()">Cerrar Sesión</button>
+
+  <!-- Mini player flotante -->
+  <div class="mini-player-float">
+    <div class="window-titlebar">
+      <span>Reproductor</span>
+      <span style="font-family: 'Wingdings'">r</span>
+    </div>
+    <div class="window-content" style="padding: 10px;">
+      <app-playback-queue></app-playback-queue>
+      @if (currentSongForPlayer$ | async; as currentSong) {
+        <app-song-player [song]="currentSong"></app-song-player>
+      } @else {
+        <app-song-player></app-song-player>
+      }
+    </div>
+  </div>
+
+  <footer>
+    <div class="window" style="margin: 0; border-radius: 0;">
+      <div class="window-content" style="text-align: center; padding: 8px;">
+        <p style="margin: 0;">
+          <span style="font-weight: bold;">Echo Player v1.0</span> | 
+          &copy; {{ getYear() }} Echo App. 
+          <span style="color: #ff00ff;">Windows 95 Vaporwave Edition</span>
+        </p>
       </div>
-
-    } @else {
-       <div>
-         <a routerLink="/login">Iniciar Sesión</a>
-         <a routerLink="/register">Registrarse</a>
-       </div>
-    }
-  </nav>
-</header>
-
-<main class="container">
-  <router-outlet></router-outlet>
-</main>
-
-<!-- Mini player flotante SIEMPRE visible -->
-<div class="mini-player-float">
-  <app-playback-queue></app-playback-queue>
-  @if (currentSongForPlayer$ | async; as currentSong) {
-    <app-song-player [song]="currentSong"></app-song-player>
-  } @else {
-    <app-song-player></app-song-player>
-  }
+    </div>
+  </footer>
 </div>
-
-<footer>
-  <p>&copy; {{ getYear() }} Echo App. Todos los derechos reservados.</p>
-</footer>

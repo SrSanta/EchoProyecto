@@ -1,27 +1,214 @@
-/* c:\Users\SrSanta\Documents\proyectos\EchoProyecto\echo-frontend\src\app\components\song-list\song-list.component.css */
+/* Lista de canciones - Tema Windows 95 Vaporwave */
+.song-list-container {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 0 10px;
+}
+
+h2 {
+  color: #000080;
+  font-size: 1.8rem;
+  margin: 20px 0 15px;
+  text-shadow: 1px 1px 0 #ffffff;
+  border-bottom: 2px solid #808080;
+  padding-bottom: 8px;
+  font-family: 'MS Sans Serif', 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.song-list-window {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 2px;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 .song-item {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .song-item:hover {
-    background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #808080;
+  transition: all 0.2s ease;
+  background: #c0c0c0;
+  position: relative;
+}
+
+.song-item:last-child {
+  border-bottom: none;
+}
+
+.song-item:hover {
+  background: #e0e0e0;
+  color: #0000ff;
+}
+
+.song-item:active {
+  background: #a0a0a0;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+}
+
+.song-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.song-thumbnail {
+  flex-shrink: 0;
+  margin-right: 15px;
+  position: relative;
+}
+
+.song-thumbnail-small {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  background: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.song-item:hover .song-thumbnail-small {
+  transform: scale(1.05);
+}
+
+.song-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-title {
+  font-weight: bold;
+  margin: 0 0 5px;
+  color: #000000;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-details {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #000080;
+  gap: 8px;
+}
+
+.song-artist, .song-genre {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.song-separator {
+  color: #808080;
+  font-weight: bold;
+}
+
+/* Estilo para el mensaje de carga */
+.loading-message {
+  padding: 20px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  text-align: center;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #000080;
+  margin: 20px 0;
+}
+
+.loading-message .blink {
+  animation: blink 1.5s infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+  padding: 15px 20px;
+  background: #ffdddd;
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  font-weight: bold;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-left: 10px;
+}
+
+.close-btn:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #a0a0a0;
+}
+
+/* Estilo para el mensaje de lista vacía */
+.empty-message {
+  padding: 30px 20px;
+  text-align: center;
+  background: #e8e8e8;
+  border: 2px solid #808080;
+  margin: 20px 0;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+}
+
+.empty-message p {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: #000080;
+}
+
+.empty-message .small {
+  font-size: 0.9rem;
+  color: #808080;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 600px) {
+  .song-item {
+    padding: 8px 10px;
   }
   
   .song-thumbnail-small {
-    width: 50px; /* Ajusta el tamaño según necesites */
-    height: 50px; /* Ajusta el tamaño según necesites */
-    object-fit: cover; /* Para que la imagen se ajuste bien sin deformarse */
-    margin-right: 10px;
-    border-radius: 4px; /* Opcional: para bordes redondeados */
-    border: 1px solid #ddd; /* Opcional: un borde sutil */
+    width: 40px;
+    height: 40px;
   }
   
-  ul {
-    list-style-type: none;
-    padding: 0;
+  .song-title {
+    font-size: 1rem;
   }
   
+  .song-details {
+    font-size: 0.8rem;
+  }
+}

@@ -1,36 +1,90 @@
-<div class="profile-edit-container" *ngIf="!loading && user">
-  <h2>Editar perfil de {{ user.username }}</h2>
-  <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
-  <form (submit)="$event.preventDefault(); uploadProfileImage();">
-    <label for="profileImage">Cambiar imagen de perfil:</label>
-    <input type="file" id="profileImage" (change)="onFileSelected($event)" accept="image/*">
-    <button type="submit" [disabled]="uploading">Subir Imagen</button>
-    <span *ngIf="uploading">Subiendo...</span>
+<div class="vaporwave-effect">
+  <!-- Sección de edición de perfil -->
+  <div class="profile-edit-container" *ngIf="!loading && user">
+    <h2>👤 Editar perfil de {{ user.username }}</h2>
+    
+    <div class="profile-image-container">
+      <img [src]="getProfileImageUrl()" class="profile-image" alt="Imagen de perfil">
+    </div>
+    
+    <form (submit)="$event.preventDefault(); uploadProfileImage();">
+      <label for="profileImage">📷 Cambiar imagen de perfil:</label>
+      <input type="file" id="profileImage" (change)="onFileSelected($event)" accept="image/*">
+      <div>
+        <button type="submit" [disabled]="uploading">
+          {{ uploading ? '⏳ Subiendo...' : '⬆️ Subir Imagen' }}
+        </button>
+      </div>
+    </form>
+    
+    <div *ngIf="success" class="success">✅ {{ success }}</div>
+    
+    <form (submit)="$event.preventDefault(); saveChanges();">
+      <h3>📝 Información del perfil</h3>
+      <label for="username">Nombre de usuario:</label>
+      <input type="text" id="username" [(ngModel)]="newUsername" name="username" required>
+      
+      <label for="email">📧 Email:</label>
+      <input type="email" id="email" [(ngModel)]="newEmail" name="email" required>
+      
+      <div style="text-align: right;">
+        <button type="submit">💾 Guardar Cambios</button>
+      </div>
+    </form>
+    
+    <div *ngIf="error && error.trim() && error !== '[object Object]' && error !== '{}}'" 
+         class="error">
+      ⚠️ {{ error }}
+    </div>
+  </div>
+  
+  <!-- Mensajes de carga y error -->
+  <div *ngIf="loading" class="loading-message">
+    <span class="blink">⏳</span> Cargando perfil...
+  </div>
+  
+  <div *ngIf="error && !loading" class="error-message">
+    ⚠️ {{ error }}
+    <button (click)="error = null" class="close-btn">✕</button>
+  </div>
+  
+  <!-- Sección de cambio de contraseña -->
+  <form (submit)="$event.preventDefault(); changePassword();" class="change-password-form">
+    <h3>🔒 Cambiar contraseña</h3>
+    
+    <label for="currentPassword">🔑 Contraseña actual:</label>
+    <input type="password" id="currentPassword" 
+           [(ngModel)]="currentPassword" 
+           name="currentPassword" 
+           required
+           autocomplete="current-password">
+    
+    <label for="newPassword">🆕 Nueva contraseña:</label>
+    <input type="password" 
+           id="newPassword" 
+           [(ngModel)]="newPassword" 
+           name="newPassword" 
+           required
+           autocomplete="new-password">
+    
+    <label for="confirmPassword">🔄 Confirmar nueva contraseña:</label>
+    <input type="password" 
+           id="confirmPassword" 
+           [(ngModel)]="confirmPassword" 
+           name="confirmPassword" 
+           required
+           autocomplete="new-password">
+    
+    <div style="text-align: right; margin-top: 15px;">
+      <button type="submit">💾 Cambiar contraseña</button>
+    </div>
+    
+    <div *ngIf="passwordSuccess" class="success">
+      ✅ {{ passwordSuccess }}
+    </div>
+    
+    <div *ngIf="passwordError" class="error">
+      ⚠️ {{ passwordError }}
+    </div>
   </form>
-  <div *ngIf="success" class="success">{{ success }}</div>
-  <form (submit)="$event.preventDefault(); saveChanges();">
-    <!-- Editar datos perfil -->
-    <label for="username">Nombre de usuario:</label>
-    <input type="text" id="username" [(ngModel)]="newUsername" name="username">
-    <label for="email">Email:</label>
-    <input type="email" id="email" [(ngModel)]="newEmail" name="email">
-    <button type="submit">Guardar Cambios</button>
-  </form>
-  <div *ngIf="error && error.trim() && error !== '[object Object]' && error !== '{}'" class="error">{{ error }}</div>
 </div>
-<div *ngIf="loading">Cargando perfil para editar...</div>
-<div *ngIf="error && !loading" class="error">{{ error }}</div>
-
-<!-- Cambiar contraseña -->
-<form (submit)="$event.preventDefault(); changePassword();" class="change-password-form">
-  <h3>Cambiar contraseña</h3>
-  <label for="currentPassword">Contraseña actual:</label>
-  <input type="password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required>
-  <label for="newPassword">Nueva contraseña:</label>
-  <input type="password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required>
-  <label for="confirmPassword">Confirmar nueva contraseña:</label>
-  <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required>
-  <button type="submit">Cambiar contraseña</button>
-  <div *ngIf="passwordSuccess" class="success">{{ passwordSuccess }}</div>
-  <div *ngIf="passwordError" class="error">{{ passwordError }}</div>
-</form>
