@@ -30,20 +30,13 @@
   </main>
 
 
-  <!-- Mini player flotante -->
-  <div class="mini-player-float">
-    <div class="window-titlebar">
-      <span>Reproductor</span>
-      <span style="font-family: 'Wingdings'">r</span>
-    </div>
-    <div class="window-content" style="padding: 10px;">
-      <app-playback-queue></app-playback-queue>
-      @if (currentSongForPlayer$ | async; as currentSong) {
-        <app-song-player [song]="currentSong"></app-song-player>
-      } @else {
-        <app-song-player></app-song-player>
-      }
-    </div>
+  <!-- Reproductor de música flotante -->
+  <div class="floating-player">
+    @if (currentSongForPlayer$ | async; as currentSong) {
+      <app-song-player [song]="currentSong"></app-song-player>
+    } @else {
+      <app-song-player></app-song-player>
+    }
   </div>
 
   <footer>

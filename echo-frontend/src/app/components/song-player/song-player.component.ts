@@ -8,11 +8,12 @@ import { PlaybackHistoryService } from '../../services/playback-history.service'
 import { CommonModule } from "@angular/common";
 import { environment } from "../../../environments/environment";
 import { FormsModule } from '@angular/forms';
+import { PlaybackQueueComponent } from "../playback-queue/playback-queue.component";
 
 @Component({
   selector: "app-song-player",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PlaybackQueueComponent],
   templateUrl: "./song-player.component.html",
   styleUrls: ['./song-player.component.css']
 })
@@ -28,6 +29,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   duration = 0;
   progressPercentage = 0;
   currentTrackNumber = 1;
+  showQueue = false; // Controla si se muestra la cola de reproducción
   
   // URLs
   audioUrl = "";
@@ -38,11 +40,12 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   // Audio element reference
   private audioElement: HTMLAudioElement | null = null;
 
+  // Inyectar servicios necesarios
   private likeService = inject(LikeService);
   private authService = inject(AuthService);
-  private playbackQueueService = inject(PlaybackQueueService);
   private playerStateService = inject(PlayerStateService);
   private playbackHistoryService = inject(PlaybackHistoryService);
+  private playbackQueueService = inject(PlaybackQueueService);
 
   constructor() {}
 

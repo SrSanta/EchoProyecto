@@ -76,6 +76,14 @@
       </div>
     </div>
   }
+  
+  <!-- Contenedor de la cola de reproducción -->
+  <div class="queue-container">
+    <button class="queue-toggle" (click)="showQueue = !showQueue">
+      {{ showQueue ? '▲ Ocultar cola' : '▼ Mostrar cola' }}
+    </button>
+    <app-playback-queue *ngIf="showQueue" class="playback-queue-panel"></app-playback-queue>
+  </div>
 </div>
 
 <audio #audioPlayer 

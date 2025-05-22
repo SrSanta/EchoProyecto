@@ -259,6 +259,107 @@
   font-size: 0.9em;
 }
 
+/* Estilos para el contenedor de la cola de reproducción */
+.queue-container {
+  margin-top: 15px;
+  border: 2px solid #000;
+  padding: 10px;
+  background-color: #c0c0c0;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.queue-toggle {
+  background-color: #c0c0c0;
+  border: 2px solid #000;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
+  display: block;
+}
+
+.queue-toggle:hover {
+  background-color: #a0a0a0;
+}
+
+/* Estilos para el panel de la cola de reproducción */
+/* Estilos para el panel de la cola */
+.playback-queue-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.queue-container.visible .playback-queue-panel {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Estilos para el componente de cola de reproducción */
+:host ::ng-deep .playback-queue {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 10px;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+}
+
+:host ::ng-deep .playback-queue h3 {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  color: #000080;
+  text-align: center;
+  border-bottom: 1px solid #808080;
+  padding-bottom: 5px;
+}
+
+:host ::ng-deep .playback-queue ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+:host ::ng-deep .playback-queue li {
+  padding: 8px;
+  margin: 5px 0;
+  background: #e0e0e0;
+  border: 1px solid #808080;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:host ::ng-deep .playback-queue li.playing {
+  background: #d0d0d0;
+  font-weight: bold;
+}
+
+:host ::ng-deep .playback-queue button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 3px 8px;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+:host ::ng-deep .playback-queue button:hover {
+  background: #e0e0e0;
+}
+
+:host ::ng-deep .playback-queue button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
 /* Like button */
 .like-button {
   margin: 15px 0 0 0;
