@@ -5,6 +5,7 @@ import { PlaybackHistoryComponent } from './components/playback-history/playback
 import { LoginComponent } from './components/login/login.component';
 import { SongListComponent } from './components/song-list/song-list.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ExploreComponent } from './components/explore/explore.component';
 import { SongUploadComponent } from './components/song-upload/song-upload.component';
 import { PlaylistsPageComponent } from './components/playlists/playlists-page.component';
 import { PublicPlaylistsPageComponent } from './components/public-playlists/public-playlists-page.component';
@@ -15,6 +16,10 @@ export const routes: Routes = [
   {
     path: 'songs',
     component: SongListComponent
+  },
+  {
+    path: 'explore',
+    component: ExploreComponent
   },
   {
     path: 'upload-song',

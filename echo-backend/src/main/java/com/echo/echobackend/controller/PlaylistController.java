@@ -140,4 +140,20 @@ public class PlaylistController {
             .toList();
         return ResponseEntity.ok(dtos);
     }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<PlaylistDTO>> searchPlaylists(@RequestParam String name) {
+        try {
+            List<Playlist> playlists = playlistService.searchPlaylists(name);
+            List<PlaylistDTO> dtos = playlists.stream()
+                .map(playlistMapper::toDto)
+                .toList();
+            return ResponseEntity.ok(dtos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

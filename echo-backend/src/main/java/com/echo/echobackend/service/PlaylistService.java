@@ -65,6 +65,13 @@ public class PlaylistService {
     public List<Playlist> getAllPublicPlaylists() {
         return playlistRepository.findByIsPublicTrue();
     }
+    
+    public List<Playlist> searchPlaylists(String name) {
+        if (name == null || name.trim().length() < 2) {
+            throw new IllegalArgumentException("El término de búsqueda debe tener al menos 2 caracteres");
+        }
+        return playlistRepository.findByNameContainingIgnoreCase(name);
+    }
 
     public Playlist getPlaylistById(Long id) {
         return playlistRepository.findById(id)

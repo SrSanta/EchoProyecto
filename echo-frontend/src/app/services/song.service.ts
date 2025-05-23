@@ -25,6 +25,11 @@ export class SongService {
     return this.http.get<Song>(`${this.apiUrl}/${id}`);
   }
 
+  /**
+   * Busca canciones por diferentes parámetros
+   * @param params Objeto con los parámetros de búsqueda (genre, artist, title)
+   * @returns Observable con el array de canciones que coinciden con la búsqueda
+   */
   searchSongs(params: { genre?: string; artist?: string; title?: string }): Observable<Song[]> {
     const cleanParams: { [key: string]: string } = {};
     for (const key in params) {

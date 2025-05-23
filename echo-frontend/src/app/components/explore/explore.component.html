@@ -1,0 +1,133 @@
+<div class="explore-container">
+  <div class="search-container">
+    <h1>Explorar</h1>
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (input)="search($any($event.target).value)" 
+        placeholder="Buscar canciones, playlists o artistas..."
+        class="search-input"
+        (keyup.enter)="search(searchQuery)"
+      >
+      <span class="search-icon">🔍</span>
+      @if (searchQuery) {
+        <button class="clear-search" (click)="clearSearch()" aria-label="Limpiar búsqueda">
+          <i class="fas fa-times"></i>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-message">
+      <span class="spinner">⏳</span> Buscando...
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ error }}</p>
+    </div>
+  }
+
+  @if (searchResults) {
+    <div class="search-results">
+      <!-- Canciones -->
+      @if (searchResults.songs.length > 0) {
+        <section class="result-section">
+          <h2>Canciones</h2>
+          <div class="song-grid">
+            @for (song of searchResults.songs; track song.id) {
+              <div class="song-card" (click)="playSong(song)">
+                <div class="song-thumbnail">
+                  @if (song.thumbnailFilename) {
+                    <img [src]="environment.apiUrl + '/audio/' + song.thumbnailFilename" 
+                         [alt]="'Portada de ' + song.title">
+                  } @else {
+                    <img src="assets/images/placeholder-thumbnail.png" 
+                         [alt]="'Sin portada para ' + song.title">
+                  }
+                  <div class="play-overlay">
+                    <span class="play-icon">▶️</span>
+                  </div>
+                </div>
+                <div class="song-info">
+                  <h3 class="song-title">{{ song.title }}</h3>
+                  <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
+                </div>
+                <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song, $event)">
+                  + Cola
+                </button>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Playlists -->
+      @if (searchResults.playlists.length > 0) {
+        <section class="result-section">
+          <h2>Playlists</h2>
+          <div class="playlist-grid">
+            @for (playlist of searchResults.playlists; track playlist.id) {
+              <div class="playlist-card" (click)="viewPlaylist(playlist)">
+                <div class="playlist-thumbnail">
+                  @if (playlist.songs && playlist.songs.length > 0 && playlist.songs[0].thumbnailFilename) {
+                    <img [src]="environment.apiUrl + '/audio/' + playlist.songs[0].thumbnailFilename" 
+                         [alt]="'Miniatura de ' + playlist.name">
+                  } @else {
+                    <img src="assets/images/placeholder-playlist.png" 
+                         [alt]="'Sin miniatura para ' + playlist.name">
+                  }
+                </div>
+                <div class="playlist-info">
+                  <h3 class="playlist-name">{{ playlist.name }}</h3>
+                  <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
+                  <p class="playlist-stats">
+                    {{ playlist.songs?.length || 0 }} canciones
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Artistas -->
+      @if (searchResults.artists.length > 0) {
+        <section class="result-section">
+          <h2>Artistas</h2>
+          <div class="artist-grid">
+            @for (artist of searchResults.artists; track artist.id) {
+              <div class="artist-card" (click)="viewArtist(artist)">
+                <div class="artist-avatar">
+                  <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" 
+                       [alt]="'Avatar de ' + artist.name">
+                </div>
+                <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      @if (searchResults.songs.length === 0 && 
+           searchResults.playlists.length === 0 && 
+           searchResults.artists.length === 0) {
+        <div class="no-results">
+          <i class="fas fa-search"></i>
+          <h3>No se encontraron resultados</h3>
+          <p>Prueba con otros términos de búsqueda</p>
+        </div>
+      }
+    </div>
+  } @else if (!searchQuery) {
+    <div class="welcome-message">
+      <i class="fas fa-search"></i>
+      <h3>Busca tu música favorita</h3>
+      <p>Encuentra canciones, álbumes, artistas y más</p>
+    </div>
+  }
+</div>

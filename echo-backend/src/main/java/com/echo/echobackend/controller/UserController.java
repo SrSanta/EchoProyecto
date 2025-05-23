@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -102,6 +103,18 @@ public class UserController {
         userService.deleteById(id);
     }
 
+
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> searchUsers(@RequestParam String username) {
+        try {
+            List<User> users = userService.searchByUsernameContaining(username);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error al buscar usuarios: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PutMapping("/{id}/password")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Playlist } from '../models/playlist.model';
 import { environment } from '../../environments/environment';
 
@@ -39,7 +40,30 @@ export class PlaylistService {
   }
 
   getPlaylistById(id: number): Observable<Playlist> {
-    return this.http.get<Playlist>(`${this.apiUrl}/${id}`);
+    return this.http.get<Playlist>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error('Error obteniendo playlist:', error);
+        throw error; // Propagar el error para que el componente lo maneje
+      })
+    );
+  }
+
+  /**
+   * Busca playlists por nombre
+   * @param name Término de búsqueda
+   * @returns Observable con el array de playlists que coinciden con la búsqueda
+   */
+  searchPlaylists(name: string): Observable<Playlist[]> {
+    if (!name || name.trim().length < 2) {
+      return of([]);
+    }
+    
+    return this.http.get<Playlist[]>(`${this.apiUrl}/search?name=${encodeURIComponent(name)}`).pipe(
+      catchError(error => {
+        console.error('Error buscando playlists:', error);
+        return of([]);
+      })
+    );
   }
 
   addSongToPlaylist(playlistId: number, songId: number, songOrder?: number): Observable<void> {
@@ -49,27 +73,52 @@ export class PlaylistService {
       params.songOrder = songOrder;
     }
     const url = `${this.apiUrl}/${playlistId}/songs`;
-    return this.http.post<void>(url, {}, { params });
+    return this.http.post<void>(url, {}, { params }).pipe(
+      catchError(error => {
+        console.error('Error añadiendo canción a la playlist:', error);
+        throw error;
+      })
+    );
   }
 
   removeSongFromPlaylist(playlistId: number, songId: number): Observable<void> {
     const username = this.authService.getUsername();
-    return this.http.delete<void>(`${this.apiUrl}/${playlistId}/songs?username=${username}&songId=${songId}`);
+    return this.http.delete<void>(`${this.apiUrl}/${playlistId}/songs?username=${username}&songId=${songId}`).pipe(
+      catchError(error => {
+        console.error('Error eliminando canción de la playlist:', error);
+        throw error;
+      })
+    );
   }
 
   /** Compartir playlist pública: devuelve la URL pública si la playlist es pública */
   sharePlaylist(playlistId: number): Observable<string> {
-    return this.http.get(`${this.apiUrl}/share/${playlistId}`, { responseType: 'text' });
+    return this.http.get(`${this.apiUrl}/share/${playlistId}`, { responseType: 'text' }).pipe(
+      catchError(error => {
+        console.error('Error compartiendo playlist:', error);
+        throw error;
+      })
+    );
   }
 
   /** Obtener todas las playlists públicas */
   getAllPublicPlaylists(): Observable<Playlist[]> {
-    return this.http.get<Playlist[]>(`${this.apiUrl}/public`);
+    return this.http.get<Playlist[]>(`${this.apiUrl}/public`).pipe(
+      catchError(error => {
+        console.error('Error obteniendo playlists públicas:', error);
+        return of([]);
+      })
+    );
   }
 
   /** Obtener playlist pública por enlace */
   getPublicPlaylist(playlistId: number): Observable<Playlist> {
-    return this.http.get<Playlist>(`${this.apiUrl}/public/${playlistId}`);
+    return this.http.get<Playlist>(`${this.apiUrl}/public/${playlistId}`).pipe(
+      catchError(error => {
+        console.error('Error obteniendo playlist pública:', error);
+        throw error;
+      })
+    );
   }
 }
 

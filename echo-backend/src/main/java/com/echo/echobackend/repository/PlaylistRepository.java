@@ -11,4 +11,6 @@ import java.util.List;
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     List<Playlist> findByUser(User user);
     List<Playlist> findByIsPublicTrue();
+    
+    List<Playlist> findByNameContainingIgnoreCase(String name);
 }

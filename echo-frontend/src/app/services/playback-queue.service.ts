@@ -11,6 +11,15 @@ export class PlaybackQueueService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Add a song to the playback queue
+   * @param song The song to add to the queue
+   */
+  addToQueue(song: any): void {
+    // TODO: Implement the actual queue logic
+    console.log('Adding to queue:', song);
+  }
+
   get queueUpdates$() {
     return this.queueUpdated$.asObservable();
   }

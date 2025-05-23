@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -85,5 +86,9 @@ public class UserService {
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+    
+    public List<User> searchByUsernameContaining(String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username);
     }
 }
