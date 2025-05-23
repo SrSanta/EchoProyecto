@@ -63,6 +63,7 @@
       <div class="tab-content">
         <!-- Pestaña de Canciones -->
         <div class="tab-pane" [class.active]="isTabActive('songs')">
+          <h2 class="section-title">Canciones</h2>
           <div class="song-grid">
             @for (song of searchResults.songs; track song.id) {
               <div class="song-card" (click)="playSong(song)">
@@ -92,6 +93,7 @@
         
         <!-- Pestaña de Playlists -->
         <div class="tab-pane" [class.active]="isTabActive('playlists')">
+          <h2 class="section-title">Playlists</h2>
           <div class="playlist-grid">
             @for (playlist of searchResults.playlists; track playlist.id) {
               <div class="playlist-card" (click)="viewPlaylist(playlist)">
@@ -118,6 +120,7 @@
         
         <!-- Pestaña de Artistas -->
         <div class="tab-pane" [class.active]="isTabActive('artists')">
+          <h2 class="section-title">Artistas</h2>
           <div class="artist-grid">
             @for (artist of searchResults.artists; track artist.id) {
               <div class="artist-card" (click)="viewArtist(artist)">
