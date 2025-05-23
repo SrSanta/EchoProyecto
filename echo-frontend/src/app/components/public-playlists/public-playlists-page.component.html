@@ -7,10 +7,10 @@
   </div>
   <ul *ngIf="filteredPlaylists.length; else noResults">
     <li *ngFor="let playlist of filteredPlaylists">
-      <strong>{{ playlist.name }}</strong> por {{ playlist.user?.username || 'Desconocido' }}<br>
-      <span *ngIf="playlist.songs && playlist.songs.length">Canciones: {{ playlist.songs.length }}</span>
-      <span *ngIf="!playlist.songs || !playlist.songs.length">Sin canciones</span>
-      <ul *ngIf="playlist.songs && playlist.songs.length">
+      <strong>{{ playlist.name }}</strong> por {{ playlist.user.username || 'Desconocido' }}<br>
+      <span *ngIf="playlist.songs?.length">Canciones: {{ playlist.songs?.length || 0 }}</span>
+      <span *ngIf="!playlist.songs?.length">Sin canciones</span>
+      <ul *ngIf="playlist.songs?.length">
         <li *ngFor="let song of playlist.songs">🎵 {{ song.title }}</li>
       </ul>
       <button (click)="playPlaylist(playlist)">Reproducir Playlist</button>

@@ -1,23 +1,18 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { AsyncPipe, CommonModule } from '@angular/common'; // Importar CommonModule
-import { PlayerStateService } from './services/player-state.service'; // Importar PlayerStateService
-import { Song } from './models/song.model'; // Importar Song
-import { SongPlayerComponent } from './components/song-player/song-player.component'; // Importar SongPlayerComponent
-import { PlaybackQueueComponent } from './components/playback-queue/playback-queue.component'; // Importar PlaybackQueueComponent
-import { PlaylistsPageComponent } from './components/playlists/playlists-page.component';
-
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { PlayerStateService } from './services/player-state.service';
+import { Song } from './models/song.model';
+import { SongPlayerComponent } from './components/song-player/song-player.component';
 import { PlaybackQueueService } from './services/playback-queue.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, AsyncPipe, CommonModule, SongPlayerComponent, PlaybackQueueComponent, PlaylistsPageComponent], // Añadir CommonModule, SongPlayerComponent, PlaybackQueueComponent y PlaylistsPageComponent
+  imports: [RouterOutlet, RouterLink, AsyncPipe, CommonModule, SongPlayerComponent], // Only include components used in the template
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

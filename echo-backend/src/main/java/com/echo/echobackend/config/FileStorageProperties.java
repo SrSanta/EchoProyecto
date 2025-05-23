@@ -10,5 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FileStorageProperties {
-    private String uploadDir;
+    @org.springframework.lang.NonNull
+    private String uploadDir = "";
 }

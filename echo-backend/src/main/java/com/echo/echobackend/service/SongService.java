@@ -45,13 +45,19 @@ public class SongService {
         this.roleRepository = roleRepository;
         this.genreRepository = genreRepository;
 
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
-                .toAbsolutePath().normalize();
+        String uploadDir = fileStorageProperties.getUploadDir();
+        if (uploadDir.trim().isEmpty()) {
+            throw new IllegalArgumentException("File upload directory is not configured. Please set 'file.upload-dir' in application properties.");
+        }
+
+        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            System.err.println("Could not create upload directory: " + ex.getMessage());
+            String errorMsg = "Could not create upload directory: " + this.fileStorageLocation + " - " + ex.getMessage();
+            System.err.println(errorMsg);
+            throw new RuntimeException(errorMsg, ex);
         }
     }
 
@@ -71,9 +77,13 @@ public class SongService {
 
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         String fileExtension = "";
-        try {
-            fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        } catch (Exception e) { fileExtension = ""; }
+        if (originalFilename != null && originalFilename.contains(".")) {
+            try {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            } catch (Exception e) {
+                fileExtension = "";
+            }
+        }
 
         String uniqueFilenameOnly = UUID.randomUUID().toString() + fileExtension;
 

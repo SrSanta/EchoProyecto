@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,32 @@ public class AuthController {
         String username = (String) registrationRequest.get("username");
         String email = (String) registrationRequest.get("email");
         String password = (String) registrationRequest.get("password");
-        List<Map<String, String>> rolesData = (List<Map<String, String>>) registrationRequest.get("roles");
+
+        List<Map<String, String>> rolesData = new ArrayList<>();
+        try {
+            Object rolesObj = registrationRequest.get("roles");
+            if (rolesObj instanceof List) {
+                for (Object item : (List<?>) rolesObj) {
+                    if (item instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        Map<String, String> roleMap = (Map<String, String>) item;
+                        rolesData.add(roleMap);
+                    } else {
+                        return new ResponseEntity<>(
+                            "Formato de roles inválido. Se espera una lista de objetos con nombre de rol.", 
+                            HttpStatus.BAD_REQUEST);
+                    }
+                }
+            } else {
+                return new ResponseEntity<>(
+                    "El campo 'roles' debe ser una lista.", 
+                    HttpStatus.BAD_REQUEST);
+            }
+        } catch (ClassCastException e) {
+            return new ResponseEntity<>(
+                "Formato de roles inválido: " + e.getMessage(), 
+                HttpStatus.BAD_REQUEST);
+        }
 
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() || email == null || email.trim().isEmpty() || rolesData == null || rolesData.isEmpty()) {
             return new ResponseEntity<>("Todos los campos y al menos un rol son obligatorios", HttpStatus.BAD_REQUEST);
