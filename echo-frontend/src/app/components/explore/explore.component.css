@@ -272,6 +272,110 @@
   padding: 1rem;
 }
 
+/* Pestañas de navegación - Estilo Windows 95 */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 4px 4px 0;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 4px 12px;
+  cursor: pointer;
+  color: #000000;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px #ffffff;
+  position: relative;
+  margin-bottom: -1px;
+  transition: none;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  min-width: 80px;
+  text-align: center;
+}
+
+.tab-button:hover {
+  background: #e0e0e0;
+  color: #000080;
+  transform: none;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+}
+
+.tab-button.active {
+  background: #c0c0c0;
+  color: #000000;
+  font-weight: bold;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding-bottom: 5px;
+  margin-bottom: -2px;
+  border-bottom: 2px solid #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  transform: none;
+}
+
+/* Estilo especial para el botón Todo */
+.tab-button:first-child {
+  margin-right: 20px;
+  position: relative;
+}
+
+.tab-button:first-child::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background-color: #808080;
+  border-right: 1px solid #ffffff;
+}
+
+.tab-button:first-child.active::after {
+  display: none;
+}
+
+/* Contenido de las pestañas */
+.tab-content {
+  margin-top: 1rem;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 15px;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+}
+
+.tab-pane {
+  animation: none; /* Eliminamos la animación para mantener el estilo Windows 95 */
+}
+
+/* Estilos para el contenido de 'Todo' */
+.all-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.content-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #808080;
+}
+
+.content-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .playlist-name {
   font-size: 1rem;
   font-weight: 600;

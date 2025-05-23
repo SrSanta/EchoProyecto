@@ -30,7 +30,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   error: string | null = null;
   environment = environment;
-  activeTab: string = 'songs'; // Pestaña activa por defecto
+  activeTab: string | null = null; // null significa que se muestra todo
+  showAll: boolean = true; // Mostrar todo por defecto
   
   private searchTerms = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -107,13 +108,24 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   // Cambiar la pestaña activa
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
+  setActiveTab(tab: string | null): void {
+    if (tab === null) {
+      this.showAll = true;
+      this.activeTab = null;
+    } else {
+      this.showAll = false;
+      this.activeTab = tab;
+    }
   }
 
   // Verificar si una pestaña está activa
   isTabActive(tab: string): boolean {
     return this.activeTab === tab;
+  }
+
+  // Verificar si se está mostrando todo
+  isShowingAll(): boolean {
+    return this.showAll;
   }
 
   playSong(song: Song): void {
