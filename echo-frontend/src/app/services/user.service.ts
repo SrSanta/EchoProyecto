@@ -29,4 +29,17 @@ export class UserService {
       })
     );
   }
+
+  /**
+   * Obtiene todos los artistas
+   * @returns Observable con el array de artistas
+   */
+  getArtists(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/artists`).pipe(
+      catchError(error => {
+        console.error('Error cargando artistas:', error);
+        return of([]);
+      })
+    );
+  }
 }

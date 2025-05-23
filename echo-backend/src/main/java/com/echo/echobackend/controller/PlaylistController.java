@@ -142,9 +142,17 @@ public class PlaylistController {
     }
     
     @GetMapping("/search")
-    public ResponseEntity<List<PlaylistDTO>> searchPlaylists(@RequestParam String name) {
+    public ResponseEntity<List<PlaylistDTO>> searchPlaylists(@RequestParam(required = false) String name) {
         try {
-            List<Playlist> playlists = playlistService.searchPlaylists(name);
+            List<Playlist> playlists;
+            
+            // Si no hay término de búsqueda o está vacío, devolver todas las playlists
+            if (name == null || name.trim().isEmpty()) {
+                playlists = playlistService.getAllPlaylists();
+            } else {
+                playlists = playlistService.searchPlaylists(name);
+            }
+            
             List<PlaylistDTO> dtos = playlists.stream()
                 .map(playlistMapper::toDto)
                 .toList();

@@ -8,25 +8,33 @@
 .search-container {
   margin-bottom: 2rem;
   position: relative;
+  padding: 0 1rem;
 }
 
 .search-box {
   position: relative;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 20px auto 40px;
   display: flex;
   align-items: center;
+  background: var(--bg-secondary);
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .search-input {
   width: 100%;
-  padding: 12px 45px 12px 20px;
-  border: 1px solid var(--border-color);
-  border-radius: 25px;
+  padding: 14px 50px 14px 25px;
+  border: none;
+  border-radius: 0;
   font-size: 1rem;
-  background-color: var(--bg-secondary);
+  background: transparent;
   color: var(--text-primary);
   transition: all 0.3s ease;
+  height: 100%;
+  outline: none;
 }
 
 .search-input:focus {
@@ -37,26 +45,30 @@
 
 .search-icon {
   position: absolute;
-  right: 15px;
-  font-size: 1.2rem;
+  right: 20px;
+  font-size: 1.1rem;
   color: var(--text-secondary);
+  pointer-events: none;
 }
 
 .clear-search {
   position: absolute;
-  right: 40px;
+  right: 45px;
   background: none;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
 .clear-search:hover {
   color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .loading-message,

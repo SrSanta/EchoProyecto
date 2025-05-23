@@ -30,6 +30,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   error: string | null = null;
   environment = environment;
+  activeTab: string = 'songs'; // Pestaña activa por defecto
   
   private searchTerms = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -37,6 +38,29 @@ export class ExploreComponent implements OnInit, OnDestroy {
   // Remove duplicate constructor since we're using inject()
 
   ngOnInit(): void {
+    // Cargar todo el contenido al inicio
+    this.loadAllContent();
+    
+    // Configurar la búsqueda
+    this.setupSearch();
+  }
+  
+  private loadAllContent(): void {
+    this.loading = true;
+    this.searchService.searchAll('').subscribe({
+      next: (results) => {
+        this.searchResults = results;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar el contenido:', error);
+        this.error = 'Error al cargar el contenido. Por favor, inténtalo de nuevo.';
+        this.loading = false;
+      }
+    });
+  }
+  
+  private setupSearch(): void {
     this.searchTerms.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -70,8 +94,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     if (term.trim()) {
       this.searchTerms.next(term);
     } else {
-      this.searchResults = null;
-      this.error = null;
+      // Si el campo de búsqueda está vacío, cargar todo el contenido
+      this.loadAllContent();
     }
   }
 
@@ -79,6 +103,17 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
     this.searchResults = null;
     this.error = null;
+    this.loadAllContent();
+  }
+
+  // Cambiar la pestaña activa
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+  }
+
+  // Verificar si una pestaña está activa
+  isTabActive(tab: string): boolean {
+    return this.activeTab === tab;
   }
 
   playSong(song: Song): void {

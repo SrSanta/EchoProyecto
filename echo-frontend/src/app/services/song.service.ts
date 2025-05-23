@@ -21,6 +21,11 @@ export class SongService {
     return this.http.get<Song[]>(this.apiUrl);
   }
 
+  // Alias para mantener consistencia con otros servicios
+  getSongs(): Observable<Song[]> {
+    return this.getAllSongs();
+  }
+
   getSongById(id: number): Observable<Song> {
     return this.http.get<Song>(`${this.apiUrl}/${id}`);
   }

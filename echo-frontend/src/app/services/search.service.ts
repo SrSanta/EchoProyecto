@@ -30,11 +30,26 @@ export class SearchService {
     artists: any[];
   }> {
     if (!query.trim()) {
-      // Si la consulta está vacía, devolver arrays vacíos
-      return of({
-        songs: [],
-        playlists: [],
-        artists: []
+      // Si la consulta está vacía, devolver todo el contenido
+      return forkJoin({
+        songs: this.songService.getSongs().pipe(
+          catchError(error => {
+            console.error('Error cargando canciones:', error);
+            return of([]);
+          })
+        ),
+        playlists: this.playlistService.getAllPlaylists().pipe(
+          catchError(error => {
+            console.error('Error cargando playlists:', error);
+            return of([]);
+          })
+        ),
+        artists: this.userService.getArtists().pipe(
+          catchError(error => {
+            console.error('Error cargando artistas:', error);
+            return of([]);
+          })
+        )
       });
     }
 
@@ -66,7 +81,10 @@ export class SearchService {
    * @returns Observable con el array de canciones que coinciden con la búsqueda
    */
   private searchSongs(query: string): Observable<Song[]> {
-    return this.songService.searchSongs({ title: query });
+    if (!query.trim()) {
+      return this.songService.getSongs();
+    }
+    return this.http.get<Song[]>(`${this.apiUrl}/songs/search?title=${encodeURIComponent(query)}`);
   }
 
   /**
@@ -75,7 +93,10 @@ export class SearchService {
    * @returns Observable con el array de playlists que coinciden con la búsqueda
    */
   private searchPlaylists(query: string): Observable<Playlist[]> {
-    return this.playlistService.searchPlaylists(query);
+    if (!query.trim()) {
+      return this.playlistService.getAllPlaylists();
+    }
+    return this.http.get<Playlist[]>(`${this.apiUrl}/playlists/search?name=${encodeURIComponent(query)}`);
   }
 
   /**
@@ -84,6 +105,9 @@ export class SearchService {
    * @returns Observable con el array de usuarios/artistas que coinciden con la búsqueda
    */
   private searchArtists(query: string): Observable<any[]> {
-    return this.userService.searchUsers(query);
+    if (!query.trim()) {
+      return this.userService.getArtists();
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/users/search?username=${encodeURIComponent(query)}`);
   }
 }

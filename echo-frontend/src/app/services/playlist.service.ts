@@ -24,6 +24,11 @@ export class PlaylistService {
     return this.http.get<Playlist[]>(`${this.apiUrl}/user/${targetUser}?currentUser=${username}`);
   }
 
+  // Obtener todas las playlists públicas
+  getAllPlaylists(): Observable<Playlist[]> {
+    return this.http.get<Playlist[]>(`${this.apiUrl}/public`);
+  }
+
   createPlaylist(playlist: Partial<Playlist>): Observable<Playlist> {
     const username = this.authService.getUsername();
     return this.http.post<Playlist>(`${this.apiUrl}?username=${username}`, playlist);

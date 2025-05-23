@@ -52,6 +52,16 @@ public class UserController {
     }
 
     private final UserService userService;
+    
+    @GetMapping("/artists")
+    public ResponseEntity<List<User>> getAllArtists() {
+        try {
+            List<User> artists = userService.findAllArtists();
+            return ResponseEntity.ok(artists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -106,9 +116,17 @@ public class UserController {
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> searchUsers(@RequestParam String username) {
+    public ResponseEntity<?> searchUsers(@RequestParam(required = false) String username) {
         try {
-            List<User> users = userService.searchByUsernameContaining(username);
+            List<User> users;
+            
+            // Si no hay término de búsqueda o está vacío, devolver todos los usuarios
+            if (username == null || username.trim().isEmpty()) {
+                users = userService.findAll();
+            } else {
+                users = userService.searchByUsernameContaining(username);
+            }
+            
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             e.printStackTrace();

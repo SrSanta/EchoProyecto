@@ -73,6 +73,10 @@ public class PlaylistService {
         return playlistRepository.findByNameContainingIgnoreCase(name);
     }
 
+    public List<Playlist> getAllPlaylists() {
+        return playlistRepository.findAll();
+    }
+
     public Playlist getPlaylistById(Long id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Playlist no encontrada con ID: " + id));
