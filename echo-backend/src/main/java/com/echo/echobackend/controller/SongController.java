@@ -43,17 +43,16 @@ public class SongController {
 
     @PostMapping("/songs/upload")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> uploadSong(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<?> uploadSong(@RequestParam("mediaFile") MultipartFile mediaFile,
                                         @RequestParam("title") String title,
                                         @RequestParam("thumbnailFile") MultipartFile thumbnailFile,
-                                        @RequestParam(value = "videoFile", required = false) MultipartFile videoFile,
                                         @RequestParam("genreId") Long genreId,
                                         @RequestParam(value = "releaseYear", required = false) Integer releaseYear,
                                         @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return new ResponseEntity<>("User not authenticated", HttpStatus.UNAUTHORIZED);
         }
-        if (file.isEmpty()) {
+        if (mediaFile.isEmpty()) {
             return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
         }
         if (thumbnailFile.isEmpty()) {
@@ -67,7 +66,7 @@ public class SongController {
         }
 
         try {
-            Song savedSong = songService.storeAndSaveSong(file, thumbnailFile, videoFile, title, userDetails.getUsername(), genreId, releaseYear);
+            Song savedSong = songService.storeAndSaveSong(mediaFile, thumbnailFile, title, userDetails.getUsername(), genreId, releaseYear);
             return new ResponseEntity<>(savedSong, HttpStatus.CREATED);
         } catch (IOException e) {
             System.err.println("Upload failed (IO): " + e.getMessage());
@@ -187,6 +186,35 @@ public class SongController {
         } catch (IOException ex) {
              System.err.println("IO Error serving audio file: " + filename + " - " + ex.getMessage());
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/video/{filename:.+}")
+    public ResponseEntity<Resource> serveVideoFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("video").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = Files.probeContentType(filePath);
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+                        .body(resource);
+            } else {
+                System.err.println("Video file not found or not readable: " + filename);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException ex) {
+            System.err.println("Malformed URL for video file: " + filename + " - " + ex.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (IOException ex) {
+            System.err.println("IO Error serving video file: " + filename + " - " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

@@ -19,14 +19,13 @@ const MAX_THUMBNAIL_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB for thumbnail
 })
 export class SongUploadComponent implements OnInit {
   songTitle: string = '';
-  selectedFile: File | null = null;
+  selectedMediaFile: File | null = null;
   errorMessage: string | null = null;
   successMessage: string | null = null;
   isLoading = false;
   genres$: Observable<Genre[]> | undefined;
   selectedGenreId: string = '';
   selectedThumbnailFile: File | null = null;
-  selectedVideoFile: File | null = null;
   songReleaseYear: number | null = null;
   currentYear: number = new Date().getFullYear();
 
@@ -48,21 +47,21 @@ export class SongUploadComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event): void {
+  onMediaFileSelected(event: Event): void {
     const element = event.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
       if (file.size > MAX_AUDIO_VIDEO_SIZE_BYTES) {
         this.errorMessage = `El archivo de audio es demasiado grande. El tamaño máximo es ${MAX_AUDIO_VIDEO_SIZE_BYTES / 1024 / 1024 / 1024} GB.`;
-        this.selectedFile = null;
+        this.selectedMediaFile = null;
         element.value = ''; // Clear the input
       } else {
-        this.selectedFile = file;
+        this.selectedMediaFile = file;
         this.errorMessage = null;
       }
     } else {
-      this.selectedFile = null;
+      this.selectedMediaFile = null;
     }
   }
 
@@ -88,26 +87,8 @@ export class SongUploadComponent implements OnInit {
     }
   }
 
-  onVideoSelected(event: Event): void {
-    const element = event.currentTarget as HTMLInputElement;
-    let fileList: FileList | null = element.files;
-    if (fileList && fileList.length > 0) {
-      const file = fileList[0];
-      if (file.size > MAX_AUDIO_VIDEO_SIZE_BYTES) {
-        this.errorMessage = `El archivo de video es demasiado grande. El tamaño máximo es ${MAX_AUDIO_VIDEO_SIZE_BYTES / 1024 / 1024 / 1024} GB.`;
-        this.selectedVideoFile = null;
-        element.value = '';
-      } else {
-        this.selectedVideoFile = file;
-        this.errorMessage = null;
-      }
-    } else {
-      this.selectedVideoFile = null;
-    }
-  }
-
   onSubmit(): void {
-    if (!this.selectedFile) {
+    if (!this.selectedMediaFile) {
       this.errorMessage = 'Por favor, selecciona un archivo de audio.';
       return;
     }
@@ -129,13 +110,11 @@ export class SongUploadComponent implements OnInit {
     this.successMessage = null;
 
     const formData = new FormData();
-    formData.append('file', this.selectedFile, this.selectedFile.name);
+    formData.append('mediaFile', this.selectedMediaFile, this.selectedMediaFile.name);
     formData.append('title', this.songTitle.trim());
     formData.append('genreId', this.selectedGenreId);
     formData.append('thumbnailFile', this.selectedThumbnailFile, this.selectedThumbnailFile.name);
-    if (this.selectedVideoFile) {
-      formData.append('videoFile', this.selectedVideoFile, this.selectedVideoFile.name);
-    }
+
     if (this.songReleaseYear !== null && this.songReleaseYear !== undefined) {
       formData.append('releaseYear', this.songReleaseYear.toString());
     }
@@ -146,17 +125,14 @@ export class SongUploadComponent implements OnInit {
         this.successMessage = `¡Canción "${savedSong.title}" subida con éxito!`;
         console.log('Canción guardada:', savedSong);
         this.songTitle = '';
-        this.selectedFile = null;
+        this.selectedMediaFile = null;
         this.selectedThumbnailFile = null;
-        this.selectedVideoFile = null;
         this.selectedGenreId = '';
         this.songReleaseYear = null;
-        const fileInput = document.getElementById('songFile') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
+        const mediaFileInput = document.getElementById('mediaFile') as HTMLInputElement;
+        if (mediaFileInput) mediaFileInput.value = '';
         const thumbnailInput = document.getElementById('songThumbnail') as HTMLInputElement;
         if (thumbnailInput) thumbnailInput.value = '';
-        const videoInput = document.getElementById('songVideo') as HTMLInputElement;
-        if (videoInput) videoInput.value = '';
       },
       error: (error) => {
         this.isLoading = false;

@@ -78,6 +78,12 @@
   width: calc(100% - 4px);
 }
 
+.video-player-visible {
+  width: 100%;
+  height: auto; /* Maintain aspect ratio */
+  display: block;
+}
+
 .track-info-container {
   display: flex;
   justify-content: space-between;

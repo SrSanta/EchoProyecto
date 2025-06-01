@@ -34,18 +34,18 @@
   </div>
 
   <div class="form-group">
-    <label for="songFile">Archivo de Audio:</label>
+    <label for="mediaFile">Archivo de Audio/Video:</label>
     <input
       type="file"
-      id="songFile"
-      name="songFile"
-      (change)="onFileSelected($event)"
-      accept="audio/*"
+      id="mediaFile"
+      name="mediaFile"
+      (change)="onMediaFileSelected($event)"
+      accept="audio/*,video/*"
       required
       [disabled]="isLoading"
     />
-    @if (selectedFile) {
-      <p>Archivo seleccionado: {{ selectedFile.name }}</p>
+    @if (selectedMediaFile) {
+      <p>Archivo seleccionado: {{ selectedMediaFile.name }}</p>
     }
   </div>
 
@@ -77,21 +77,6 @@
     }
   </div>
 
-  <div class="form-group">
-    <label for="songVideo">Video (Opcional):</label>
-    <input
-      type="file"
-      id="songVideo"
-      name="songVideo"
-      (change)="onVideoSelected($event)"
-      accept="video/*"
-      [disabled]="isLoading"
-    />
-    @if (selectedVideoFile) {
-      <p>Video seleccionado: {{ selectedVideoFile.name }}</p>
-    }
-  </div>
-
   @if (errorMessage) {
     <div class="error-message" style="color: red; margin-top: 10px;">
       {{ errorMessage }}
@@ -103,7 +88,7 @@
     </div>
   }
 
-  <button type="submit" [disabled]="isLoading || !selectedFile || !songTitle.trim() || !selectedGenreId || !selectedThumbnailFile">
+  <button type="submit" [disabled]="isLoading || !selectedMediaFile || !songTitle.trim() || !selectedGenreId || !selectedThumbnailFile">
     {{ isLoading ? 'Subiendo...' : 'Subir Canción' }}
   </button>
 </form>

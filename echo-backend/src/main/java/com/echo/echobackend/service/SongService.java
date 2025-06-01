@@ -125,20 +125,18 @@ public class SongService {
     }
 
     @Transactional
-    public Song storeAndSaveSong(MultipartFile audioFile, MultipartFile thumbnailFile, MultipartFile videoFile,
+    public Song storeAndSaveSong(MultipartFile mediaFile, MultipartFile thumbnailFile,
                                  String title, String username, Long genreId, Integer releaseYear) throws IOException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
-        String audioFilename = storeUploadedFile(audioFile, "audio");
-        if (audioFilename == null) {
-            throw new IllegalArgumentException("Audio file is required.");
-        }
         String thumbnailFilename = storeUploadedFile(thumbnailFile, "thumbnail");
         if (thumbnailFilename == null) {
             throw new IllegalArgumentException("Thumbnail file is required.");
         }
-        String videoFilename = storeUploadedFile(videoFile, "video");
+
+        String mediaFilename = null;
+        String contentType = mediaFile.getContentType();
 
         Song newSong = new Song();
         newSong.setTitle(title);
@@ -152,11 +150,24 @@ public class SongService {
         } else {
              throw new IllegalArgumentException("Genre ID is required but was not provided.");
         }
-        newSong.setAudioFilename(audioFilename);
-        newSong.setThumbnailFilename(thumbnailFilename);
-        if (videoFilename != null) {
-            newSong.setVideoFilename(videoFilename);
+
+        if (contentType != null && contentType.startsWith("audio")) {
+            mediaFilename = storeUploadedFile(mediaFile, "audio");
+            newSong.setAudioFilename(mediaFilename);
+            newSong.setVideoFilename(null); // Ensure video filename is null for audio files
+        } else if (contentType != null && contentType.startsWith("video")) {
+            mediaFilename = storeUploadedFile(mediaFile, "video");
+            newSong.setVideoFilename(mediaFilename);
+            newSong.setAudioFilename(null); // Ensure audio filename is null for video files
+        } else {
+            throw new IllegalArgumentException("Unsupported media file type: " + contentType);
         }
+
+        if (mediaFilename == null) {
+            throw new IllegalArgumentException("Media file could not be stored.");
+        }
+
+        newSong.setThumbnailFilename(thumbnailFilename);
         if (releaseYear != null) {
             newSong.setReleaseYear(releaseYear);
         }

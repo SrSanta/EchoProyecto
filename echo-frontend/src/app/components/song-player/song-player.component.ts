@@ -21,6 +21,7 @@ import { PlaybackQueueComponent } from "../playback-queue/playback-queue.compone
 export class SongPlayerComponent implements OnInit, OnChanges {
   @Input() song!: Song;
   @ViewChild('audioPlayer') audioPlayerRef!: ElementRef<HTMLAudioElement>;
+  @ViewChild('videoPlayerVisible') videoPlayerRef!: ElementRef<HTMLVideoElement>;
   
   // Player state
   isPlaying = false;
@@ -36,11 +37,12 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   // URLs
   audioUrl = "";
   thumbnailUrl = "";
+  videoUrl = "";
   
   protected userId: number | null = null;
   
-  // Audio element reference
-  private audioElement: HTMLAudioElement | null = null;
+  // Media element reference (audio or video)
+  private mediaElement: HTMLMediaElement | null = null;
 
   // Inyectar servicios necesarios
   private likeService = inject(LikeService);
@@ -99,33 +101,21 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   }
 
   ngAfterViewInit() {
-    this.audioElement = this.audioPlayerRef.nativeElement;
-    
-    // Try to autoplay when view is initialized
-    if (this.audioElement && this.audioUrl) {
-      this.audioElement.load();
-      this.audioElement.play().catch(e => console.log('Initial autoplay prevented:', e));
-    }
+    this.updateMediaElementReference();
+    this.tryAutoplay();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['song'] && changes['song'].currentValue) {
       console.log("Song input changed:", this.song);
-      if (this.song && this.song.audioFilename) {
-        this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
-        // Add autoplay when song changes
-        setTimeout(() => {
-          if (this.audioElement) {
-            this.audioElement.load();
-            this.audioElement.play().catch(e => console.log('Autoplay prevented:', e));
-          }
-        }, 0);
-      } else {
-        this.audioUrl = '';
-      }
-      if (this.song && this.song.thumbnailFilename) {
-        this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
-      }
+      this.updateMediaUrls();
+      this.updateMediaElementReference(); // Update reference when song changes
+      
+      // Add autoplay when song changes
+      setTimeout(() => {
+        this.tryAutoplay();
+      }, 0);
+      
       this.isLiked = false;
 
       // Registrar reproducción en historial
@@ -157,10 +147,61 @@ export class SongPlayerComponent implements OnInit, OnChanges {
           this.song?.id
         );
       }
-    } else if (changes['song'] && !changes['song'].currentValue) {
+    } else if (changes['song'] && !changes['song'].currentValue) { // When song is set to null
         this.audioUrl = "";
+        this.videoUrl = "";
         this.thumbnailUrl = "";
         this.isLiked = false;
+        this.stopPlayback(); // Stop playback when song is cleared
+        this.mediaElement = null; // Clear media element reference
+    }
+  }
+
+  private updateMediaUrls(): void {
+    if (!this.song) {
+      this.audioUrl = '';
+      this.videoUrl = '';
+      this.thumbnailUrl = '';
+      return;
+    }
+
+    if (this.song.audioFilename) {
+      this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+    } else {
+      this.audioUrl = '';
+    }
+
+    if (this.song.videoFilename) {
+      this.videoUrl = `${environment.apiUrl}/video/${this.song.videoFilename}`;
+    } else {
+      this.videoUrl = '';
+    }
+
+    if (this.song.thumbnailFilename) {
+      this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
+    } else {
+      this.thumbnailUrl = '';
+    }
+  }
+
+  private updateMediaElementReference(): void {
+    // Set the active media element reference based on the song data
+    if (this.song?.videoFilename && this.videoPlayerRef?.nativeElement) {
+        this.mediaElement = this.videoPlayerRef.nativeElement;
+        console.log("Using video element");
+    } else if (this.song?.audioFilename && this.audioPlayerRef?.nativeElement) {
+        this.mediaElement = this.audioPlayerRef.nativeElement;
+        console.log("Using audio element");
+    } else {
+        this.mediaElement = null;
+        console.log("No playable media found or elements not ready");
+    }
+  }
+
+  private tryAutoplay(): void {
+    if (this.mediaElement) {
+        this.mediaElement.load();
+        this.mediaElement.play().catch(e => console.log('Autoplay prevented:', e));
     }
   }
 
@@ -201,9 +242,9 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   
   // Update progress bar and current time
   updateProgress(): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
-    const currentTime = this.audioElement.currentTime;
+    const currentTime = this.mediaElement.currentTime;
     this.currentTime = this.formatTime(currentTime);
     
     if (this.duration > 0) {
@@ -213,8 +254,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   
   // Handle metadata loaded event
   onMetadataLoaded(): void {
-    if (!this.audioElement) return;
-    this.duration = this.audioElement.duration;
+    if (!this.mediaElement) return;
+    this.duration = this.mediaElement.duration;
     this.formattedDuration = this.formatTime(this.duration);
   }
 
@@ -228,58 +269,55 @@ export class SongPlayerComponent implements OnInit, OnChanges {
 
   // Navegar a una posición específica en la canción
   seek(event: MouseEvent): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
     const progressContainer = event.currentTarget as HTMLElement;
     const rect = progressContainer.getBoundingClientRect();
     const pos = (event.clientX - rect.left) / rect.width;
     const seekTime = pos * this.duration;
     
-    this.audioElement.currentTime = seekTime;
+    this.mediaElement.currentTime = seekTime;
     this.currentTime = this.formatTime(seekTime);
     this.progressPercentage = (seekTime / this.duration) * 100;
   }
 
   // Retroceder 10 segundos
   seekBackward(): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
-    const newTime = Math.max(0, this.audioElement.currentTime - 10);
-    this.audioElement.currentTime = newTime;
+    const newTime = Math.max(0, this.mediaElement.currentTime - 10);
+    this.mediaElement.currentTime = newTime;
     this.currentTime = this.formatTime(newTime);
     this.progressPercentage = (newTime / this.duration) * 100;
   }
 
   // Avanzar 10 segundos
   seekForward(): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
-    const newTime = Math.min(this.duration, this.audioElement.currentTime + 10);
-    this.audioElement.currentTime = newTime;
+    const newTime = Math.min(this.duration, this.mediaElement.currentTime + 10);
+    this.mediaElement.currentTime = newTime;
     this.currentTime = this.formatTime(newTime);
     this.progressPercentage = (newTime / this.duration) * 100;
   }
   
   // Play/Pause toggle
   playOrPause(): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
-    if (this.audioElement.paused) {
-      this.audioElement.play().then(() => {
-        this.isPlaying = true;
-      });
+    if (this.isPlaying) {
+      this.mediaElement.pause();
     } else {
-      this.audioElement.pause();
-      this.isPlaying = false;
+      this.mediaElement.play().catch(e => console.log('Play prevented:', e));
     }
   }
   
   // Stop playback
   stopPlayback(): void {
-    if (!this.audioElement) return;
+    if (!this.mediaElement) return;
     
-    this.audioElement.pause();
-    this.audioElement.currentTime = 0;
+    this.mediaElement.pause();
+    this.mediaElement.currentTime = 0;
     this.isPlaying = false;
     this.currentTime = '00:00';
     this.progressPercentage = 0;
@@ -306,21 +344,26 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   
   // Handle play event
   onPlay(): void {
+    console.log('Media is playing');
     this.isPlaying = true;
+    this.playerStateService.setIsPlaying(true);
   }
   
   // Handle pause event
   onPause(): void {
+    console.log('Media is paused');
     this.isPlaying = false;
+    this.playerStateService.setIsPlaying(false);
   }
   
   onSongEnded(): void {
+    console.log('Media ended');
     this.isPlaying = false;
     if (this.isLoopEnabled) {
       // Si el bucle está activado, reproducir la misma canción de nuevo
-      if (this.audioElement) {
-        this.audioElement.currentTime = 0;
-        this.audioElement.play().catch(console.error);
+      if (this.mediaElement) {
+        this.mediaElement.currentTime = 0;
+        this.mediaElement.play().catch(console.error);
         this.isPlaying = true;
       }
     } else {
@@ -397,8 +440,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   // Alternar el estado de bucle
   toggleLoop(): void {
     this.isLoopEnabled = !this.isLoopEnabled;
-    if (this.audioElement) {
-      this.audioElement.loop = this.isLoopEnabled;
+    if (this.mediaElement) {
+      this.mediaElement.loop = this.isLoopEnabled;
     }
   }
 

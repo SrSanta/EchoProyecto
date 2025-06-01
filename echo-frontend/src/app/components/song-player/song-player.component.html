@@ -5,23 +5,37 @@
   
   @if (song) {
     <div class="cd-player-display">
-      <div class="track-info-container">
-        <div class="track-details">
-          <div class="cd-player-artist">
-            <span class="label">Artist:</span>
-            <div class="value">{{ song.user.username || 'Unknown' }}</div>
+      @if (song?.videoFilename) {
+        <video #videoPlayerVisible
+               [src]="videoUrl"
+               (timeupdate)="updateProgress()"
+               (loadedmetadata)="onMetadataLoaded()"
+               (play)="onPlay()"
+               (pause)="onPause()"
+               (ended)="onSongEnded()"
+               class="video-player-visible"
+               controls>
+          Your browser does not support the video element.
+        </video>
+      } @else {
+        <div class="track-info-container">
+          <div class="track-details">
+            <div class="cd-player-artist">
+              <span class="label">Artist:</span>
+              <div class="value">{{ song.user.username || 'Unknown' }}</div>
+            </div>
+            
+            <div class="cd-player-title">
+              <span class="label">Title:</span>
+              <div class="value">{{ song.title || 'No title' }}</div>
+            </div>
           </div>
           
-          <div class="cd-player-title">
-            <span class="label">Title:</span>
-            <div class="value">{{ song.title || 'No title' }}</div>
+          <div class="track-image" *ngIf="thumbnailUrl">
+            <img [src]="thumbnailUrl" alt="Album Art" class="album-art">
           </div>
         </div>
-        
-        <div class="track-image" *ngIf="thumbnailUrl">
-          <img [src]="thumbnailUrl" alt="Album Art" class="album-art">
-        </div>
-      </div>
+      }
     </div>
     
     <div class="cd-player-controls">
