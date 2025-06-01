@@ -68,6 +68,7 @@ public class SecurityBeansConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite todas las peticiones OPTIONS para que CORS funcione bien que si no explota
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/songs/user").authenticated()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/audio/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/songs").permitAll()
@@ -79,7 +80,8 @@ public class SecurityBeansConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)));
 
         return http.build();
     }

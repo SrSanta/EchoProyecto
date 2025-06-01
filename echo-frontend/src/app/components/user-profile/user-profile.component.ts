@@ -8,11 +8,12 @@ import { RouterModule } from '@angular/router';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 import { PlaylistsPageComponent } from '../playlists/playlists-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { UserUploadedSongsComponent } from '../user-uploaded-songs/user-uploaded-songs.component';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, UserProfileEditComponent, PlaylistsPageComponent],
+  imports: [CommonModule, RouterModule, UserProfileEditComponent, PlaylistsPageComponent, UserUploadedSongsComponent],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })

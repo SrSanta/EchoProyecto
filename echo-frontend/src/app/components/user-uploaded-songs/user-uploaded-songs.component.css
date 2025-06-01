@@ -1,0 +1,18 @@
+.user-uploaded-songs-container {
+  /* Add styling for the main container */
+}
+
+.songs-list {
+  /* Add styling for the list of songs */
+}
+
+.song-item {
+  /* Add styling for individual song items */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+} 

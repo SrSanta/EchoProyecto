@@ -49,6 +49,20 @@
   <!-- Profile Edit Form -->
   <app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
 
+  <!-- User Uploaded Songs Section -->
+  <div *ngIf="!editMode && !showPlaylists">
+    <div class="window-titlebar">
+      <span>Mis Canciones Subidas</span>
+      <span class="window-controls">
+        <span class="window-minimize">-</span>
+        <span class="window-close">✕</span>
+      </span>
+    </div>
+    <div class="window-content">
+      <app-user-uploaded-songs></app-user-uploaded-songs>
+    </div>
+  </div>
+
   <!-- Playlists Section -->
   <div *ngIf="showPlaylists" class="playlists-section">
     <div class="window-titlebar">

@@ -3,7 +3,9 @@ package com.echo.echobackend.controller;
 import com.echo.echobackend.config.FileStorageProperties;
 import com.echo.echobackend.exception.SongNotFoundException;
 import com.echo.echobackend.model.Song;
+import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.SongService;
+import com.echo.echobackend.repository.UserRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -30,10 +33,12 @@ public class SongController {
 
     private final SongService songService;
     private final FileStorageProperties fileStorageProperties;
+    private final UserRepository userRepository;
 
-    public SongController(SongService songService, FileStorageProperties fileStorageProperties) {
+    public SongController(SongService songService, FileStorageProperties fileStorageProperties, UserRepository userRepository) {
         this.songService = songService;
         this.fileStorageProperties = fileStorageProperties;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/songs/upload")
@@ -105,13 +110,38 @@ public class SongController {
     }
 
     @DeleteMapping("/songs/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> deleteSong(@PathVariable Long id) {
-        if (songService.findById(id).isPresent()) {
-            songService.deleteSong(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> deleteSong(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+             // This check might be redundant with @PreAuthorize, but good for clarity
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
+        if (!userOptional.isPresent()) {
+             // User not found in DB despite being authenticated? Should not happen often.
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+        User authenticatedUser = userOptional.get();
+
+        try {
+            songService.deleteById(id, authenticatedUser);
+            return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // Still return NO_CONTENT for success
+        } catch (RuntimeException e) {
+            // Catch the ownership check exception or SongNotFoundException
+            System.err.println("Deletion failed for song " + id + ": " + e.getMessage());
+            // Depending on the exception, return 403 Forbidden or 404 Not Found
+            if (e.getMessage().contains("No tienes permiso")) {
+                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.FORBIDDEN);
+            } else if (e.getMessage().contains("Canción no encontrada")) {
+                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            } else {
+                 return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+             // Catch any other unexpected exceptions
+             System.err.println("Unexpected error during deletion of song " + id + ": " + e.getMessage());
+             return new ResponseEntity<String>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -158,5 +188,23 @@ public class SongController {
              System.err.println("IO Error serving audio file: " + filename + " - " + ex.getMessage());
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/songs/user")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Song>> getUserSongs(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User user = userOptional.get();
+        
+        List<Song> userSongs = songService.findByUser(user);
+        
+        return ResponseEntity.ok(userSongs);
     }
 }

@@ -1,0 +1,23 @@
+<div class="user-uploaded-songs-container">
+  <h2>Your Uploaded Songs</h2>
+
+  <div *ngIf="loading">Loading songs...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="songs.length > 0" class="songs-list">
+    <div *ngFor="let song of songs" class="song-item">
+      <h3>{{ song.title }}</h3>
+      <p>Artist: {{ song.artist }}</p>
+      <p>Genre: {{ song.genre.name }}</p>
+      <p>Release Year: {{ song.releaseYear }}</p>
+      <!-- Add play button and other controls here -->
+      <button (click)="deleteSong(song.id!)">Delete</button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && songs.length === 0">
+    <p>You haven't uploaded any songs yet.</p>
+    <!-- Maybe add a link to the upload page -->
+  </div>
+</div> 

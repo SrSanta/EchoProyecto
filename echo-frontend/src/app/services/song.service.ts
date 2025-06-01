@@ -49,11 +49,14 @@ export class SongService {
     return this.http.get<Song[]>(`${this.apiUrl}/search?${query}`);
   }
 
+  getUserSongs(): Observable<Song[]> {
+    return this.http.get<Song[]>(`${this.apiUrl}/user`);
+  }
 
-  // deleteSong(id: number): Observable<void> {
-  //   return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  // }
-  
+  deleteSong(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   // updateSongMetadata(id: number, songData: Partial<Song>): Observable<Song> {
   //   // Asegúrate de enviar solo los campos permitidos para actualizar
   //   const updatePayload = { title: songData.title, genre: songData.genre /* otros */ };

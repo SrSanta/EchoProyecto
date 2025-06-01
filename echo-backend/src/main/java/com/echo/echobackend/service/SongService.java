@@ -9,6 +9,9 @@ import com.echo.echobackend.repository.GenreRepository;
 import com.echo.echobackend.repository.RoleRepository;
 import com.echo.echobackend.repository.SongRepository;
 import com.echo.echobackend.repository.UserRepository;
+import com.echo.echobackend.repository.PlaybackHistoryRepository;
+import com.echo.echobackend.repository.PlaylistSongRepository;
+import com.echo.echobackend.repository.LikeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,17 +36,26 @@ public class SongService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final GenreRepository genreRepository;
+    private final PlaybackHistoryRepository playbackHistoryRepository;
+    private final PlaylistSongRepository playlistSongRepository;
+    private final LikeRepository likeRepository;
     private final Path fileStorageLocation;
 
     public SongService(SongRepository songRepository,
                        UserRepository userRepository,
                        RoleRepository roleRepository,
                        GenreRepository genreRepository,
+                       PlaybackHistoryRepository playbackHistoryRepository,
+                       PlaylistSongRepository playlistSongRepository,
+                       LikeRepository likeRepository,
                        FileStorageProperties fileStorageProperties) {
         this.songRepository = songRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.genreRepository = genreRepository;
+        this.playbackHistoryRepository = playbackHistoryRepository;
+        this.playlistSongRepository = playlistSongRepository;
+        this.likeRepository = likeRepository;
 
         String uploadDir = fileStorageProperties.getUploadDir();
         if (uploadDir.trim().isEmpty()) {
@@ -162,10 +174,6 @@ public class SongService {
         return songRepository.findAll();
     }
 
-    public void deleteSong(Long id) {
-        songRepository.deleteById(id);
-    }
-
     public Song updateSong(Long id, Song songDetails) {
         return songRepository.findById(id).map(song -> {
             song.setTitle(songDetails.getTitle());
@@ -174,8 +182,41 @@ public class SongService {
         }).orElseThrow(() -> new RuntimeException("Canción no encontrada con ID: " + id));
     }
 
-    public void deleteById(Long id) {
+    @Transactional
+    public void deleteById(Long id, User authenticatedUser) {
+        Song song = songRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Canción no encontrada con ID: " + id));
+
+        if (!song.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new RuntimeException("No tienes permiso para eliminar esta canción."); // Or a more specific exception
+        }
+
+        // Optionally delete the files from the file system
+        // deleteFile(song.getAudioFilename());
+        // deleteFile(song.getThumbnailFilename());
+        // deleteFile(song.getVideoFilename());
+
+        // Delete associated playback history records
+        playbackHistoryRepository.deleteBySong(song);
+
+        // Delete associated playlist songs records
+        playlistSongRepository.deleteBySong(song);
+
+        // Delete associated like records
+        likeRepository.deleteBySong(song);
+
         songRepository.deleteById(id);
+    }
+
+    private void deleteFile(String filename) {
+        if (filename == null) return;
+        Path filePath = this.fileStorageLocation.resolve(filename);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException ex) {
+            System.err.println("Failed to delete file " + filename + ": " + ex.getMessage());
+            // Consider logging or throwing a custom exception
+        }
     }
 
     public List<Song> findByGenre(String genreName) {
@@ -188,5 +229,9 @@ public class SongService {
 
     public List<Song> findByTitle(String title) {
         return songRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Song> findByUser(User user) {
+        return songRepository.findByUser(user);
     }
 }
