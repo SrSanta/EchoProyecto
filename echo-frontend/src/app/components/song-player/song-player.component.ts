@@ -80,11 +80,21 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     if (!this.song) return;
     
     if (this.song.audioFilename) {
-      this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+      this.audioUrl = `${environment.apiUrl}/api/${this.song.audioFilename}`;
+    } else {
+      this.audioUrl = '';
+    }
+    
+    if (this.song.videoFilename) {
+      this.videoUrl = `${environment.apiUrl}/api/${this.song.videoFilename}`;
+    } else {
+      this.videoUrl = '';
     }
     
     if (this.song.thumbnailFilename) {
-      this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
+      this.thumbnailUrl = `${environment.apiUrl}/api/${this.song.thumbnailFilename}`;
+    } else {
+      this.thumbnailUrl = '';
     }
     
     if (this.userId && this.song.id) {
@@ -109,10 +119,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     if (changes['song'] && changes['song'].currentValue) {
       console.log("Song input changed:", this.song);
       this.updateMediaUrls();
-      this.updateMediaElementReference(); // Update reference when song changes
-      
-      // Add autoplay when song changes
       setTimeout(() => {
+        this.updateMediaElementReference();
         this.tryAutoplay();
       }, 0);
       
@@ -166,19 +174,19 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     }
 
     if (this.song.audioFilename) {
-      this.audioUrl = `${environment.apiUrl}/audio/${this.song.audioFilename}`;
+      this.audioUrl = `${environment.apiUrl}/api/${this.song.audioFilename}`;
     } else {
       this.audioUrl = '';
     }
 
     if (this.song.videoFilename) {
-      this.videoUrl = `${environment.apiUrl}/video/${this.song.videoFilename}`;
+      this.videoUrl = `${environment.apiUrl}/api/${this.song.videoFilename}`;
     } else {
       this.videoUrl = '';
     }
 
     if (this.song.thumbnailFilename) {
-      this.thumbnailUrl = `${environment.apiUrl}/audio/${this.song.thumbnailFilename}`;
+      this.thumbnailUrl = `${environment.apiUrl}/api/${this.song.thumbnailFilename}`;
     } else {
       this.thumbnailUrl = '';
     }

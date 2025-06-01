@@ -160,10 +160,38 @@ public class SongController {
         return ResponseEntity.badRequest().body(List.of());
     }
 
+    @GetMapping("/api/thumbnails/{filename:.+}")
+    public ResponseEntity<Resource> serveThumbnailFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = Files.probeContentType(filePath);
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(resource); // No need for Accept-Ranges header for images
+            } else {
+                System.err.println("Thumbnail file not found or not readable: " + filename);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException ex) {
+             System.err.println("Malformed URL for thumbnail file: " + filename + " - " + ex.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (IOException ex) {
+             System.err.println("IO Error serving thumbnail file: " + filename + " - " + ex.getMessage());
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/audio/{filename:.+}")
     public ResponseEntity<Resource> serveAudioFile(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve(filename).normalize();
+            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("audio").resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
@@ -198,7 +226,19 @@ public class SongController {
             if (resource.exists() && resource.isReadable()) {
                 String contentType = Files.probeContentType(filePath);
                 if (contentType == null) {
-                    contentType = "application/octet-stream";
+                    // Fallback: Determine based on file extension
+                    int lastDot = filename.lastIndexOf('.');
+                    if (lastDot > 0) {
+                        String fileExtension = filename.substring(lastDot + 1).toLowerCase();
+                        switch (fileExtension) {
+                            case "mp4": contentType = "video/mp4"; break;
+                            case "webm": contentType = "video/webm"; break;
+                            // Add other video types as needed
+                            default: contentType = "application/octet-stream"; break;
+                        }
+                    } else {
+                         contentType = "application/octet-stream"; // Default fallback if no extension
+                    }
                 }
 
                 return ResponseEntity.ok()
