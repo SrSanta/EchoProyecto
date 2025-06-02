@@ -9,6 +9,7 @@ import { ExploreComponent } from './components/explore/explore.component';
 import { SongUploadComponent } from './components/song-upload/song-upload.component';
 import { PlaylistsPageComponent } from './components/playlists/playlists-page.component';
 import { PublicPlaylistsPageComponent } from './components/public-playlists/public-playlists-page.component';
+import { ArtistProfileComponent } from './components/artist-profile/artist-profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -46,6 +47,10 @@ export const routes: Routes = [
         component: UserProfileEditComponent
       }
     ]
+  },
+  {
+    path: 'artist/:username',
+    component: ArtistProfileComponent
   },
   {
     path: '',

@@ -77,7 +77,10 @@ public class SecurityBeansConfig {
                                 "/api/thumbnails/**",
                                 "/api/users/profile-image/**",
                                 "/audio/**",
-                                "/audio/thumbnail/**"
+                                "/audio/thumbnail/**",
+                                "/api/songs",
+                                "/api/users/artists",
+                                "/api/playlists/public"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

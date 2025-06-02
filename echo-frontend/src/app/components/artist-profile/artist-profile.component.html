@@ -1,0 +1,23 @@
+<div class="artist-profile-container">
+  <div *ngIf="loading">Cargando perfil del artista...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="artist && !loading && !error" class="profile-details">
+    <h2>{{ artist.username }}</h2>
+    <img [src]="getProfileImageUrl()" alt="Imagen de perfil de {{ artist.username }}" class="profile-image">
+
+    <!-- Aquí irán los componentes para mostrar canciones y playlists -->
+    <div class="artist-songs-section">
+      <h3>Canciones</h3>
+      <!-- Componente de canciones del artista -->
+       <app-artist-songs [artistUsername]="artist.username"></app-artist-songs>
+    </div>
+
+    <div class="artist-playlists-section">
+      <h3>Playlists Públicas</h3>
+      <!-- Componente de playlists públicas del artista -->
+       <app-artist-playlists [artistUsername]="artist.username"></app-artist-playlists>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,18 @@
+<div class="artist-playlists-list">
+  <div *ngIf="loading">Cargando playlists...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="playlists.length > 0 && !loading && !error" class="playlists-grid">
+    <div *ngFor="let playlist of playlists" class="playlist-item">
+      <!-- Aquí puedes mostrar la información de la playlist -->
+      <h4>{{ playlist.name }}</h4>
+      <p>Canciones: {{ playlist.songs?.length || 0 }}</p>
+      <!-- Puedes añadir un enlace para ver la playlist, etc. -->
+    </div>
+  </div>
+
+  <div *ngIf="playlists.length === 0 && !loading && !error">
+    <p>Este artista aún no ha creado playlists públicas.</p>
+  </div>
+</div> 

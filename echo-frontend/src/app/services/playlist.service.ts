@@ -116,6 +116,23 @@ export class PlaylistService {
     );
   }
 
+  /**
+   * Obtener playlists públicas de un usuario específico por nombre de usuario.
+   * @param username El nombre de usuario del artista.
+   * @returns Observable con un array de PlaylistDTO.
+   */
+  getPublicPlaylistsByUsername(username: string): Observable<Playlist[]> {
+    if (!username || username.trim().length === 0) {
+      return of([]);
+    }
+    return this.http.get<Playlist[]>(`${this.apiUrl}/public/user/${username}`).pipe(
+      catchError(error => {
+        console.error(`Error loading public playlists for user ${username}:`, error);
+        return of([]);
+      })
+    );
+  }
+
   /** Obtener playlist pública por enlace */
   getPublicPlaylist(playlistId: number): Observable<Playlist> {
     return this.http.get<Playlist>(`${this.apiUrl}/public/${playlistId}`).pipe(

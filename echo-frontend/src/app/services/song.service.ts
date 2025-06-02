@@ -2,8 +2,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Song } from '../models/song.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,12 @@ export class SongService {
   }
 
   getAllSongs(): Observable<Song[]> {
-    return this.http.get<Song[]>(this.apiUrl);
+    return this.http.get<Song[]>(this.apiUrl).pipe(
+      catchError(error => {
+        console.error('Error loading all songs:', error);
+        return of([]); // Return empty array on error
+      })
+    );
   }
 
   // Alias para mantener consistencia con otros servicios
@@ -26,8 +32,13 @@ export class SongService {
     return this.getAllSongs();
   }
 
-  getSongById(id: number): Observable<Song> {
-    return this.http.get<Song>(`${this.apiUrl}/${id}`);
+  getSongById(id: number): Observable<Song | undefined> {
+    return this.http.get<Song>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error loading song ${id}:`, error);
+        return of(undefined); // Return undefined on error
+      })
+    );
   }
 
   /**
@@ -50,11 +61,38 @@ export class SongService {
   }
 
   getUserSongs(): Observable<Song[]> {
-    return this.http.get<Song[]>(`${this.apiUrl}/user`);
+    return this.http.get<Song[]>(`${this.apiUrl}/user`).pipe(
+      catchError(error => {
+        console.error('Error loading user songs.', error);
+        return of([]);
+      })
+    );
   }
 
   deleteSong(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error deleting song ${id}:`, error);
+        throw error; // Rethrow to be caught by component if needed
+      })
+    );
+  }
+
+  /**
+   * Obtener canciones por nombre de usuario.
+   * @param username El nombre de usuario del artista.
+   * @returns Observable con un array de Song.
+   */
+  getSongsByUsername(username: string): Observable<Song[]> {
+    if (!username || username.trim().length === 0) {
+      return of([]);
+    }
+    return this.http.get<Song[]>(`${this.apiUrl}/user/${username}`).pipe(
+      catchError(error => {
+        console.error(`Error loading songs for user ${username}:`, error);
+        return of([]);
+      })
+    );
   }
 
   // updateSongMetadata(id: number, songData: Partial<Song>): Observable<Song> {

@@ -1,0 +1,20 @@
+<div class="artist-songs-list">
+  <div *ngIf="loading">Cargando canciones...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="songs.length > 0 && !loading && !error" class="songs-grid">
+    <div *ngFor="let song of songs" class="song-item">
+      <!-- Aquí puedes mostrar la información de la canción -->
+      <h4>{{ song.title }}</h4>
+      <p>Artista: {{ song.artist }}</p>
+      <p>Género: {{ song.genre?.name }}</p>
+      <img [src]="getThumbnailUrl(song.thumbnailFilename)" alt="Miniatura de {{ song.title }}">
+      <!-- Puedes añadir un botón para reproducir la canción, etc. -->
+    </div>
+  </div>
+
+  <div *ngIf="songs.length === 0 && !loading && !error">
+    <p>Este artista aún no ha subido canciones.</p>
+  </div>
+</div> 

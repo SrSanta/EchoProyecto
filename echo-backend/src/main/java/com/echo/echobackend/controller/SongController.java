@@ -5,6 +5,7 @@ import com.echo.echobackend.exception.SongNotFoundException;
 import com.echo.echobackend.model.Song;
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.SongService;
+import com.echo.echobackend.service.UserService;
 import com.echo.echobackend.repository.UserRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -34,11 +37,14 @@ public class SongController {
     private final SongService songService;
     private final FileStorageProperties fileStorageProperties;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public SongController(SongService songService, FileStorageProperties fileStorageProperties, UserRepository userRepository) {
+    @Autowired
+    public SongController(SongService songService, FileStorageProperties fileStorageProperties, UserRepository userRepository, UserService userService) {
         this.songService = songService;
         this.fileStorageProperties = fileStorageProperties;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/songs/upload")
@@ -256,6 +262,17 @@ public class SongController {
             System.err.println("IO Error serving video file: " + filename + " - " + ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/songs/user/{username}")
+    public ResponseEntity<List<Song>> getSongsByUsername(@PathVariable String username) {
+        Optional<User> userOptional = userService.findByUsername(username);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User user = userOptional.get();
+        List<Song> songs = songService.findByUser(user);
+        return ResponseEntity.ok(songs);
     }
 
     @GetMapping("/songs/user")

@@ -211,15 +211,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   viewPlaylist(playlist: Playlist): void {
-    if (playlist.id) {
-      this.router.navigate(['/playlist', playlist.id]);
-    }
-  }
-
-  viewArtist(artist: any): void {
-    if (artist.id) {
-      this.router.navigate(['/artist', artist.id]);
-    }
+    // Lógica para ver detalles de la playlist
+    console.log('View playlist:', playlist);
+    // Implementar navegación a la página de detalles de playlist
   }
 
   // Cargar playlists del usuario

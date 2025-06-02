@@ -8,4 +8,5 @@ export interface User {
   roles?: Role[];
   registrationDate?: string;
   isProfilePublic?: boolean;
+  profileImage?: string;
 }

@@ -62,6 +62,13 @@ public class PlaylistService {
         return playlistRepository.findByUser(user);
     }
 
+    // Nuevo método para obtener playlists públicas por usuario
+    public List<Playlist> getPublicPlaylistsByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + username));
+        return playlistRepository.findByUserAndIsPublicTrue(user);
+    }
+
     public List<Playlist> getAllPublicPlaylists() {
         return playlistRepository.findByIsPublicTrue();
     }

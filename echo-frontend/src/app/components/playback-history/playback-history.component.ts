@@ -66,9 +66,14 @@ export class PlaybackHistoryComponent implements OnInit {
     uniqueSongIds.forEach(songId => {
       if (typeof songId !== 'number' || isNaN(songId)) return;
       this.songService.getSongById(songId).subscribe({
-        next: (song: Song) => {
-          this.songTitles[songId] = song.title;
-          this.songArtists[songId] = song.artist || '(desconocido)';
+        next: (song: Song | undefined) => {
+          if (song) {
+            this.songTitles[songId] = song.title;
+            this.songArtists[songId] = song.artist || '(desconocido)';
+          } else {
+            this.songTitles[songId] = '(desconocido)';
+            this.songArtists[songId] = '(desconocido)';
+          }
         },
         error: () => {
           this.songTitles[songId] = '(desconocido)';

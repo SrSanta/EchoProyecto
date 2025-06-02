@@ -138,13 +138,13 @@
                 <h2 class="section-title">Artistas</h2>
                 <div class="artist-grid">
                   @for (artist of searchResults.artists; track artist.id) {
-                    <div class="artist-card" (click)="viewArtist(artist)">
+                    <a class="artist-card" [routerLink]="['/artist', artist.username]">
                       <div class="artist-avatar">
                         <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" 
                             [alt]="'Avatar de ' + artist.name">
                       </div>
                       <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
-                    </div>
+                    </a>
                   }
                 </div>
               </div>
@@ -242,13 +242,13 @@
             <h2 class="section-title">Artistas</h2>
             <div class="artist-grid">
               @for (artist of searchResults.artists; track artist.id) {
-                <div class="artist-card" (click)="viewArtist(artist)">
+                <a class="artist-card" [routerLink]="['/artist', artist.username]">
                   <div class="artist-avatar">
                     <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" 
                         [alt]="'Avatar de ' + artist.name">
                   </div>
                   <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
-                </div>
+                </a>
               }
               @if (searchResults.artists.length === 0) {
                 <div class="no-results">

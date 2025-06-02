@@ -131,6 +131,16 @@ public class PlaylistController {
         return ResponseEntity.ok(dto);
     }
 
+    // NUEVO ENDPOINT: Listar playlists públicas por usuario
+    @GetMapping("/public/user/{username}")
+    public ResponseEntity<List<PlaylistDTO>> getPublicPlaylistsByUsername(@PathVariable String username) {
+        List<Playlist> publicPlaylists = playlistService.getPublicPlaylistsByUser(username);
+        List<PlaylistDTO> dtos = publicPlaylists.stream()
+            .map(playlistMapper::toDto)
+            .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
     // NUEVO ENDPOINT: Listar todas las públicas
     @GetMapping("/public")
     public ResponseEntity<List<PlaylistDTO>> getAllPublicPlaylists() {
@@ -140,7 +150,7 @@ public class PlaylistController {
             .toList();
         return ResponseEntity.ok(dtos);
     }
-    
+
     @GetMapping("/search")
     public ResponseEntity<List<PlaylistDTO>> searchPlaylists(@RequestParam(required = false) String name) {
         try {
