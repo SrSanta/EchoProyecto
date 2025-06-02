@@ -3,7 +3,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { User } from '../models/user.model';
+
+export interface AuthUser {
+  username: string;
+  role?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +15,7 @@ import { User } from '../models/user.model';
 export class AuthService {
   private tokenKey = 'auth_token';
   private apiUrl = `${environment.apiUrl}/api/auth`;
-  private currentUserSubject = new BehaviorSubject<string | null>(null);
+  private currentUserSubject = new BehaviorSubject<AuthUser | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
@@ -19,7 +23,7 @@ export class AuthService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)) {
-      this.currentUserSubject.next(this.getUsernameFromTokenInternal());
+      this.currentUserSubject.next(this.getUserFromTokenInternal());
     }
   }
 
@@ -61,7 +65,8 @@ export class AuthService {
         if (response && response.token) {
           this.setItemInLocalStorage(this.tokenKey, response.token);
           if (isPlatformBrowser(this.platformId)) {
-             this.currentUserSubject.next(this.getUsernameFromTokenInternal());
+            const authUser = this.getUserFromTokenInternal();
+            this.currentUserSubject.next(authUser);
           }
         } else {
           console.error('Login successful but no token received.');
@@ -89,7 +94,7 @@ export class AuthService {
   }
 
   getUsername(): string | null {
-    return this.currentUserSubject.value;
+    return this.currentUserSubject.value?.username || null;
   }
 
   isAuthenticated(): boolean {
@@ -113,18 +118,40 @@ export class AuthService {
     }
   }
 
-  private getUsernameFromTokenInternal(): string | null {
+  private getUserFromTokenInternal(): AuthUser | null {
     const token = this.getToken();
     if (!token || !isPlatformBrowser(this.platformId)) {
         return null;
     }
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.sub || null;
+      const username = payload.sub || null;
+      let role: string | undefined = undefined;
+
+      if (payload.roles && Array.isArray(payload.roles)) {
+        if (payload.roles.includes('ROLE_ADMIN')) {
+          role = 'ADMIN';
+        } else if (payload.roles.length > 0) {
+            // Opcional: Puedes asignar el primer rol encontrado si no es ADMIN
+            // Por ahora, si no es ADMIN y tiene otros roles, el rol seguirá siendo undefined
+        }
+      }
+
+      if (username) {
+        return { username, role };
+      } else {
+        console.error("Token payload missing username ('sub')", payload);
+        this.removeItemFromLocalStorage(this.tokenKey);
+        return null;
+      }
     } catch (e) {
-      console.error("Error decoding token to get username:", e);
+      console.error("Error decoding token to get user info:", e);
       this.removeItemFromLocalStorage(this.tokenKey);
       return null;
     }
+  }
+
+  getAuthenticatedUser(): AuthUser | null {
+      return this.currentUserSubject.value;
   }
 }

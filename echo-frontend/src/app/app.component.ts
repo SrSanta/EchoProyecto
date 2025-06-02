@@ -27,12 +27,14 @@ export class AppComponent {
 
   isLoggedIn$: Observable<boolean>;
   username$: Observable<string | null>;
+  isAdmin$: Observable<boolean>;
   currentSongForPlayer$: Observable<Song | null> = this.playerStateService.currentSong$;
   hasSongsInQueue = false;
 
   constructor() {
     this.isLoggedIn$ = this.authService.currentUser$.pipe(map(user => !!user));
     this.username$ = this.authService.currentUser$;
+    this.isAdmin$ = this.authService.currentUser$.pipe(map(user => user?.role === 'ADMIN'));
 
     // Suscribirse a cambios en la cola
     // Función auxiliar para actualizar el estado de la cola

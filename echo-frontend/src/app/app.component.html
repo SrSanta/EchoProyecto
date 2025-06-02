@@ -3,8 +3,12 @@
     <h1><a routerLink="/" class="window">Echo 🎵</a></h1>
     
     <nav>
-      <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
-      <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
+      @if (isAdmin$ | async) {
+        <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
+      }
+      @if (isAdmin$ | async) {
+        <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
+      }
       
       @if (isLoggedIn$ | async; as loggedIn) {
         <a routerLink="/upload-song" routerLinkActive="active">⬆️ Subir Canción</a>

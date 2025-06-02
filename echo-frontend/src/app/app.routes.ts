@@ -49,7 +49,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/songs',
+    redirectTo: '/explore',
     pathMatch: 'full'
   },
   { path: '**', redirectTo: '/songs' }

@@ -1,26 +1,31 @@
-<div class="playback-history">
-  <h2>Historial de reproducción</h2>
-  <div *ngIf="loading">Cargando historial...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <table *ngIf="!loading && !error && history.length > 0" class="history-table">
-    <thead>
-      <tr>
-        <th>Canción</th>
-        <th>Artista</th>
-        <th>Fecha y hora</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of history; let i = index">
-        <td>
-          {{ item.song?.title || (item.songId !== undefined ? songTitles[item.songId] : '(desconocido)') || item.songId || '(desconocido)' }}
-        </td>
-        <td>
-          {{ item.song?.user?.username || item.song?.artist || (item.songId !== undefined ? songArtists[item.songId] : '(desconocido)') || '(desconocido)' }}
-        </td>
-        <td>{{ item.playbackTime || item.playbackTimestamp | date:'medium' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="!loading && !error && history.length === 0">No hay historial de reproducción.</div>
+<div class="playback-history window">
+  <div class="window-titlebar">
+    <span class="window-title">Historial de reproducción</span>
+    <!-- Considerar añadir botones de minimizar/maximizar/cerrar si la funcionalidad es relevante -->
+  </div>
+  <div class="window-content">
+    <div *ngIf="loading" class="loading-message">Cargando historial...</div>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <table *ngIf="!loading && !error && history.length > 0" class="history-table win95-table">
+      <thead>
+        <tr>
+          <th>Canción</th>
+          <th>Artista</th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of history; let i = index" class="win95-table-row">
+          <td>
+            {{ item.song?.title || songTitles[item.song!.id] || '(desconocido)' }}
+          </td>
+          <td>
+            {{ item.song?.user?.username || item.song?.artist || songArtists[item.song!.id] || '(desconocido)' }}
+          </td>
+          <td>{{ item.playbackTimestamp | date:'medium' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!loading && !error && history.length === 0" class="no-history-message">No hay historial de reproducción.</div>
+  </div>
 </div>
