@@ -8,7 +8,7 @@
       <!-- Aquí puedes mostrar la información de la canción -->
       <h4>{{ song.title }}</h4>
       <p>Artista: {{ song.artist }}</p>
-      <p>Género: {{ song.genre?.name }}</p>
+      <p>Género: {{ song.genre.name }}</p>
       <img [src]="getThumbnailUrl(song.thumbnailFilename)" alt="Miniatura de {{ song.title }}">
       <!-- Puedes añadir un botón para reproducir la canción, etc. -->
     </div>

@@ -68,13 +68,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.searchService.searchAll('').subscribe({
       next: (results) => {
-        console.log('loadAllContent - SearchService searchAll results:', results);
         this.searchResults = results;
         this.loading = false;
       },
       error: (error) => {
         console.error('loadAllContent - Error calling SearchService searchAll:', error);
-        console.error('Error al cargar el contenido:', error);
         this.error = 'Error al cargar el contenido. Por favor, inténtalo de nuevo.';
         this.loading = false;
       }
@@ -97,7 +95,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (results) => {
-        console.log('setupSearch - SearchService searchAll results:', results);
         this.searchResults = results;
         this.loading = false;
       },

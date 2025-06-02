@@ -19,7 +19,7 @@
                 <div (click)="playSong(song)" class="song-content">
                   <div class="song-thumbnail">
                     @if (song.thumbnailFilename) {
-                      <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename?.replace('thumbnail/', '')" 
+                      <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')" 
                            [alt]="'Portada de ' + song.title" 
                            class="song-thumbnail-small">
                     } @else {

@@ -5,7 +5,7 @@
   
   @if (song) {
     <div class="cd-player-display">
-      @if (song?.videoFilename) {
+      @if (song && song.videoFilename) {
         <video #videoPlayerVisible
                [src]="videoUrl"
                (timeupdate)="updateProgress()"
