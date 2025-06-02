@@ -160,7 +160,7 @@ public class SongController {
         return ResponseEntity.badRequest().body(List.of());
     }
 
-    @GetMapping("/api/thumbnails/{filename:.+}")
+    @GetMapping("/thumbnails/{filename:.+}")
     public ResponseEntity<Resource> serveThumbnailFile(@PathVariable String filename) {
         try {
             Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename).normalize();

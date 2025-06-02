@@ -162,8 +162,10 @@ export class UserProfileEditComponent implements OnInit {
   }
 
   getProfileImageUrl(): string {
+    // Usar el nuevo endpoint API para servir imágenes de perfil
     if (this.user && this.user.profileImage) {
-      return `${environment.apiUrl.replace('/api', '')}/audio/${this.user.profileImage}`;
+       // profileImage ya debería contener la ruta relativa, como 'profile/nombre_archivo.jpg'
+      return `${environment.apiUrl}/${this.user.profileImage}`;
     }
     return 'https://ui-avatars.com/api/?name=' + (this.user?.username || 'U') + '&background=cccccc&color=333333&size=128';
   }

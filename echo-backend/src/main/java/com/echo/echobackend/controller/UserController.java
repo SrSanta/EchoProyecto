@@ -13,9 +13,21 @@ import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -51,8 +63,6 @@ public class UserController {
         }
     }
 
-    private final UserService userService;
-    
     @GetMapping("/artists")
     public ResponseEntity<List<User>> getAllArtists() {
         try {
@@ -163,5 +173,35 @@ public class UserController {
         }
         userService.changePassword(id, newPassword);
         return ResponseEntity.ok("Contraseña actualizada exitosamente");
+    }
+
+    @GetMapping("/profile-image/{filename:.+}")
+    public ResponseEntity<org.springframework.core.io.Resource> serveProfileImage(@PathVariable String filename) {
+        try {
+            // Cargar el archivo como recurso desde el subdirectorio 'profile'
+            org.springframework.core.io.Resource file = fileStorageService.loadFileAsResource("profile/" + filename);
+
+            // Determinar el tipo de contenido
+            String contentType = null;
+            try {
+                contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
+            } catch (IOException ex) {
+                // Fallback a tipo de contenido por defecto si no se puede determinar
+                logger.info("Could not determine file type.");
+            }
+
+            // Si no se encontró el tipo de contenido, usar un tipo por defecto
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(file);
+        } catch (Exception e) {
+            // Manejar errores, por ejemplo, archivo no encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -13,15 +13,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${file.uploadDir}")
     private String uploadDir;
 
-    @Override
-    public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
-        String resolvedUploadDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
-
-        String resourceLocation = "file:" + resolvedUploadDir.replace("\\", "/") + (resolvedUploadDir.endsWith("/") || resolvedUploadDir.endsWith("\\") ? "" : "/");
-
-        System.out.println("--- [WebConfig] Mapeando /audio/** a la ubicación física: " + resourceLocation);
-
-        registry.addResourceHandler("/audio/**")
-                .addResourceLocations(resourceLocation);
-    }
+    //@Override
+    //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
+    //    String resolvedUploadDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
+    //
+    //    String resourceLocation = "file:" + resolvedUploadDir.replace("\\", "/") + (resolvedUploadDir.endsWith("/") || resolvedUploadDir.endsWith("\\") ? "" : "/");
+    //
+    //    System.out.println("--- [WebConfig] Mapeando /audio/** a la ubicación física: " + resourceLocation);
+    //
+    //    registry.addResourceHandler("/audio/**")
+    //            .addResourceLocations(resourceLocation);
+    //}
 }

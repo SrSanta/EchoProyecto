@@ -67,15 +67,16 @@ public class SecurityBeansConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite todas las peticiones OPTIONS para que CORS funcione bien que si no explota
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/songs/user").authenticated()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/audio/**").permitAll()
-                        .requestMatchers("/api/video/**").permitAll()
-                        .requestMatchers("/api/thumbnails/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/songs").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/playlists/public").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/artists").permitAll()
+                        .requestMatchers("/api/auth/**",
+                                "/error",
+                                "/api/songs/search",
+                                "/api/audio/**",
+                                "/api/video/**",
+                                "/api/thumbnails/**",
+                                "/api/users/profile-image/**",
+                                "/audio/**",
+                                "/audio/thumbnail/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
