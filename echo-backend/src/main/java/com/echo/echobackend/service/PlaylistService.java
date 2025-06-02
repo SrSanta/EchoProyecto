@@ -67,8 +67,11 @@ public class PlaylistService {
     }
     
     public List<Playlist> searchPlaylists(String name) {
-        if (name == null || name.trim().length() < 2) {
-            throw new IllegalArgumentException("El término de búsqueda debe tener al menos 2 caracteres");
+        // Permitir búsqueda con cualquier término no vacío
+        if (name == null || name.trim().isEmpty()) {
+             // Opcional: Manejar aquí si se desea devolver un resultado específico para búsqueda vacía
+             // Por ahora, devolvemos una lista vacía si el término es nulo o vacío
+             return List.of(); // Devuelve lista vacía para búsqueda vacía
         }
         return playlistRepository.findByNameContainingIgnoreCase(name);
     }

@@ -84,7 +84,7 @@ export class SearchService {
     if (!query.trim()) {
       return this.songService.getSongs();
     }
-    return this.http.get<Song[]>(`${this.apiUrl}/songs/search?title=${encodeURIComponent(query)}`);
+    return this.http.get<Song[]>(`${this.apiUrl}/api/songs/search?title=${encodeURIComponent(query)}`);
   }
 
   /**
@@ -96,7 +96,7 @@ export class SearchService {
     if (!query.trim()) {
       return this.playlistService.getAllPlaylists();
     }
-    return this.http.get<Playlist[]>(`${this.apiUrl}/playlists/search?name=${encodeURIComponent(query)}`);
+    return this.http.get<Playlist[]>(`${this.apiUrl}/api/playlists/search?name=${encodeURIComponent(query)}`);
   }
 
   /**
@@ -108,6 +108,6 @@ export class SearchService {
     if (!query.trim()) {
       return this.userService.getArtists();
     }
-    return this.http.get<any[]>(`${this.apiUrl}/users/search?username=${encodeURIComponent(query)}`);
+    return this.http.get<any[]>(`${this.apiUrl}/api/users/search?username=${encodeURIComponent(query)}`);
   }
 }

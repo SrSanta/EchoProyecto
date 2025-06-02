@@ -24,4 +24,12 @@ public class WebConfig implements WebMvcConfigurer {
     //    registry.addResourceHandler("/audio/**")
     //            .addResourceLocations(resourceLocation);
     //}
+
+    //@Override
+    //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
+    //    // No mapear rutas bajo /api/** como recursos estáticos
+    //    registry.addResourceHandler("/api/**")
+    //            .addResourceLocations()
+    //            .setCachePeriod(0); // Deshabilitar caché si es necesario para depuración
+    //}
 }

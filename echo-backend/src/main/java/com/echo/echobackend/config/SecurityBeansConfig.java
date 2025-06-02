@@ -70,6 +70,8 @@ public class SecurityBeansConfig {
                         .requestMatchers("/api/auth/**",
                                 "/error",
                                 "/api/songs/search",
+                                "/api/users/search",
+                                "/api/playlists/search",
                                 "/api/audio/**",
                                 "/api/video/**",
                                 "/api/thumbnails/**",

@@ -714,3 +714,42 @@ p { margin-bottom: 8px; }
   background: #c0c0c0;
   color: #000000;
 }
+
+/* Media Queries para responsividad móvil */
+@media (max-width: 600px) {
+  :host {
+    padding: 6px;
+  }
+
+  .cd-player-display {
+    padding: 8px;
+    margin: 6px 0;
+  }
+
+  .controls-row,
+  .controls-row-bottom {
+    gap: 4px; /* Reducir espacio entre elementos en pantallas pequeñas */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan en múltiples líneas */
+    justify-content: center; /* Centrar los botones si se envuelven */
+    padding: 0 4px; /* Reducir padding horizontal */
+  }
+
+  .control-btn {
+    width: 40px; /* Aumentar tamaño de los botones para mejor toque */
+    height: 40px;
+    font-size: 18px; /* Ajustar tamaño del icono */
+  }
+
+  .volume-slider {
+    width: 80px; /* Ancho fijo más pequeño para el deslizador en móvil */
+    max-width: 80px;
+  }
+  
+  .progress-container {
+    padding: 0 4px; /* Reducir padding */
+  }
+
+  .progress-track {
+    height: 20px; /* Aumentar altura del track para mejor toque */
+  }
+}

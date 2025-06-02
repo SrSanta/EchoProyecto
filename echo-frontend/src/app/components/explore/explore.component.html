@@ -77,7 +77,7 @@
                 <h2 class="section-title">Canciones</h2>
                 <div class="song-grid">
                   @for (song of searchResults.songs; track song.id) {
-                    <div class="song-card" (click)="playSong(song)">
+                    <div class="song-card" (click)="playSong(song)" (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
                       <div class="song-thumbnail">
                         @if (song.thumbnailFilename) {
                           <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename?.replace('thumbnail/', '')" 
@@ -94,7 +94,7 @@
                         <h3 class="song-title">{{ song.title }}</h3>
                         <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
                       </div>
-                      <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song, $event)">
+                      <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
                         + Cola
                       </button>
                     </div>
@@ -167,7 +167,7 @@
             <h2 class="section-title">Canciones</h2>
             <div class="song-grid">
               @for (song of searchResults.songs; track song.id) {
-                <div class="song-card" (click)="playSong(song)">
+                <div class="song-card" (click)="playSong(song)" (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
                   <div class="song-thumbnail">
                     @if (song.thumbnailFilename) {
                       <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename?.replace('thumbnail/', '')" 
@@ -184,7 +184,7 @@
                     <h3 class="song-title">{{ song.title }}</h3>
                     <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
                   </div>
-                  <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song, $event)">
+                  <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
                     + Cola
                   </button>
                 </div>
@@ -270,3 +270,28 @@
     </div>
   }
 </div>
+
+<!-- Menú contextual para añadir a playlist y cola -->
+<app-context-menu
+  *ngIf="showContextMenu && selectedSongId !== null"
+  [show]="showContextMenu"
+  [position]="contextMenuPosition"
+  [playlists]="userPlaylists"
+  [songId]="selectedSongId"
+  (addToPlaylist)="onAddToPlaylistHandler($event)"
+  (addToQueue)="onAddToQueueFromContextMenu($event)"
+  (closeMenu)="onCloseContextMenu()">
+</app-context-menu>
+
+<!-- Mensaje de error del menú contextual -->
+@if (contextMenuError) {
+  <div class="context-menu-error window">
+    <div class="window-titlebar">
+      <span>Error del Menú</span>
+      <button (click)="contextMenuError = null" class="close-btn">✕</button>
+    </div>
+    <div class="window-content">
+      <p>⚠️ {{ contextMenuError }}</p>
+    </div>
+  </div>
+}
