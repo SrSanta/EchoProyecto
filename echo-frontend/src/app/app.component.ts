@@ -33,7 +33,7 @@ export class AppComponent {
 
   constructor() {
     this.isLoggedIn$ = this.authService.currentUser$.pipe(map(user => !!user));
-    this.username$ = this.authService.currentUser$;
+    this.username$ = this.authService.currentUser$.pipe(map(user => user?.username ?? null));
     this.isAdmin$ = this.authService.currentUser$.pipe(map(user => user?.role === 'ADMIN'));
 
     // Suscribirse a cambios en la cola

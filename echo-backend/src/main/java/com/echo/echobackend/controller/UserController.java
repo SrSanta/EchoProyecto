@@ -2,12 +2,17 @@ package com.echo.echobackend.controller;
 
 import com.echo.echobackend.model.User;
 import com.echo.echobackend.service.UserService;
+import com.echo.echobackend.service.FileStorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.List;
@@ -23,11 +28,18 @@ import java.net.MalformedURLException;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    private final UserService userService;
+    private final FileStorageService fileStorageService;
+    private final HttpServletRequest request;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    public UserController(UserService userService, FileStorageService fileStorageService, HttpServletRequest request) {
+        this.userService = userService;
+        this.fileStorageService = fileStorageService;
+        this.request = request;
+    }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -42,23 +54,20 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
     public ResponseEntity<?> uploadProfileImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {
-            // Directorio donde se guardan las imágenes
-            String uploadDir = System.getProperty("user.dir") + "/mis_uploads/";
-            java.io.File dir = new java.io.File(uploadDir);
-            if (!dir.exists()) dir.mkdirs();
-
-            // Nombre único para la imagen
+            // Generar nombre único para la imagen
             String filename = "profile_" + id + "_" + System.currentTimeMillis() + "_" + image.getOriginalFilename();
-            java.nio.file.Path filepath = java.nio.file.Paths.get(uploadDir, filename);
-            image.transferTo(filepath);
+            
+            // Almacenar el archivo usando el servicio
+            fileStorageService.storeFile(image, filename);
 
-            // Actualiza el usuario
+            // Actualiza el usuario con el nombre de archivo guardado
             User user = userService.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             user.setProfileImage(filename);
             userService.updateUser(id, user);
 
             return ResponseEntity.ok(filename);
         } catch (Exception e) {
+            logger.error("Error al subir la imagen de perfil para el usuario {}", id, e);
             return new ResponseEntity<>("Error al subir la imagen de perfil: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -71,10 +80,6 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    public UserController(UserService userService) {
-        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -122,7 +127,6 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
     }
-
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -178,7 +182,7 @@ public class UserController {
     @GetMapping("/profile-image/{filename:.+}")
     public ResponseEntity<org.springframework.core.io.Resource> serveProfileImage(@PathVariable String filename) {
         try {
-            // Cargar el archivo como recurso desde el subdirectorio 'profile'
+            // Cargar el archivo como recurso usando el servicio
             org.springframework.core.io.Resource file = fileStorageService.loadFileAsResource("profile/" + filename);
 
             // Determinar el tipo de contenido
@@ -187,7 +191,7 @@ public class UserController {
                 contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
             } catch (IOException ex) {
                 // Fallback a tipo de contenido por defecto si no se puede determinar
-                logger.info("Could not determine file type.");
+                logger.warn("Could not determine file type for file: {}", filename, ex);
             }
 
             // Si no se encontró el tipo de contenido, usar un tipo por defecto
@@ -201,6 +205,7 @@ public class UserController {
                     .body(file);
         } catch (Exception e) {
             // Manejar errores, por ejemplo, archivo no encontrado
+            logger.error("Error serving profile image {}", filename, e);
             return ResponseEntity.notFound().build();
         }
     }

@@ -34,7 +34,7 @@ export class PlaybackQueueComponent implements OnInit, OnDestroy {
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
-        this.username = user || '';
+        this.username = user?.username || '';
         if (this.username) {
           this.loadQueue();
         }

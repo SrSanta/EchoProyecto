@@ -9,6 +9,7 @@ import { CommonModule } from "@angular/common";
 import { environment } from "../../../environments/environment";
 import { FormsModule } from '@angular/forms';
 import { PlaybackQueueComponent } from "../playback-queue/playback-queue.component";
+import { User } from "../../models/user.model";
 
 @Component({
   selector: "app-song-player",
@@ -418,7 +419,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   playNext(): void {
     this.authService.currentUser$.subscribe(username => {
       if (!username) return;
-      this.playbackQueueService.getQueue(username).subscribe({
+      this.playbackQueueService.getQueue(username.username).subscribe({
         next: (queue) => {
           if (!queue || queue.length === 0) return;
           const idx = queue.findIndex(item => item.song.id === this.song?.id);
@@ -437,7 +438,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   playPrevious(): void {
     this.authService.currentUser$.subscribe(username => {
       if (!username) return;
-      this.playbackQueueService.getQueue(username).subscribe({
+      this.playbackQueueService.getQueue(username.username).subscribe({
         next: (queue) => {
           if (!queue || queue.length === 0) return;
           const idx = queue.findIndex(item => item.song.id === this.song?.id);

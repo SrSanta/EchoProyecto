@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user.model';
 
 export interface AuthUser {
   username: string;
