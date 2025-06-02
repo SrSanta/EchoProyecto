@@ -59,10 +59,39 @@
           <button class="control-btn" [class.active]="isShuffleEnabled" (click)="toggleShuffle()" title="Shuffle">
             <span class="icon">🔀</span>
           </button>
+
           <button class="control-btn eject" (click)="clearQueue()" title="Clear Queue">
             <span class="icon">⏏</span>
           </button>
         </div>
+
+        <!-- Nueva fila para controles de volumen y pantalla completa -->
+        <div class="controls-row-bottom">
+          <!-- Botón de Silenciar -->
+          <button class="control-btn" (click)="toggleMute()" title="Mute/Unmute">
+            <span class="icon">{{ isMuted ? '🔇' : '🔊' }}</span>
+          </button>
+
+          <!-- Controles de Volumen -->
+          <input type="range" class="volume-slider" min="0" max="1" step="0.01" [value]="volume" (input)="setVolume($event)">
+
+          <!-- Botón de Pantalla Completa -->
+          <button class="control-btn" (click)="toggleFullscreen()" title="Fullscreen">
+            <span class="icon">{{ isFullscreen ? '❐' : '❑' }}</span> <!-- Símbolos para pantalla completa (Expandir/Reducir) -->
+          </button>
+        </div>
+
+        <!-- Controles de Calidad (Placeholder por ahora) -->
+        <!-- La implementación de la selección de calidad dependerá del streaming adaptativo -->
+        <!--
+        <div class="quality-container">
+          <select class="quality-select" (change)="setQuality($event)">
+            <option value="auto">Auto</option>
+             Agrega opciones de calidad aquí (ej: 1080p, 720p, 480p)
+          </select>
+        </div>
+        -->
+
       </div>
       
       <div class="progress-container">

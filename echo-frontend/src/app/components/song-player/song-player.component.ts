@@ -34,6 +34,11 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   isLoopEnabled = false; // Controla si está activado el bucle
   isShuffleEnabled = false; // Controla si está activada la mezcla
   
+  // Player state for new controls
+  volume = 1.0; // Volumen inicial al máximo
+  isMuted = false; // Estado de silencio
+  isFullscreen = false; // Estado de pantalla completa
+  
   // URLs
   audioUrl = "";
   thumbnailUrl = "";
@@ -210,6 +215,9 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     if (this.mediaElement) {
         this.mediaElement.load();
         this.mediaElement.play().catch(e => console.log('Autoplay prevented:', e));
+        // Aplicar volumen inicial y estado de silencio si es necesario al cargar
+        this.mediaElement.volume = this.volume;
+        this.mediaElement.muted = this.isMuted;
     }
   }
 
@@ -500,5 +508,62 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       },
       error: (err: any) => console.error('Error al obtener la cola para mezclar:', err)
     });
+  }
+
+  // New methods for volume and fullscreen
+
+  setVolume(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.volume = parseFloat(target.value);
+    if (this.mediaElement) {
+      this.mediaElement.volume = this.volume;
+      // Si el volumen se establece por encima de cero, desactivar el silencio
+      if (this.volume > 0) {
+        this.isMuted = false;
+        if (this.mediaElement.muted) {
+            this.mediaElement.muted = false;
+        }
+      }
+    }
+  }
+
+  toggleMute(): void {
+    this.isMuted = !this.isMuted;
+    if (this.mediaElement) {
+      this.mediaElement.muted = this.isMuted;
+       // Si se activa el silencio, guardar el volumen actual para restaurar
+       // Si se desactiva, restaurar el volumen guardado o al valor del slider
+       // Nota: Este enfoque básico solo alterna el estado `muted`. Un enfoque más avanzado guardaría el último volumen no muteado.
+    }
+  }
+
+  toggleFullscreen(): void {
+    if (!this.mediaElement) return; // Solo aplicar si hay un elemento multimedia
+
+    if (!document.fullscreenElement) {
+      // Entrar en pantalla completa
+      if (this.mediaElement.requestFullscreen) {
+        this.mediaElement.requestFullscreen();
+      } else if ((this.mediaElement as any).mozRequestFullScreen) { // Firefox
+        (this.mediaElement as any).mozRequestFullScreen();
+      } else if ((this.mediaElement as any).webkitRequestFullscreen) { // Chrome, Safari and Opera
+        (this.mediaElement as any).webkitRequestFullscreen();
+      } else if ((this.mediaElement as any).msRequestFullscreen) { // IE/Edge
+        (this.mediaElement as any).msRequestFullscreen();
+      }
+      this.isFullscreen = true;
+    } else {
+      // Salir de pantalla completa
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) { // Firefox
+        (document as any).mozCancelFullScreen();
+      } else if ((document as any).webkitExitFullscreen) { // Chrome, Safari and Opera
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) { // IE/Edge
+        (document as any).msExitFullscreen();
+      }
+      this.isFullscreen = false;
+    }
   }
 }
