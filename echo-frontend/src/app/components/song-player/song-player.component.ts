@@ -214,13 +214,44 @@ export class SongPlayerComponent implements OnInit, OnChanges {
 
   private tryAutoplay(): void {
     if (this.mediaElement) {
-        this.mediaElement.load();
-        this.mediaElement.play().catch(e => console.log('Autoplay prevented:', e));
-        // Aplicar volumen inicial y estado de silencio si es necesario al cargar
-        this.mediaElement.volume = this.volume;
-        this.mediaElement.muted = this.isMuted;
+      // Limpiar cualquier listener anterior para evitar múltiples reproducciones
+      this.mediaElement.removeEventListener('loadedmetadata', this.playAfterLoad);
+
+      // Asignar la URL y cargar la metadata
+      // La URL ya se asigna en updateMediaUrls() y ngOnChanges
+      // this.mediaElement.src = this.audioUrl || this.videoUrl;
+      this.mediaElement.load();
+
+      // Añadir listener para reproducir automáticamente después de cargar metadata
+      // Usamos bind(this) para mantener el contexto correcto de la clase
+      this.mediaElement.addEventListener('loadedmetadata', this.playAfterLoad);
+
+      // Aplicar volumen inicial y estado de silencio inmediatamente
+      this.mediaElement.volume = this.volume;
+      this.mediaElement.muted = this.isMuted;
+
+       // Manejar casos donde la metadata ya está cargada (por ejemplo, si el input cambia a la misma canción)
+       if (this.mediaElement.readyState >= 1) { // READY_STATE.METADATA_LOADED
+         this.playAfterLoad();
+       }
+
+    } else {
+      console.log("No playable media found or elements not ready");
     }
   }
+
+  // Método auxiliar para ser usado como listener
+  private playAfterLoad = () => {
+      if (this.mediaElement) {
+        console.log('Metadata loaded, attempting to play.');
+        this.mediaElement.play().catch(e => {
+          console.log('Autoplay prevented or failed after metadata load:', e);
+          this.playerStateService.setIsPlaying(false); // Asegurarse de que el estado sea falso si falla
+        });
+         // Remover el listener una vez que se dispare para evitar duplicados
+         this.mediaElement.removeEventListener('loadedmetadata', this.playAfterLoad);
+      }
+  };
 
   toggleLike(): void {
     if (!this.song) {

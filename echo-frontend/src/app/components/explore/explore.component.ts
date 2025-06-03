@@ -333,45 +333,68 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
 
     const songsToPlay = this.selectedPlaylistForModal.songs;
+    const songIdsToPlay = songsToPlay.map(song => song.id).filter((id): id is number => id !== undefined);
 
-    // Lógica para añadir canciones a la cola y reproducir la primera, similar a playlists-page.component.ts
+    if (songIdsToPlay.length === 0) {
+      console.log('No valid song IDs in the selected playlist.');
+      return;
+    }
+
+    console.log('Attempting to play playlist:', this.selectedPlaylistForModal.name);
+
+    // 1. Limpiar la cola actual
     this.playbackQueueService.clearQueue(username).subscribe({
       next: () => {
-        console.log('Queue cleared.');
-        // Añadir canciones una por una con un pequeño retraso para simular el comportamiento original si es necesario,
-        // o simplemente añadir todas de golpe si el servicio lo permite de forma eficiente.
-        // Replicando el patrón de playlists-page.component.ts:
-        const addNext = (index: number) => {
-          if (index < songsToPlay.length) {
-            const song = songsToPlay[index];
-            if (song.id !== undefined) {
-              this.playbackQueueService.addSongToQueue(username, song.id).subscribe({
-                next: () => {
-                  console.log(`Song ${song.title} added to queue. Index: ${index}`);
-                  // Si es la primera canción, iniciar la reproducción inmediatamente
-                  if (index === 0) {
-                    this.playerStateService.playSong(song);
-                  }
-                  // Continuar con la siguiente canción después de un breve retraso
-                  setTimeout(() => addNext(index + 1), 50); // Retraso de 50ms entre canciones
-                },
-                error: (err) => {
-                  console.error(`Error adding song ${song.title} to queue:`, err);
-                  // Continuar con la siguiente canción incluso si falla una
-                  setTimeout(() => addNext(index + 1), 50); // Retraso de 50ms entre canciones
-                }
-              });
-            } else {
-               console.warn(`Song at index ${index} has no ID, skipping.`, song);
-               setTimeout(() => addNext(index + 1), 50); // Continuar incluso si falta el ID
-            }
+        console.log('Queue cleared. Adding songs to queue...');
+
+        // 2. Añadir todas las canciones de la playlist a la cola en el backend
+        // Usamos una cadena de suscripciones o un array de Observables si es necesario,
+        // pero una simple iteración con subscribe dentro es más directa si no necesitamos esperar todas juntas.
+        // Vamos a añadir una por una y luego obtener la cola.
+
+        const addSongsSequentially = (index: number) => {
+          if (index < songIdsToPlay.length) {
+            const songId = songIdsToPlay[index];
+            this.playbackQueueService.addSongToQueue(username, songId).subscribe({
+              next: () => {
+                console.log(`Song ID ${songId} added to queue. Index: ${index}`);
+                // Continuar con la siguiente canción después de un breve retraso (opcional, puede ayudar con rate limits)
+                setTimeout(() => addSongsSequentially(index + 1), 20); // Pequeño retraso
+              },
+              error: (err) => {
+                console.error(`Error adding song ID ${songId} to queue:`, err);
+                // Continuar con la siguiente canción incluso si falla una
+                setTimeout(() => addSongsSequentially(index + 1), 20); // Pequeño retraso
+              }
+            });
           } else {
-            console.log('All songs processed.');
-            // Aquí podrías cerrar el modal o dar alguna indicación al usuario si es necesario
+            console.log('All songs from playlist attempted to be added to queue.');
+            // 3. Una vez que todas las canciones se han intentado añadir, obtener la cola actualizada
+            this.playbackQueueService.getQueue(username).subscribe({
+              next: (updatedQueue) => {
+                 console.log('Fetched updated queue:', updatedQueue);
+                // 4. Encontrar la primera canción en la cola obtenida y notificar al reproductor
+                if (updatedQueue && updatedQueue.length > 0 && updatedQueue[0].song) {
+                   console.log('Playing first song from updated queue:', updatedQueue[0].song);
+                   this.playerStateService.playSong(updatedQueue[0].song); // Notificar al reproductor con la primera canción de la cola
+                } else {
+                   console.log('Updated queue is empty after adding songs.');
+                   // Opcional: Limpiar el estado del reproductor si la cola terminó vacía
+                   this.playerStateService.playSong(null);
+                }
+                 // Opcional: cerrar el modal o dar feedback al usuario
+                 this.closePlaylistModal();
+              },
+              error: (err) => {
+                console.error('Error fetching updated queue after adding songs:', err);
+                // Opcional: mostrar un mensaje de error
+              }
+            });
           }
         };
 
-        addNext(0); // Iniciar el proceso con la primera canción
+        addSongsSequentially(0); // Iniciar el proceso de añadir canciones
+
       },
       error: (err) => {
         console.error('Error clearing queue before playing playlist:', err);
