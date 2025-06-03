@@ -1,9 +1,5 @@
 <div class="artist-songs-list">
-  <div *ngIf="loading">Cargando canciones...</div>
-
-  <div *ngIf="error" class="error-message">{{ error }}</div>
-
-  <div *ngIf="songs.length > 0 && !loading && !error" class="songs-grid">
+  <div *ngIf="songs.length > 0" class="songs-grid">
     <div *ngFor="let song of songs" class="song-item">
       <!-- Aquí puedes mostrar la información de la canción -->
       <h4>{{ song.title }}</h4>
@@ -14,7 +10,7 @@
     </div>
   </div>
 
-  <div *ngIf="songs.length === 0 && !loading && !error">
+  <div *ngIf="songs.length === 0">
     <p>Este artista aún no ha subido canciones.</p>
   </div>
 </div> 

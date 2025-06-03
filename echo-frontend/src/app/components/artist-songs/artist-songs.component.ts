@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SongService } from '../../services/song.service';
 import { Song } from '../../models/song.model';
 import { environment } from '../../../environments/environment';
 
@@ -11,48 +10,11 @@ import { environment } from '../../../environments/environment';
   templateUrl: './artist-songs.component.html',
   styleUrls: ['./artist-songs.component.css']
 })
-export class ArtistSongsComponent implements OnInit, OnChanges {
-  @Input() artistUsername: string | null = null;
+export class ArtistSongsComponent {
+  @Input() songs: Song[] = [];
 
-  songs: Song[] = [];
-  loading = false;
-  error: string | null = null;
-
-  private songService = inject(SongService);
-
-  constructor() { }
-
-  ngOnInit(): void {
-    // La carga inicial se manejará en ngOnChanges cuando se reciba el artistUsername
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['artistUsername'] && this.artistUsername) {
-      this.loadArtistSongs(this.artistUsername);
-    } else if (changes['artistUsername'] && !this.artistUsername) {
-      // Limpiar si el username se vuelve nulo
-      this.songs = [];
-      this.loading = false;
-      this.error = null;
-    }
-  }
-
-  loadArtistSongs(username: string): void {
-    this.loading = true;
-    this.error = null;
-    
-    this.songService.getSongsByUsername(username).subscribe({
-      next: (data) => {
-        this.songs = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error loading artist songs.';
-        this.loading = false;
-        console.error('Error loading artist songs:', err);
-      }
-    });
-  }
+  // No need for loading, error, artistUsername, or SongService injection
+  // as the songs are now passed in via @Input
 
   getSongUrl(songFilename: string | undefined): string {
     if (!songFilename) return '';

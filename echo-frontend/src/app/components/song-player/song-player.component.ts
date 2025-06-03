@@ -52,7 +52,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
 
   // Inyectar servicios necesarios
   private likeService = inject(LikeService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private playerStateService = inject(PlayerStateService);
   private playbackHistoryService = inject(PlaybackHistoryService);
   private playbackQueueService = inject(PlaybackQueueService);

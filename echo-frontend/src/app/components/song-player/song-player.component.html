@@ -1,151 +1,153 @@
-<div class="cd-player">
-  <div class="cd-player-header">
-    <div class="cd-player-title">ECHO PLAYER</div>
-  </div>
-  
-  @if (song) {
-    <div class="cd-player-display">
-      @if (song && song.videoFilename) {
-        <video #videoPlayerVisible
-               [src]="videoUrl"
-               (timeupdate)="updateProgress()"
-               (loadedmetadata)="onMetadataLoaded()"
-               (play)="onPlay()"
-               (pause)="onPause()"
-               (ended)="onSongEnded()"
-               class="video-player-visible"
-               controls>
-          Your browser does not support the video element.
-        </video>
-      } @else {
-        <div class="track-info-container">
-          <div class="track-details">
-            <div class="cd-player-artist">
-              <span class="label">Artist:</span>
-              <div class="value">{{ song.user?.username || song.artist || 'Unknown' }}</div>
+<div *ngIf="authService.isLoggedIn()">
+  <div class="cd-player">
+    <div class="cd-player-header">
+      <div class="cd-player-title">ECHO PLAYER</div>
+    </div>
+    
+    @if (song) {
+      <div class="cd-player-display">
+        @if (song && song.videoFilename) {
+          <video #videoPlayerVisible
+                 [src]="videoUrl"
+                 (timeupdate)="updateProgress()"
+                 (loadedmetadata)="onMetadataLoaded()"
+                 (play)="onPlay()"
+                 (pause)="onPause()"
+                 (ended)="onSongEnded()"
+                 class="video-player-visible"
+                 controls>
+            Your browser does not support the video element.
+          </video>
+        } @else {
+          <div class="track-info-container">
+            <div class="track-details">
+              <div class="cd-player-artist">
+                <span class="label">Artist:</span>
+                <div class="value">{{ song.user?.username || song.artist || 'Unknown' }}</div>
+              </div>
+              
+              <div class="cd-player-title">
+                <span class="label">Title:</span>
+                <div class="value">{{ song.title || 'No title' }}</div>
+              </div>
             </div>
             
-            <div class="cd-player-title">
-              <span class="label">Title:</span>
-              <div class="value">{{ song.title || 'No title' }}</div>
+            <div class="track-image" *ngIf="thumbnailUrl">
+              <img [src]="thumbnailUrl" alt="Album Art" class="album-art">
             </div>
           </div>
-          
-          <div class="track-image" *ngIf="thumbnailUrl">
-            <img [src]="thumbnailUrl" alt="Album Art" class="album-art">
-          </div>
-        </div>
-      }
-    </div>
-    
-    <div class="cd-player-controls">
-      <div class="controls-wrapper">
-        <div class="controls-row">
-          <button class="control-btn" (click)="playPrevious()" title="Previous">
-            <span class="icon">⏮</span>
-          </button>
-          <button class="control-btn" (click)="playOrPause()" [class.playing]="isPlaying" title="Play/Pause">
-            <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
-          </button>
-          <button class="control-btn" (click)="stopPlayback()" title="Stop">
-            <span class="icon">⏹</span>
-          </button>
-          <button class="control-btn" (click)="playNext()" title="Next">
-            <span class="icon">⏭</span>
-          </button>
-          <button class="control-btn" [class.active]="isLoopEnabled" (click)="toggleLoop()" title="Toggle Loop">
-            <span class="icon">🔁</span>
-          </button>
-          <button class="control-btn" [class.active]="isShuffleEnabled" (click)="toggleShuffle()" title="Shuffle">
-            <span class="icon">🔀</span>
-          </button>
-
-          <button class="control-btn eject" (click)="clearQueue()" title="Clear Queue">
-            <span class="icon">⏏</span>
-          </button>
-        </div>
-
-        <!-- Nueva fila para controles de volumen y pantalla completa -->
-        <div class="controls-row-bottom">
-          <!-- Botón de Silenciar -->
-          <button class="control-btn" (click)="toggleMute()" title="Mute/Unmute">
-            <span class="icon">{{ isMuted ? '🔇' : '🔊' }}</span>
-          </button>
-
-          <!-- Controles de Volumen -->
-          <input type="range" class="volume-slider" min="0" max="1" step="0.01" [value]="volume" (input)="setVolume($event)">
-
-          <!-- Botón de Pantalla Completa -->
-          <button class="control-btn" (click)="toggleFullscreen()" title="Fullscreen">
-            <span class="icon">{{ isFullscreen ? '❐' : '❑' }}</span> <!-- Símbolos para pantalla completa (Expandir/Reducir) -->
-          </button>
-        </div>
-
-        <!-- Controles de Calidad (Placeholder por ahora) -->
-        <!-- La implementación de la selección de calidad dependerá del streaming adaptativo -->
-        <!--
-        <div class="quality-container">
-          <select class="quality-select" (change)="setQuality($event)">
-            <option value="auto">Auto</option>
-             Agrega opciones de calidad aquí (ej: 1080p, 720p, 480p)
-          </select>
-        </div>
-        -->
-
+        }
       </div>
       
-      <div class="progress-container">
-        <div class="progress-track" (click)="seek($event)">
-          <div class="progress-bar" [style.width.%]="progressPercentage">
-            <div class="progress-handle" *ngIf="song"></div>
+      <div class="cd-player-controls">
+        <div class="controls-wrapper">
+          <div class="controls-row">
+            <button class="control-btn" (click)="playPrevious()" title="Previous">
+              <span class="icon">⏮</span>
+            </button>
+            <button class="control-btn" (click)="playOrPause()" [class.playing]="isPlaying" title="Play/Pause">
+              <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
+            </button>
+            <button class="control-btn" (click)="stopPlayback()" title="Stop">
+              <span class="icon">⏹</span>
+            </button>
+            <button class="control-btn" (click)="playNext()" title="Next">
+              <span class="icon">⏭</span>
+            </button>
+            <button class="control-btn" [class.active]="isLoopEnabled" (click)="toggleLoop()" title="Toggle Loop">
+              <span class="icon">🔁</span>
+            </button>
+            <button class="control-btn" [class.active]="isShuffleEnabled" (click)="toggleShuffle()" title="Shuffle">
+              <span class="icon">🔀</span>
+            </button>
+
+            <button class="control-btn eject" (click)="clearQueue()" title="Clear Queue">
+              <span class="icon">⏏</span>
+            </button>
+          </div>
+
+          <!-- Nueva fila para controles de volumen y pantalla completa -->
+          <div class="controls-row-bottom">
+            <!-- Botón de Silenciar -->
+            <button class="control-btn" (click)="toggleMute()" title="Mute/Unmute">
+              <span class="icon">{{ isMuted ? '🔇' : '🔊' }}</span>
+            </button>
+
+            <!-- Controles de Volumen -->
+            <input type="range" class="volume-slider" min="0" max="1" step="0.01" [value]="volume" (input)="setVolume($event)">
+
+            <!-- Botón de Pantalla Completa -->
+            <button class="control-btn" (click)="toggleFullscreen()" title="Fullscreen">
+              <span class="icon">{{ isFullscreen ? '❐' : '❑' }}</span> <!-- Símbolos para pantalla completa (Expandir/Reducir) -->
+            </button>
+          </div>
+
+          <!-- Controles de Calidad (Placeholder por ahora) -->
+          <!-- La implementación de la selección de calidad dependerá del streaming adaptativo -->
+          <!--
+          <div class="quality-container">
+            <select class="quality-select" (change)="setQuality($event)">
+              <option value="auto">Auto</option>
+               Agrega opciones de calidad aquí (ej: 1080p, 720p, 480p)
+            </select>
+          </div>
+          -->
+
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-track" (click)="seek($event)">
+            <div class="progress-bar" [style.width.%]="progressPercentage">
+              <div class="progress-handle" *ngIf="song"></div>
+            </div>
+          </div>
+          <div class="progress-time">
+            <span>Track: {{ currentTime || '00:00' }}</span>
+            <span>Total: {{ durationDisplay || '00:00' }}</span>
           </div>
         </div>
-        <div class="progress-time">
-          <span>Track: {{ currentTime || '00:00' }}</span>
-          <span>Total: {{ durationDisplay || '00:00' }}</span>
+      </div>
+      
+      @if (userId !== null) {
+        <div class="like-button">
+          <button (click)="toggleLike()" [class.liked]="isLiked">
+            {{ isLiked ? '💔 Unlike' : '❤️ Like' }}
+          </button>
+        </div>
+      } @else {
+        <div>
+          <p>Inicia sesión para dar 'Me gusta'.</p>
+          <a routerLink="/login">Iniciar Sesión</a>
+        </div>
+      }
+    } @else {
+      <div class="no-song">
+        <div class="cd-player-display">
+          <div class="no-song-message">NO DISC</div>
+          <div class="no-song-sub">Insert a song to begin</div>
         </div>
       </div>
-    </div>
-    
-    @if (userId !== null) {
-      <div class="like-button">
-        <button (click)="toggleLike()" [class.liked]="isLiked">
-          {{ isLiked ? '💔 Unlike' : '❤️ Like' }}
-        </button>
-      </div>
-    } @else {
-      <div>
-        <p>Inicia sesión para dar 'Me gusta'.</p>
-        <a routerLink="/login">Iniciar Sesión</a>
-      </div>
     }
-  } @else {
-    <div class="no-song">
-      <div class="cd-player-display">
-        <div class="no-song-message">NO DISC</div>
-        <div class="no-song-sub">Insert a song to begin</div>
+    
+    <!-- Contenedor de la cola de reproducción -->
+    <div class="queue-container">
+      <button class="queue-toggle" (click)="showQueue = !showQueue">
+        {{ showQueue ? '▲ Ocultar cola' : '▼ Mostrar cola' }}
+      </button>
+      <div class="playback-queue-panel" [class.visible]="showQueue">
+        <app-playback-queue></app-playback-queue>
       </div>
-    </div>
-  }
-  
-  <!-- Contenedor de la cola de reproducción -->
-  <div class="queue-container">
-    <button class="queue-toggle" (click)="showQueue = !showQueue">
-      {{ showQueue ? '▲ Ocultar cola' : '▼ Mostrar cola' }}
-    </button>
-    <div class="playback-queue-panel" [class.visible]="showQueue">
-      <app-playback-queue></app-playback-queue>
     </div>
   </div>
-</div>
 
-<audio #audioPlayer 
-       [src]="audioUrl" 
-       (timeupdate)="updateProgress()" 
-       (loadedmetadata)="onMetadataLoaded()"
-       (play)="onPlay()"
-       (pause)="onPause()"
-       (ended)="onSongEnded()"
-       style="display: none;">
-  Your browser does not support the audio element.
-</audio>
+  <audio #audioPlayer 
+         [src]="audioUrl" 
+         (timeupdate)="updateProgress()" 
+         (loadedmetadata)="onMetadataLoaded()"
+         (play)="onPlay()"
+         (pause)="onPause()"
+         (ended)="onSongEnded()"
+         style="display: none;">
+    Your browser does not support the audio element.
+  </audio>
+</div>

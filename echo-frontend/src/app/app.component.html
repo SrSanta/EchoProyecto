@@ -35,7 +35,7 @@
 
 
   <!-- Reproductor de música flotante -->
-  <div class="floating-player">
+  <div class="floating-player" *ngIf="isLoggedIn$ | async">
     @if (currentSongForPlayer$ | async; as currentSong) {
       <app-song-player [song]="currentSong"></app-song-player>
     } @else {
