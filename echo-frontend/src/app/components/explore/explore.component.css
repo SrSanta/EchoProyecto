@@ -135,11 +135,131 @@
 }
 
 .song-grid,
-.playlist-grid,
 .artist-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Estilos actualizados para la cuadrícula de playlists - igual que en playlist-page */
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Estilos de la tarjeta individual de playlist - estilo disquete como en playlist-page */
+.playlist-card {
+  background-color: #222222;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 5px 5px;
+  border: 2px solid #606060;
+  border-radius: 0;
+  padding: 20px 15px 15px 15px;
+  position: relative;
+  width: 250px;
+  height: 260px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: none;
+  box-shadow: -2px -2px 0 0 #000000, 2px 2px 0 0 #c0c0c0, 2px 2px 0 1px #000000;
+}
+
+/* Elemento para simular la muesca de protección contra escritura */
+.playlist-card::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 12px;
+  height: 30px;
+  background-color: #222222;
+  border-top: 2px solid #606060;
+  border-bottom: 2px solid #606060;
+  border-right: 2px solid #606060;
+  z-index: 1;
+}
+
+/* Elemento para simular la abertura de lectura/escritura y el anillo central */
+.playlist-card::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 25px;
+  background-color: #101010;
+  border: 1px solid #404040;
+  border-radius: 3px;
+  z-index: 1;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos para la etiqueta blanca del disquete */
+.playlist-label {
+  width: 85%;
+  height: 80px;
+  background-color: #ffffff;
+  border: 2px inset #c6c3c6;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+  position: relative;
+  padding: 4px;
+  z-index: 3;
+}
+
+/* Ajustar estilos para el contenido dentro de la etiqueta */
+.playlist-label .playlist-info {
+  margin: 0;
+}
+
+.playlist-label .playlist-name {
+  font-size: 1em;
+  margin: 0;
+  color: #000000;
+  text-shadow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.playlist-label .playlist-stats {
+  font-size: 0.7em;
+  color: #333333;
+  text-shadow: none;
+  margin-top: 2px;
+}
+
+.playlist-label .playlist-owner {
+  font-size: 0.65em;
+  color: #666666;
+  text-shadow: none;
+  margin-top: 1px;
+}
+
+/* Asegurar que los elementos principales estén por encima de los pseudo-elementos */
+.playlist-info {
+  position: relative;
+  z-index: 3;
 }
 
 .song-card {
@@ -239,19 +359,6 @@
   opacity: 1;
 }
 
-.playlist-card {
-  background: var(--bg-secondary);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-}
-
-.playlist-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
 .playlist-thumbnail {
   position: relative;
   padding-top: 100%;
@@ -266,10 +373,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.playlist-info {
-  padding: 1rem;
 }
 
 /* Pestañas de navegación - Estilo Windows 95 */
@@ -354,7 +457,7 @@
 }
 
 .tab-pane {
-  animation: none; /* Eliminamos la animación para mantener el estilo Windows 95 */
+  animation: none;
 }
 
 /* Estilos para el contenido de 'Todo' */
@@ -432,10 +535,20 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .song-grid,
-  .playlist-grid,
   .artist-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 1rem;
+  }
+  
+  .playlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  .playlist-card {
+    width: 200px;
+    height: 220px;
   }
   
   .artist-avatar {
@@ -446,9 +559,13 @@
 
 @media (max-width: 480px) {
   .song-grid,
-  .playlist-grid,
   .artist-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .playlist-grid {
+    grid-template-columns: repeat(1, 1fr);
+    justify-items: center;
   }
   
   .search-input {

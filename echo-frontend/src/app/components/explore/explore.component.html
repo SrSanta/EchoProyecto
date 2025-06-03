@@ -2,278 +2,283 @@
   <div class="search-container">
     <h1>Explorar</h1>
     <div class="search-box">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (input)="search($any($event.target).value)" 
-        placeholder="Buscar canciones, playlists o artistas..."
-        class="search-input"
-        (keyup.enter)="search(searchQuery)"
-      >
+      <input type="text" [(ngModel)]="searchQuery" (input)="search($any($event.target).value)"
+        placeholder="Buscar canciones, playlists o artistas..." class="search-input"
+        (keyup.enter)="search(searchQuery)">
       <span class="search-icon">
         <i class="fas fa-search"></i>
       </span>
       @if (searchQuery) {
-        <button class="clear-search" (click)="clearSearch()" aria-label="Limpiar búsqueda">
-          <i class="fas fa-times"></i>
-        </button>
+      <button class="clear-search" (click)="clearSearch()" aria-label="Limpiar búsqueda">
+        <i class="fas fa-times"></i>
+      </button>
       }
     </div>
   </div>
 
   @if (loading) {
-    <div class="loading-message">
-      <span class="spinner">⏳</span> Buscando...
-    </div>
+  <div class="loading-message">
+    <span class="spinner">⏳</span> Buscando...
+  </div>
   }
 
   @if (error) {
-    <div class="error-message">
-      <i class="fas fa-exclamation-circle"></i>
-      <p>{{ error }}</p>
-    </div>
+  <div class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+  </div>
   }
 
   @if (searchResults) {
-    <div class="tabs-container">
-      <div class="tabs">
-        <button 
-          class="tab-button" 
-          [class.active]="isShowingAll()" 
-          (click)="setActiveTab(null)"
-        >
-          Todo
-        </button>
-        <button 
-          class="tab-button" 
-          [class.active]="isTabActive('songs')" 
-          (click)="setActiveTab('songs')"
-        >
-          Canciones
-        </button>
-        <button 
-          class="tab-button" 
-          [class.active]="isTabActive('playlists')" 
-          (click)="setActiveTab('playlists')"
-        >
-          Playlists
-        </button>
-        <button 
-          class="tab-button" 
-          [class.active]="isTabActive('artists')" 
-          (click)="setActiveTab('artists')"
-        >
-          Artistas
-        </button>
-      </div>
-      
-      <div class="tab-content">
-        @if (isShowingAll()) {
-          <!-- Mostrar todo el contenido -->
-          <div class="all-content">
-            <!-- Sección de Canciones -->
-            @if (searchResults.songs.length > 0) {
-              <div class="content-section">
-                <h2 class="section-title">Canciones</h2>
-                <div class="song-grid">
-                  @for (song of searchResults.songs; track song.id) {
-                    <div class="song-card" (click)="playSong(song)" (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
-                      <div class="song-thumbnail">
-                        @if (song.thumbnailFilename) {
-                          <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')" 
-                              [alt]="'Portada de ' + song.title">
-                        } @else {
-                          <img src="assets/images/placeholder-thumbnail.png" 
-                              [alt]="'Sin portada para ' + song.title">
-                        }
-                        <div class="play-overlay">
-                          <span class="play-icon">▶️</span>
-                        </div>
-                      </div>
-                      <div class="song-info">
-                        <h3 class="song-title">{{ song.title }}</h3>
-                        <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
-                      </div>
-                      <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
-                        + Cola
-                      </button>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab-button" [class.active]="isShowingAll()" (click)="setActiveTab(null)">
+        Todo
+      </button>
+      <button class="tab-button" [class.active]="isTabActive('songs')" (click)="setActiveTab('songs')">
+        Canciones
+      </button>
+      <button class="tab-button" [class.active]="isTabActive('playlists')" (click)="setActiveTab('playlists')">
+        Playlists
+      </button>
+      <button class="tab-button" [class.active]="isTabActive('artists')" (click)="setActiveTab('artists')">
+        Artistas
+      </button>
+    </div>
 
-            <!-- Sección de Playlists -->
-            @if (searchResults.playlists.length > 0) {
-              <div class="content-section">
-                <h2 class="section-title">Playlists</h2>
-                <div class="playlist-grid">
-                  @for (playlist of searchResults.playlists; track playlist.id) {
-                    <div class="playlist-card" (click)="viewPlaylist(playlist)">
-                      <div class="playlist-info">
-                        <h3 class="playlist-name">{{ playlist.name }}</h3>
-                        <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
-                        <p class="playlist-stats">
-                          {{ playlist.songs?.length || 0 }} canciones
-                        </p>
-                      </div>
-                    </div>
-                  }
+    <div class="tab-content">
+      @if (isShowingAll()) {
+      <!-- Mostrar todo el contenido -->
+      <div class="all-content">
+        <!-- Sección de Canciones -->
+        @if (searchResults.songs.length > 0) {
+        <div class="content-section">
+          <h2 class="section-title">Canciones</h2>
+          <div class="song-grid">
+            @for (song of searchResults.songs; track song.id) {
+            <div class="song-card" (click)="playSong(song)"
+              (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
+              <div class="song-thumbnail">
+                @if (song.thumbnailFilename) {
+                <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')"
+                  [alt]="'Portada de ' + song.title">
+                } @else {
+                <img src="assets/images/placeholder-thumbnail.png" [alt]="'Sin portada para ' + song.title">
+                }
+                <div class="play-overlay">
+                  <span class="play-icon">▶️</span>
                 </div>
               </div>
-            }
-
-            <!-- Sección de Artistas -->
-            @if (searchResults.artists.length > 0) {
-              <div class="content-section">
-                <h2 class="section-title">Artistas</h2>
-                <div class="artist-grid">
-                  @for (artist of searchResults.artists; track artist.id) {
-                    <a class="artist-card" [routerLink]="['/artist', artist.username]">
-                      <div class="artist-avatar">
-                        <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" 
-                            [alt]="'Avatar de ' + artist.name">
-                      </div>
-                      <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
-                    </a>
-                  }
-                </div>
+              <div class="song-info">
+                <h3 class="song-title">{{ song.title }}</h3>
+                <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
               </div>
-            }
-
-            <!-- Mensaje cuando no hay resultados en ninguna categoría -->
-            @if (searchResults.songs.length === 0 && searchResults.playlists.length === 0 && searchResults.artists.length === 0) {
-              <div class="no-results">
-                <i class="fas fa-search"></i>
-                <h3>No se encontraron resultados</h3>
-                <p>Prueba con otros términos de búsqueda</p>
-              </div>
-            }
-          </div>
-        }
-        
-        @if (isTabActive('songs')) {
-          <!-- Pestaña de Canciones -->
-          <div class="tab-pane">
-            <h2 class="section-title">Canciones</h2>
-            <div class="song-grid">
-              @for (song of searchResults.songs; track song.id) {
-                <div class="song-card" (click)="playSong(song)" (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
-                  <div class="song-thumbnail">
-                    @if (song.thumbnailFilename) {
-                      <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')" 
-                          [alt]="'Portada de ' + song.title">
-                    } @else {
-                      <img src="assets/images/placeholder-thumbnail.png" 
-                          [alt]="'Sin portada para ' + song.title">
-                    }
-                    <div class="play-overlay">
-                      <span class="play-icon">▶️</span>
-                    </div>
-                  </div>
-                  <div class="song-info">
-                    <h3 class="song-title">{{ song.title }}</h3>
-                    <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
-                  </div>
-                  <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
-                    + Cola
-                  </button>
-                </div>
-              }
-              @if (searchResults.songs.length === 0) {
-                <div class="no-results">
-                  <i class="fas fa-music"></i>
-                  <h3>No se encontraron canciones</h3>
-                  <p>Prueba con otros términos de búsqueda</p>
-                </div>
-              }
+              <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
+                + Cola
+              </button>
             </div>
+            }
           </div>
+        </div>
         }
-        
+
+        <!-- Sección de Playlists actualizada -->
+        @if (searchResults.playlists.length > 0) {
+        <div class="content-section">
+          <h2 class="section-title">Playlists</h2>
+          <div class="playlist-grid">
+            @for (playlist of searchResults.playlists; track playlist.id) {
+            <div class="playlist-card" (click)="viewPlaylist(playlist)">
+              <!-- Nuevo contenedor para simular la etiqueta del disquete -->
+              <div class="playlist-label">
+                <div class="playlist-info">
+                  <h3 class="playlist-name">{{ playlist.name }}</h3>
+                  <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido'
+                    }}</p>
+                  <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Pestaña de Playlists actualizada -->
         @if (isTabActive('playlists')) {
-          <!-- Pestaña de Playlists -->
-          <div class="tab-pane">
-            <h2 class="section-title">Playlists</h2>
-            <div class="playlist-grid">
-              @for (playlist of searchResults.playlists; track playlist.id) {
-                <div class="playlist-card" (click)="viewPlaylist(playlist)">
-                  <div class="playlist-info">
-                    <h3 class="playlist-name">{{ playlist.name }}</h3>
-                    <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
-                    <p class="playlist-stats">
-                      {{ playlist.songs?.length || 0 }} canciones
-                    </p>
-                  </div>
+        <div class="tab-pane">
+          <h2 class="section-title">Playlists</h2>
+          <div class="playlist-grid">
+            @for (playlist of searchResults.playlists; track playlist.id) {
+            <div class="playlist-card" (click)="viewPlaylist(playlist)">
+              <!-- Nuevo contenedor para simular la etiqueta del disquete -->
+              <div class="playlist-label">
+                <div class="playlist-info">
+                  <h3 class="playlist-name">{{ playlist.name }}</h3>
+                  <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido'
+                    }}</p>
+                  <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
                 </div>
-              }
-              @if (searchResults.playlists.length === 0) {
-                <div class="no-results">
-                  <i class="fas fa-list"></i>
-                  <h3>No se encontraron playlists</h3>
-                  <p>Prueba con otros términos de búsqueda</p>
-                </div>
-              }
+              </div>
             </div>
+            }
+            @if (searchResults.playlists.length === 0) {
+            <div class="no-results">
+              <i class="fas fa-list"></i>
+              <h3>No se encontraron playlists</h3>
+              <p>Prueba con otros términos de búsqueda</p>
+            </div>
+            }
           </div>
+        </div>
         }
-        
-        @if (isTabActive('artists')) {
-          <!-- Pestaña de Artistas -->
-          <div class="tab-pane">
-            <h2 class="section-title">Artistas</h2>
-            <div class="artist-grid">
-              @for (artist of searchResults.artists; track artist.id) {
-                <a class="artist-card" [routerLink]="['/artist', artist.username]">
-                  <div class="artist-avatar">
-                    <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" 
-                        [alt]="'Avatar de ' + artist.name">
-                  </div>
-                  <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
-                </a>
-              }
-              @if (searchResults.artists.length === 0) {
-                <div class="no-results">
-                  <i class="fas fa-user"></i>
-                  <h3>No se encontraron artistas</h3>
-                  <p>Prueba con otros términos de búsqueda</p>
-                </div>
-              }
-            </div>
+
+        <!-- Sección de Artistas -->
+        @if (searchResults.artists.length > 0) {
+        <div class="content-section">
+          <h2 class="section-title">Artistas</h2>
+          <div class="artist-grid">
+            @for (artist of searchResults.artists; track artist.id) {
+            <a class="artist-card" [routerLink]="['/artist', artist.username]">
+              <div class="artist-avatar">
+                <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" [alt]="'Avatar de ' + artist.name">
+              </div>
+              <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
+            </a>
+            }
           </div>
+        </div>
+        }
+
+        <!-- Mensaje cuando no hay resultados en ninguna categoría -->
+        @if (searchResults.songs.length === 0 && searchResults.playlists.length === 0 && searchResults.artists.length
+        === 0) {
+        <div class="no-results">
+          <i class="fas fa-search"></i>
+          <h3>No se encontraron resultados</h3>
+          <p>Prueba con otros términos de búsqueda</p>
+        </div>
         }
       </div>
+      }
+
+      @if (isTabActive('songs')) {
+      <!-- Pestaña de Canciones -->
+      <div class="tab-pane">
+        <h2 class="section-title">Canciones</h2>
+        <div class="song-grid">
+          @for (song of searchResults.songs; track song.id) {
+          <div class="song-card" (click)="playSong(song)"
+            (contextmenu)="onSongContextMenu($event, song); $event.preventDefault()">
+            <div class="song-thumbnail">
+              @if (song.thumbnailFilename) {
+              <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')"
+                [alt]="'Portada de ' + song.title">
+              } @else {
+              <img src="assets/images/placeholder-thumbnail.png" [alt]="'Sin portada para ' + song.title">
+              }
+              <div class="play-overlay">
+                <span class="play-icon">▶️</span>
+              </div>
+            </div>
+            <div class="song-info">
+              <h3 class="song-title">{{ song.title }}</h3>
+              <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
+            </div>
+            <button class="queue-btn" (click)="$event.stopPropagation(); addToQueue(song)">
+              + Cola
+            </button>
+          </div>
+          }
+          @if (searchResults.songs.length === 0) {
+          <div class="no-results">
+            <i class="fas fa-music"></i>
+            <h3>No se encontraron canciones</h3>
+            <p>Prueba con otros términos de búsqueda</p>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      @if (isTabActive('playlists')) {
+      <!-- Pestaña de Playlists -->
+      <div class="tab-pane">
+        <h2 class="section-title">Playlists</h2>
+        <div class="playlist-grid">
+          @for (playlist of searchResults.playlists; track playlist.id) {
+          <div class="playlist-card" (click)="viewPlaylist(playlist)">
+            <div class="playlist-info">
+              <h3 class="playlist-name">{{ playlist.name }}</h3>
+              <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}
+              </p>
+              <p class="playlist-stats">
+                {{ playlist.songs?.length || 0 }} canciones
+              </p>
+            </div>
+          </div>
+          }
+          @if (searchResults.playlists.length === 0) {
+          <div class="no-results">
+            <i class="fas fa-list"></i>
+            <h3>No se encontraron playlists</h3>
+            <p>Prueba con otros términos de búsqueda</p>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      @if (isTabActive('artists')) {
+      <!-- Pestaña de Artistas -->
+      <div class="tab-pane">
+        <h2 class="section-title">Artistas</h2>
+        <div class="artist-grid">
+          @for (artist of searchResults.artists; track artist.id) {
+          <a class="artist-card" [routerLink]="['/artist', artist.username]">
+            <div class="artist-avatar">
+              <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" [alt]="'Avatar de ' + artist.name">
+            </div>
+            <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
+          </a>
+          }
+          @if (searchResults.artists.length === 0) {
+          <div class="no-results">
+            <i class="fas fa-user"></i>
+            <h3>No se encontraron artistas</h3>
+            <p>Prueba con otros términos de búsqueda</p>
+          </div>
+          }
+        </div>
+      </div>
+      }
     </div>
+  </div>
   } @else if (!searchQuery) {
-    <div class="welcome-message">
-      <i class="fas fa-search"></i>
-      <h3>Busca tu música favorita</h3>
-      <p>Encuentra canciones, álbumes, artistas y más</p>
-    </div>
+  <div class="welcome-message">
+    <i class="fas fa-search"></i>
+    <h3>Busca tu música favorita</h3>
+    <p>Encuentra canciones, álbumes, artistas y más</p>
+  </div>
   }
 </div>
 
 <!-- Menú contextual para añadir a playlist y cola -->
-<app-context-menu
-  *ngIf="showContextMenu && selectedSongId !== null"
-  [show]="showContextMenu"
-  [position]="contextMenuPosition"
-  [playlists]="userPlaylists"
-  [songId]="selectedSongId"
-  (addToPlaylist)="onAddToPlaylistHandler($event)"
-  (addToQueue)="onAddToQueueFromContextMenu($event)"
+<app-context-menu *ngIf="showContextMenu && selectedSongId !== null" [show]="showContextMenu"
+  [position]="contextMenuPosition" [playlists]="userPlaylists" [songId]="selectedSongId"
+  (addToPlaylist)="onAddToPlaylistHandler($event)" (addToQueue)="onAddToQueueFromContextMenu($event)"
   (closeMenu)="onCloseContextMenu()">
 </app-context-menu>
 
 <!-- Mensaje de error del menú contextual -->
 @if (contextMenuError) {
-  <div class="context-menu-error window">
-    <div class="window-titlebar">
-      <span>Error del Menú</span>
-      <button (click)="contextMenuError = null" class="close-btn">✕</button>
-    </div>
-    <div class="window-content">
-      <p>⚠️ {{ contextMenuError }}</p>
-    </div>
+<div class="context-menu-error window">
+  <div class="window-titlebar">
+    <span>Error del Menú</span>
+    <button (click)="contextMenuError = null" class="close-btn">✕</button>
   </div>
+  <div class="window-content">
+    <p>⚠️ {{ contextMenuError }}</p>
+  </div>
+</div>
 }
