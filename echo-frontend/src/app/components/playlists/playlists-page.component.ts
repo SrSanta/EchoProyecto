@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Playlist } from '../../models/playlist.model';
 import { PlaylistService } from '../../services/playlist.service';
 import { PlaylistFollowService } from '../../services/playlist-follow.service';
@@ -10,6 +10,12 @@ import { PlayerStateService } from '../../services/player-state.service';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
+// Extender la interfaz Playlist para incluir la URL de la imagen de portada
+interface PlaylistWithCover extends Playlist {
+  coverImageUrl?: string;
+}
 
 @Component({
   selector: 'app-playlists-page',
@@ -18,7 +24,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './playlists-page.component.html',
   styleUrls: ['./playlists-page.component.css']
 })
-export class PlaylistsPageComponent implements OnInit {
+export class PlaylistsPageComponent implements OnInit, OnDestroy {
   playlists: Playlist[] = [];
   loading = true;
   error: string | null = null;
@@ -34,6 +40,7 @@ export class PlaylistsPageComponent implements OnInit {
   allSongs: Song[] = [];
 
   currentUsername: string | null = null;
+  private currentUserSubscription: Subscription;
 
   constructor(
     private playlistService: PlaylistService,
@@ -43,15 +50,30 @@ export class PlaylistsPageComponent implements OnInit {
     private playbackQueueService: PlaybackQueueService,
     private playerStateService: PlayerStateService
   ) {
-    this.currentUsername = this.authService.getUsername();
+    this.currentUserSubscription = this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.currentUsername = user.username;
+        this.fetchPlaylists();
+        this.songService.getAllSongs().subscribe({
+          next: (songs) => this.allSongs = songs,
+          error: () => this.allSongs = []
+        });
+      } else {
+        this.currentUsername = null;
+        this.playlists = [];
+        this.allSongs = [];
+      }
+    });
   }
 
   ngOnInit(): void {
     this.fetchPlaylists();
-    this.songService.getAllSongs().subscribe({
-      next: (songs) => this.allSongs = songs,
-      error: () => this.allSongs = []
-    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.currentUserSubscription) {
+      this.currentUserSubscription.unsubscribe();
+    }
   }
 
   follow(playlist: Playlist) {
@@ -112,7 +134,10 @@ export class PlaylistsPageComponent implements OnInit {
     return false;
   }
 
-  togglePublic(playlist: Playlist) {
+  togglePublic(playlist: Playlist): void {
+    console.log('Intentando alternar visibilidad:');
+    console.log('isOwner:', this.isOwner(playlist));
+    console.log('Objeto Playlist:', playlist);
     if (!this.isOwner(playlist)) return;
     const nuevoEstado = !playlist.isPublic;
     this.playlistService.updatePlaylist(playlist.id!, { name: playlist.name, isPublic: nuevoEstado }).subscribe({
@@ -133,7 +158,9 @@ export class PlaylistsPageComponent implements OnInit {
     this.loading = true;
     this.playlistService.getUserPlaylists().subscribe({
       next: (playlists) => {
+        // Ya no mapeamos para añadir coverImageUrl
         this.playlists = playlists;
+        console.log('Playlists cargadas:', this.playlists);
         this.loading = false;
       },
       error: (err) => {
@@ -197,6 +224,7 @@ export class PlaylistsPageComponent implements OnInit {
     // Recarga la playlist para obtener canciones actualizadas
     this.playlistService.getPlaylistById(playlist.id!).subscribe({
       next: (p) => {
+        // Ya no necesitamos añadir coverImageUrl aquí
         this.selectedPlaylist = p;
         this.showDetail = true;
         this.showCreateForm = false;

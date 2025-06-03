@@ -61,9 +61,12 @@ export class AuthService {
   }
   
   login(username: string, password: string): Observable<{ token: string }> {
+    console.log('Intentando login para usuario:', username);
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { username, password }).pipe(
       tap(response => {
+        console.log('Respuesta del login:', response);
         if (response && response.token) {
+          console.log('Token recibido, intentando guardar en localStorage...');
           this.setItemInLocalStorage(this.tokenKey, response.token);
           if (isPlatformBrowser(this.platformId)) {
             const authUser = this.getUserFromTokenInternal();
@@ -71,6 +74,7 @@ export class AuthService {
           }
         } else {
           console.error('Login successful but no token received.');
+          console.log('No se recibió token, llamando a logout...');
           this.logout();
         }
       })

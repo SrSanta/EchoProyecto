@@ -1,10 +1,12 @@
 // src/app/services/song.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Song } from '../models/song.model';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { catchError } from 'rxjs/operators';
+
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +14,7 @@ import { catchError } from 'rxjs/operators';
 export class SongService {
   private apiUrl = `${environment.apiUrl}/api/songs`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   uploadSong(formData: FormData): Observable<Song> {
     return this.http.post<Song>(`${this.apiUrl}/upload`, formData);
@@ -61,7 +63,13 @@ export class SongService {
   }
 
   getUserSongs(): Observable<Song[]> {
-    return this.http.get<Song[]>(`${this.apiUrl}/user`).pipe(
+    const token = this.authService.getToken();
+    console.log('Token obtenido para getUserSongs:', token);
+    const headers = token ? new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    }) : undefined;
+
+    return this.http.get<Song[]>(`${this.apiUrl}/user`, { headers: headers }).pipe(
       catchError(error => {
         console.error('Error loading user songs.', error);
         return of([]);

@@ -110,15 +110,6 @@
                 <div class="playlist-grid">
                   @for (playlist of searchResults.playlists; track playlist.id) {
                     <div class="playlist-card" (click)="viewPlaylist(playlist)">
-                      <div class="playlist-thumbnail">
-                        @if (playlist.songs && playlist.songs.length > 0 && playlist.songs[0].thumbnailFilename) {
-                          <img [src]="environment.apiUrl + '/api/thumbnails/' + playlist.songs[0].thumbnailFilename.replace('thumbnail/', '')" 
-                              [alt]="'Miniatura de ' + playlist.name">
-                        } @else {
-                          <img src="assets/images/placeholder-playlist.png" 
-                              [alt]="'Sin miniatura para ' + playlist.name">
-                        }
-                      </div>
                       <div class="playlist-info">
                         <h3 class="playlist-name">{{ playlist.name }}</h3>
                         <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
@@ -207,15 +198,6 @@
             <div class="playlist-grid">
               @for (playlist of searchResults.playlists; track playlist.id) {
                 <div class="playlist-card" (click)="viewPlaylist(playlist)">
-                  <div class="playlist-thumbnail">
-                    @if (playlist.songs && playlist.songs.length > 0 && playlist.songs[0].thumbnailFilename) {
-                      <img [src]="environment.apiUrl + '/api/thumbnails/' + playlist.songs[0].thumbnailFilename.replace('thumbnail/', '')" 
-                          [alt]="'Miniatura de ' + playlist.name">
-                    } @else {
-                      <img src="assets/images/placeholder-playlist.png" 
-                          [alt]="'Sin miniatura para ' + playlist.name">
-                    }
-                  </div>
                   <div class="playlist-info">
                     <h3 class="playlist-name">{{ playlist.name }}</h3>
                     <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>

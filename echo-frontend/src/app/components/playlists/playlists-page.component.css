@@ -66,6 +66,7 @@ h2 {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el tamaño mínimo y máximo según necesites */
   gap: 30px; /* Espacio entre las tarjetas */
   padding: 20px;
+  overflow: hidden; /* Asegurar que nada se salga de los bordes */
 }
 
 /* Estilos de la tarjeta individual de playlist - ahora como ventanas pequeñas */
@@ -95,17 +96,6 @@ h2 {
 }
 
 .playlist-thumbnail {
-  width: 85%; /* Ancho de la etiqueta */
-  height: 80px; /* Altura de la etiqueta */
-  background-color: #ffffff; /* Fondo blanco para la etiqueta */
-  border: 2px inset #c6c3c6; /* Borde interior 3D para la etiqueta */
-  margin-bottom: 12px; /* Espacio debajo de la etiqueta */
-  display: flex;
-  flex-direction: column; /* Apilar contenido de la etiqueta */
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* Esconde partes de la imagen que sobresalgan */
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4); /* Sombra interior más pronunciada */
   position: relative; /* Necesario para posicionar el texto de la etiqueta */
   padding: 4px; /* Padding dentro de la etiqueta */
 }
@@ -455,5 +445,41 @@ h2 {
 .playlist-thumbnail, .playlist-info, .playlist-actions, .playlist-status, .public-url, .toggle-public-btn, .share-btn {
   position: relative; /* Asegurar que estén en el flujo normal */
   z-index: 3; /* Colocarlos por encima de los pseudo-elementos de decoración */
+}
+
+/* Estilos para la etiqueta blanca del disquete */
+.playlist-label {
+  width: 85%; /* Ancho de la etiqueta */
+  height: 80px; /* Altura de la etiqueta */
+  background-color: #ffffff; /* Fondo blanco para la etiqueta */
+  border: 2px inset #c6c3c6; /* Borde interior 3D para la etiqueta */
+  margin-bottom: 12px; /* Espacio debajo de la etiqueta */
+  display: flex;
+  flex-direction: column; /* Apilar contenido de la etiqueta */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Esconde partes de la imagen que sobresalgan */
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4); /* Sombra interior más pronunciada */
+  position: relative; /* Necesario para posicionar el texto de la etiqueta */
+  padding: 4px; /* Padding dentro de la etiqueta */
+}
+
+/* Ajustar estilos para el contenido dentro de la etiqueta */
+.playlist-label .playlist-info {
+  margin: 0; /* Eliminar margen si existía */
+}
+
+.playlist-label .playlist-name {
+  font-size: 1em; /* Tamaño de fuente para el título dentro de la etiqueta */
+  margin: 0; /* Eliminar margen si existía */
+  color: #000000; /* Texto negro */
+  text-shadow: none; /* Eliminar sombra de texto */
+}
+
+.playlist-label .playlist-stats {
+   font-size: 0.7em; /* Tamaño de fuente para las estadísticas */
+   color: #333333; /* Gris oscuro para estadísticas */
+   text-shadow: none; /* Eliminar sombra de texto */
+   margin-top: 2px; /* Espacio arriba */
 }
 

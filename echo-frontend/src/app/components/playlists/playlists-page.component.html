@@ -24,15 +24,22 @@
   <div *ngIf="!loading && playlists.length" class="playlist-grid">
     <div *ngFor="let playlist of playlists" class="playlist-card">
       <!-- Aquí va el contenido de la tarjeta de playlist -->
+      <!-- Lógica de miniatura de playlist eliminada -->
+      <!--
       <div class="playlist-thumbnail">
-        <!-- Puedes poner una miniatura aquí si hay alguna disponible, por ahora un placeholder -->
-        <img src="assets/images/placeholder-playlist.png" alt="Miniatura de playlist">
+        <img [src]="playlist.coverImageUrl" alt="Miniatura de playlist">
       </div>
-      <div class="playlist-info">
-        <h3 class="playlist-name">{{ playlist.name }}</h3>
-        <!-- Puedes añadir más info aquí si quieres -->
-        <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
+      -->
+
+      <!-- Nuevo contenedor para simular la etiqueta del disquete -->
+      <div class="playlist-label">
+        <div class="playlist-info">
+          <h3 class="playlist-name">{{ playlist.name }}</h3>
+          <!-- Puedes añadir más info aquí si quieres -->
+          <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
+        </div>
       </div>
+
       <div class="playlist-actions">
         <button (click)="viewDetail(playlist)">Ver</button>
         <button (click)="openEditForm(playlist)">Editar</button>
@@ -67,7 +74,6 @@
       <div *ngIf="selectedPlaylist.isPublic" style="color: green;">🌐 Playlist pública</div>
       <div *ngIf="!selectedPlaylist.isPublic" style="color: gray;">🔒 Playlist privada</div>
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-      <p>ID: {{ selectedPlaylist.id }}</p>
       <span *ngIf="selectedPlaylist.publicUrl">
         <br>Enlace público: <a [href]="selectedPlaylist.publicUrl" target="_blank">{{ selectedPlaylist.publicUrl }}</a>
       </span>
