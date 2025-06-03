@@ -67,9 +67,35 @@ export class AppComponent {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-    console.log('Usuario desconectado');
+    // Detener la reproducción y limpiar la canción actual
+    this.playerStateService.playSong(null);
+
+    // Vaciar la cola de reproducción al cerrar sesión
+    const username = this.authService.getUsername();
+    if (username) {
+      this.playbackQueueService.clearQueue(username).subscribe({
+        next: () => {
+          console.log('Cola de reproducción vaciada al cerrar sesión');
+          this.playbackQueueService.notifyQueueUpdated();
+          // Proceder con el cierre de sesión después de vaciar la cola
+          this.authService.logout();
+          this.router.navigate(['/login']);
+          console.log('Usuario desconectado');
+        },
+        error: (err) => {
+          console.error('Error al vaciar la cola de reproducción al cerrar sesión:', err);
+          // Aunque falle vaciar la cola, procedemos con el cierre de sesión
+          this.authService.logout();
+          this.router.navigate(['/login']);
+          console.log('Usuario desconectado');
+        }
+      });
+    } else {
+       // Si no hay usuario, simplemente cerramos sesión localmente
+       this.authService.logout();
+       this.router.navigate(['/login']);
+       console.log('Usuario desconectado (sin usuario para vaciar cola)');
+    }
   }
 
   getYear(): number {
