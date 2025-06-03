@@ -41,11 +41,7 @@
       <!-- Indicador pública/privada -->
       <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
       <span *ngIf="!playlist.isPublic" title="Privada" class="playlist-status private">🔒 Privada</span>
-      <!-- Botón para cambiar visibilidad -->
-       <button (click)="togglePublic(playlist)" class="toggle-public-btn">
-        {{ playlist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
-      </button>
-       <button *ngIf="playlist.isPublic" (click)="sharePlaylist(playlist)" class="share-btn">Compartir</button>
+      <button *ngIf="playlist.isPublic" (click)="sharePlaylist(playlist)" class="share-btn">Compartir</button>
       <span *ngIf="playlist.publicUrl" class="public-url">
         Enlace: <a [href]="playlist.publicUrl" target="_blank">{{ playlist.publicUrl }}</a>
       </span>
