@@ -38,13 +38,21 @@
         <button (click)="openEditForm(playlist)">Editar</button>
         <button (click)="deletePlaylist(playlist)">Eliminar</button>
       </div>
-      <!-- Indicador pública/privada -->
-      <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
-      <span *ngIf="!playlist.isPublic" title="Privada" class="playlist-status private">🔒 Privada</span>
-      <button *ngIf="playlist.isPublic" (click)="sharePlaylist(playlist)" class="share-btn">Compartir</button>
+      
+      <!-- BOTÓN CORREGIDO: Cambiar estado público/privado -->
+      <button class="toggle-public-btn" (click)="togglePublic(playlist)">
+        {{ playlist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
+      </button>
+      
+      <!-- Enlace público solo si existe -->
       <span *ngIf="playlist.publicUrl" class="public-url">
         Enlace: <a [href]="playlist.publicUrl" target="_blank">{{ playlist.publicUrl }}</a>
       </span>
+
+      <!-- Indicador pública/privada -->
+      <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
+      <span *ngIf="!playlist.isPublic" title="Privada" class="playlist-status private">🔒 Privada</span>
+      
     </div>
   </div>
   <div *ngIf="!loading && !playlists.length" class="no-playlists-message">No tienes playlists aún.</div>
@@ -58,12 +66,8 @@
      <div class="modal-content-area">
       <div *ngIf="selectedPlaylist.isPublic" style="color: green;">🌐 Playlist pública</div>
       <div *ngIf="!selectedPlaylist.isPublic" style="color: gray;">🔒 Playlist privada</div>
-      <button (click)="togglePublic(selectedPlaylist)">
-        {{ selectedPlaylist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
-      </button>
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
       <p>ID: {{ selectedPlaylist.id }}</p>
-      <button *ngIf="selectedPlaylist.isPublic" (click)="sharePlaylist(selectedPlaylist)">Compartir</button>
       <span *ngIf="selectedPlaylist.publicUrl">
         <br>Enlace público: <a [href]="selectedPlaylist.publicUrl" target="_blank">{{ selectedPlaylist.publicUrl }}</a>
       </span>
