@@ -88,7 +88,7 @@
           <h2 class="section-title">Playlists</h2>
           <div class="playlist-grid">
             @for (playlist of searchResults.playlists; track playlist.id) {
-            <div class="playlist-card" (click)="viewPlaylist(playlist)">
+            <div class="playlist-card">
               <!-- Nuevo contenedor para simular la etiqueta del disquete -->
               <div class="playlist-label">
                 <div class="playlist-info">
@@ -98,6 +98,7 @@
                   <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
                 </div>
               </div>
+              <button class="view-playlist-button" (click)="viewPlaylist(playlist)">Ver</button>
             </div>
             }
           </div>
@@ -110,16 +111,15 @@
           <h2 class="section-title">Playlists</h2>
           <div class="playlist-grid">
             @for (playlist of searchResults.playlists; track playlist.id) {
-            <div class="playlist-card" (click)="viewPlaylist(playlist)">
-              <!-- Nuevo contenedor para simular la etiqueta del disquete -->
-              <div class="playlist-label">
-                <div class="playlist-info">
-                  <h3 class="playlist-name">{{ playlist.name }}</h3>
-                  <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido'
-                    }}</p>
-                  <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
-                </div>
+            <div class="playlist-card">
+              <div class="playlist-info">
+                <h3 class="playlist-name">{{ playlist.name }}</h3>
+                <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
+                <p class="playlist-stats">
+                  {{ playlist.songs?.length || 0 }} canciones
+                </p>
               </div>
+              <button class="view-playlist-button" (click)="viewPlaylist(playlist)">Ver</button>
             </div>
             }
             @if (searchResults.playlists.length === 0) {
@@ -207,15 +207,15 @@
         <h2 class="section-title">Playlists</h2>
         <div class="playlist-grid">
           @for (playlist of searchResults.playlists; track playlist.id) {
-          <div class="playlist-card" (click)="viewPlaylist(playlist)">
+          <div class="playlist-card">
             <div class="playlist-info">
               <h3 class="playlist-name">{{ playlist.name }}</h3>
-              <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}
-              </p>
+              <p class="playlist-owner" *ngIf="playlist.user">Por {{ playlist.user.username || 'Usuario desconocido' }}</p>
               <p class="playlist-stats">
                 {{ playlist.songs?.length || 0 }} canciones
               </p>
             </div>
+            <button class="view-playlist-button" (click)="viewPlaylist(playlist)">Ver</button>
           </div>
           }
           @if (searchResults.playlists.length === 0) {
@@ -279,6 +279,37 @@
   </div>
   <div class="window-content">
     <p>⚠️ {{ contextMenuError }}</p>
+  </div>
+</div>
+}
+
+<!-- Nueva ventana modal para ver playlists -->
+@if (selectedPlaylistForModal) {
+<div class="modal-overlay" (click)="closePlaylistModal()"></div>
+<div class="window floating-window">
+  <div class="window-titlebar">
+    <span>{{ selectedPlaylistForModal.name }}</span>
+    <button (click)="closePlaylistModal()" class="close-btn">✕</button>
+  </div>
+  <div class="window-content">
+    <h4>Canciones en esta playlist</h4>
+    @if (selectedPlaylistForModal.songs && selectedPlaylistForModal.songs.length > 0) {
+    <ul class="playlist-songs-list">
+      @for (song of selectedPlaylistForModal.songs; track song.id) {
+      <li class="song-item" (click)="playSong(song)">
+        <div class="song-info">
+          <h4 class="song-title">{{ song.title }}</h4>
+          <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
+        </div>
+        <span class="play-icon">▶️</span>
+      </li>
+      }
+    </ul>
+    } @else {
+    <div class="no-songs">
+      <p>Esta playlist no tiene canciones.</p>
+    </div>
+    }
   </div>
 </div>
 }

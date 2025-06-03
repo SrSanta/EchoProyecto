@@ -50,6 +50,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   loadingPlaylists = false;
   contextMenuError: string | null = null;
 
+  // Nueva variable para la ventana modal de playlist
+  selectedPlaylistForModal: Playlist | null = null;
+
   ngOnInit(): void {
     // Cargar todo el contenido al inicio
     this.loadAllContent();
@@ -208,9 +211,15 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   viewPlaylist(playlist: Playlist): void {
-    // Lógica para ver detalles de la playlist
-    console.log('View playlist:', playlist);
-    // Implementar navegación a la página de detalles de playlist
+    // Lógica para ver detalles de la playlist en una ventana modal
+    console.log('View playlist in modal:', playlist);
+    this.selectedPlaylistForModal = playlist;
+  }
+
+  // Método para cerrar la ventana modal de playlist
+  closePlaylistModal(): void {
+    console.log('Closing playlist modal.');
+    this.selectedPlaylistForModal = null;
   }
 
   // Cargar playlists del usuario
