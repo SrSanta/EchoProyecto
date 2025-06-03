@@ -69,7 +69,7 @@ export class ArtistProfileComponent implements OnInit {
 
   getProfileImageUrl(): string {
     if (this.artist && this.artist.profileImage) {
-        return `${environment.apiUrl}/${this.artist.profileImage}`;
+        return `${environment.apiUrl}/api/users/profile-image/${this.artist.profileImage}`;
     }
     return 'https://ui-avatars.com/api/?name=' + (this.artist?.username || 'U') + '&background=cccccc&color=333333&size=128';
   }

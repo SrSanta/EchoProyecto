@@ -83,7 +83,7 @@ export class UserProfileComponent implements OnInit {
 
   getProfileImageUrl(): string {
     if (this.user && this.user.profileImage) {
-      return `${environment.apiUrl}/${this.user.profileImage}`;
+      return `${environment.apiUrl}/api/users/profile-image/${this.user.profileImage}`;
     }
     return 'https://ui-avatars.com/api/?name=' + (this.user?.username || 'U') + '&background=cccccc&color=333333&size=128';
   }

@@ -1,1 +1,85 @@
- 
+.artist-profile-container {
+    max-width: 800px;
+    margin: 20px auto;
+    /* Fondo y bordes de ventana de Windows 95 */
+    background: #c0c0c0;
+    border: 3px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+    padding: 15px; /* Ajustar padding para simular contenido de ventana */
+    color: #000000; /* Texto negro */
+    font-family: 'MS Sans Serif', sans-serif; /* Fuente retro */
+}
+
+.profile-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px; /* Reducir margen */
+    padding-bottom: 15px; /* Ajustar padding */
+    border-bottom: 1px solid #808080; /* Separador gris */
+}
+
+.profile-image {
+    width: 100px; /* Ajustar tamaño de imagen */
+    height: 100px; /* Ajustar tamaño de imagen */
+    border-radius: 50%;
+    object-fit: cover;
+    /* Borde estilo Windows 95 */
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: -1px -1px 0 0 #000000;
+}
+
+.profile-details h2 {
+    margin: 0;
+    font-size: 1.8em; /* Ajustar tamaño de fuente */
+    color: #000080; /* Color azul oscuro de título principal */
+    text-shadow: 1px 1px 0px #ffffff; /* Sombra de texto */
+}
+
+.artist-songs-section,
+.artist-playlists-section {
+    margin-top: 15px; /* Ajustar margen */
+}
+
+.artist-songs-section h3,
+.artist-playlists-section h3 {
+    font-size: 1.3em; /* Ajustar tamaño de fuente */
+    margin-bottom: 10px; /* Ajustar margen */
+    color: #800080; /* Morado vaporwave */
+    text-shadow: 1px 1px 0px #ffffff; /* Sombra de texto */
+    border-bottom: 1px solid #808080; /* Separador gris */
+    padding-bottom: 5px;
+}
+
+.loading-message,
+.error-message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #000000; /* Texto negro */
+}
+
+.error-message {
+    color: #ff00ff; /* Rosa neón para errores */
+}
+
+/* Estilos para listas de canciones/playlists */
+.songs-list, .playlists-list {
+    list-style: none;
+    padding: 0;
+}
+
+.songs-list li, .playlists-list li {
+    background: #d0d0d0; /* Fondo ligeramente diferente */
+    border: 1px solid #a0a0a0;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 0;
+    font-size: 0.95em;
+}
+
+.songs-list li:last-child, .playlists-list li:last-child {
+    margin-bottom: 0;
+} 

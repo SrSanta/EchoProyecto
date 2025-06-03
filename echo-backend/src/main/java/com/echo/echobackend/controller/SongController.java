@@ -169,7 +169,7 @@ public class SongController {
     @GetMapping("/thumbnails/{filename:.+}")
     public ResponseEntity<Resource> serveThumbnailFile(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename).normalize();
+            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename.replace("thumbnail/", "")).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {

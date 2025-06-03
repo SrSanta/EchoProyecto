@@ -71,6 +71,14 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.searchService.searchAll('').subscribe({
       next: (results) => {
+        // Procesar artistas para construir la URL completa de la imagen de perfil
+        if (results.artists && results.artists.length > 0) {
+          results.artists.forEach(artist => {
+            artist.avatarUrl = artist.profileImage 
+              ? `${environment.apiUrl}/api/users/profile-image/${artist.profileImage}` 
+              : 'assets/images/default-avatar.png';
+          });
+        }
         this.searchResults = results;
         this.loading = false;
       },
@@ -98,6 +106,14 @@ export class ExploreComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (results) => {
+        // Procesar artistas para construir la URL completa de la imagen de perfil
+        if (results.artists && results.artists.length > 0) {
+          results.artists.forEach(artist => {
+            artist.avatarUrl = artist.profileImage 
+              ? `${environment.apiUrl}/api/users/profile-image/${artist.profileImage}` 
+              : 'assets/images/default-avatar.png';
+          });
+        }
         this.searchResults = results;
         this.loading = false;
       },

@@ -73,9 +73,11 @@ export class UserProfileEditComponent implements OnInit {
     const formData = new FormData();
     formData.append('image', this.selectedFile);
     this.http.put(`${environment.apiUrl}/api/users/${this.user.id}/profile-image`, formData).subscribe({
-      next: (filename: any) => {
-        this.user.profileImage = filename;
+      next: (response: any) => {
+        this.user.profileImage = response.filename;
         this.uploading = false;
+        this.success = 'Imagen de perfil subida exitosamente!';
+        this.error = null;
       },
       error: (err: HttpErrorResponse) => {
         this.error = this.toDisplayString(err.error);
@@ -162,10 +164,8 @@ export class UserProfileEditComponent implements OnInit {
   }
 
   getProfileImageUrl(): string {
-    // Usar el nuevo endpoint API para servir imágenes de perfil
     if (this.user && this.user.profileImage) {
-       // profileImage ya debería contener la ruta relativa, como 'profile/nombre_archivo.jpg'
-      return `${environment.apiUrl}/${this.user.profileImage}`;
+      return `${environment.apiUrl}/api/users/profile-image/${this.user.profileImage}`;
     }
     return 'https://ui-avatars.com/api/?name=' + (this.user?.username || 'U') + '&background=cccccc&color=333333&size=128';
   }

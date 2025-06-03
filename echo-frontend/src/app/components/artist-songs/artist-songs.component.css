@@ -1,1 +1,60 @@
- 
+.artist-songs-list {
+    margin-top: 15px;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Columnas flexibles */
+    gap: 15px; /* Espacio entre tarjetas */
+}
+
+.song-item {
+    /* Estilo de tarjeta Windows 95 */
+    background: #c0c0c0;
+    border: 3px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+    padding: 10px; /* Espacio interno */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar contenido */
+    font-family: 'MS Sans Serif', sans-serif;
+    color: #000000;
+}
+
+.song-item img {
+    width: 100%; /* Imagen ocupa todo el ancho de la tarjeta */
+    height: 120px; /* Altura fija para la imagen */
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    margin-bottom: 10px;
+    /* Borde de imagen estilo Windows 95 */
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: -1px -1px 0 0 #000000;
+}
+
+.song-item h4 {
+    font-size: 1em; /* Tamaño de título de canción */
+    margin: 0 0 5px 0; /* Margen inferior */
+    color: #000080; /* Color azul oscuro */
+    text-shadow: 1px 1px 0px #ffffff;
+    text-align: center;
+}
+
+.song-item p {
+    font-size: 0.9em; /* Tamaño de texto de detalles */
+    margin: 0 0 3px 0; /* Margen inferior */
+    color: #404040; /* Color gris oscuro para detalles */
+    text-align: center;
+}
+
+.error-message {
+    color: #ff00ff; /* Rosa neón para errores */
+    text-align: center;
+    margin-top: 20px;
+}
+
+.loading-message {
+    text-align: center;
+    margin-top: 20px;
+} 

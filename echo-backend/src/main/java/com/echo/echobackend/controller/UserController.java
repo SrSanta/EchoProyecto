@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/profile-image")
-    @PreAuthorize("hasRole('ROLE_USER, ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<?> uploadProfileImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {
             // Generar nombre único para la imagen
@@ -65,7 +65,8 @@ public class UserController {
             user.setProfileImage(filename);
             userService.updateUser(id, user);
 
-            return ResponseEntity.ok(filename);
+            // Devolver un objeto JSON con el nombre del archivo
+            return ResponseEntity.ok(Map.of("filename", filename));
         } catch (Exception e) {
             logger.error("Error al subir la imagen de perfil para el usuario {}", id, e);
             return new ResponseEntity<>("Error al subir la imagen de perfil: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -183,7 +184,7 @@ public class UserController {
     public ResponseEntity<org.springframework.core.io.Resource> serveProfileImage(@PathVariable String filename) {
         try {
             // Cargar el archivo como recurso usando el servicio
-            org.springframework.core.io.Resource file = fileStorageService.loadFileAsResource("profile/" + filename);
+            org.springframework.core.io.Resource file = fileStorageService.loadFileAsResource(filename);
 
             // Determinar el tipo de contenido
             String contentType = null;

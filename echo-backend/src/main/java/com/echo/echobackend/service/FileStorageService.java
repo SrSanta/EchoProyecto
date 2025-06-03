@@ -10,15 +10,19 @@ import java.nio.file.StandardCopyOption;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import java.net.MalformedURLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FileStorageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     private final Path fileStorageLocation;
 
     public FileStorageService() {
         // Directorio donde se guardan las imágenes de perfil
-        this.fileStorageLocation = Paths.get(System.getProperty("user.dir"), "mis_uploads").toAbsolutePath().normalize();
+        this.fileStorageLocation = Paths.get(System.getProperty("user.dir"), "mis_uploads", "perfile").toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -29,9 +33,16 @@ public class FileStorageService {
     public String storeFile(MultipartFile file, String filename) throws IOException {
         // Crear el path completo del archivo destino
         Path targetLocation = this.fileStorageLocation.resolve(filename);
+        logger.info("Attempting to store file {} at path {}", filename, targetLocation.toString());
 
-        // Copiar el archivo al destino (sobrescribirá si ya existe)
-        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            // Copiar el archivo al destino (sobrescribirá si ya existe)
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            logger.info("Successfully stored file {} at path {}", filename, targetLocation.toString());
+        } catch (IOException ex) {
+            logger.error("Failed to store file {} at path {}", filename, targetLocation.toString(), ex);
+            throw ex; // Re-lanzar la excepción después de loguear
+        }
 
         return filename; // Retornar el nombre del archivo guardado
     }
