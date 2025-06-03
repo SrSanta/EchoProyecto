@@ -81,6 +81,8 @@ public class SecurityBeansConfig {
                                 "/api/songs",
                                 "/api/users/artists",
                                 "/api/playlists/public",
+                                "/api/songs/user/**",
+                                "/api/playlists/public/user/**",
                                 "/mis_uploads/**"
                         ).permitAll()
                         .anyRequest().authenticated()

@@ -130,7 +130,6 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> searchUsers(@RequestParam(required = false) String username) {
         try {
             List<User> users;

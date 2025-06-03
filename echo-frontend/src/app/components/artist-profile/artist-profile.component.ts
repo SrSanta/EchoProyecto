@@ -50,9 +50,13 @@ export class ArtistProfileComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.userService.getUserByUsername(username).subscribe({
-      next: (artist) => {
-        this.artist = artist;
+    forkJoin({
+      artist: this.userService.getUserByUsername(username),
+      songs: this.songService.getSongsByUsername(username)
+    }).subscribe({
+      next: (results) => {
+        this.artist = results.artist;
+        this.songs = results.songs || []; // Ensure songs is an empty array if null
         this.loading = false;
 
         if (!this.artist) {
@@ -60,9 +64,9 @@ export class ArtistProfileComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.error = 'Error loading artist profile.';
+        this.error = 'Error loading artist profile or songs.';
         this.loading = false;
-        console.error('Error loading artist profile:', err);
+        console.error('Error loading artist profile or songs:', err);
       }
     });
   }
