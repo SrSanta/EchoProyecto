@@ -255,6 +255,7 @@
   z-index: 1;
 }
 
+
 /* Mensajes de error */
 .error {
   color: #dc3545;
@@ -281,4 +282,34 @@
     flex: 1;
     justify-content: center;
   }
+}
+
+.playlists-window-content {
+  padding: 0px !important; /* Remove padding specifically for the playlists window content */
+  /* Ensure Flexbox styles are still applied if needed for layout */
+   display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.playlists-section .window-content {
+  /* Existing styles */
+  padding: 15px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+  position: relative;
+   /* Add Flexbox styles to make content fill the container */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow this div to grow */
+}
+
+/* Ensure app-playlists-page takes available space within the flex container */
+.playlists-section .window-content app-playlists-page {
+    display: flex; /* app-playlists-page is a custom element, needs display flex/block to respect width/height */
+    flex-grow: 1; /* Allow app-playlists-page to grow */
+    /* It might be necessary to set a min-height here if content is smaller than container */
+    min-height: 0; /* Allow shrinking below content size if needed */
 }

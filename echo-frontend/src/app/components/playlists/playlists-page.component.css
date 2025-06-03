@@ -1,18 +1,547 @@
 .playlists-page {
-  max-width: 600px;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  /* Aplicar estilos de ventana de Windows 95 */
+  background: #c0c0c0; /* Fondo gris */
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000; /* Sombra */
+  padding: 3px; /* Padding para el borde */
+  width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+  height: 100%; /* Asegurar que ocupe toda la altura disponible en el flex container */
+  margin: 0; /* Remover margen automático para que no afecte el llenado del contenedor */
+  /* Remover estilos previos */
+  /* background: #fff; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 2px 8px rgba(0,0,0,0.08); */
 }
+
+.playlists-page .window-titlebar-custom {
+  /* Barra de título simple para la ventana principal si se necesita */
+  background: linear-gradient(90deg, #000080, #1084d0); /* Degradado de título */
+  color: white;
+  padding: 3px 6px;
+  font-weight: bold;
+  margin-bottom: 10px; /* Espacio debajo de la barra de título */
+}
+
+h2 {
+ /* Mantener estilos h2 de styles.css */
+  font-size: 1.5rem;
+  color: #800080; /* Morado vaporwave */
+  margin-bottom: 1rem; /* Ajuste de margen */
+  text-shadow: 1px 1px 0px #ffffff;
+}
+
 .create-btn {
-  margin-bottom: 1rem;
-  background: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1.2rem;
+  /* Estilo de botón de Windows 95 */
+  display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 12px;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-bottom: 1.5rem; /* Mantener margen inferior */
+  /* Remover estilos previos */
+  /* background-color: #007bff; */
+  /* color: white; */
+  /* border: none; */
+  /* border-radius: 5px; */
+  /* padding: 0.75rem 1.5rem; */
+  /* transition: background-color 0.3s ease; */
 }
+
+.create-btn:hover {
+  /* Estilo hover de botón de Windows 95 (opcional, puede ser el mismo que active) */
+   background: #d0d0d0;
+}
+
+.create-btn:active {
+  /* Estilo active de botón de Windows 95 */
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 11px 2px 13px; /* Ajuste de padding para efecto click */
+}
+
+/* Estilos de la cuadrícula de playlists */
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Cuadrícula responsiva */
+  gap: 20px; /* Espacio entre tarjetas */
+  margin-top: 1.5rem;
+}
+
+/* Estilos de la tarjeta individual de playlist - ahora como ventanas pequeñas */
+.playlist-card {
+   /* Aplicar estilos de ventana de Windows 95 */
+  background: #c0c0c0; /* Fondo gris */
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000; /* Sombra */
+  padding: 3px; /* Padding para el borde */
+  text-align: center; /* Centrar contenido */
+  transition: transform 0.1s ease, box-shadow 0.1s ease; /* Transición más rápida */
+  display: flex; /* Usar flexbox para el contenido interno */
+  flex-direction: column; /* Apilar contenido verticalmente */
+  justify-content: space-between; /* Espacio entre elementos */
+   /* Remover estilos previos */
+  /* background-color: #f8f9fa; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 1px 4px rgba(0,0,0,0.05); */
+}
+
+.playlist-card:hover {
+  transform: none; /* Eliminar efecto hover de traslación */
+  box-shadow: -2px -2px 0 0 #000000, 2px 2px 0 0 #c0c0c0, 2px 2px 0 1px #000000; /* Sombra más pronunciada al hover */
+}
+
+.playlist-thumbnail img {
+  width: 100%; /* Imagen ocupa todo el ancho de la tarjeta */
+  height: auto; /* Mantener proporción */
+  border-radius: 0; /* Eliminar border-radius */
+  margin-bottom: 10px;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde interior 3D */
+  padding: 2px; /* Espacio para el borde interior */
+}
+
+.playlist-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: #000000; /* Texto negro */
+   text-shadow: 1px 1px 0px #ffffff; /* Sombra de texto blanco */
+}
+
+.playlist-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #000000; /* Texto negro */
+}
+
+.playlist-actions button {
+  /* Estilo de botón de Windows 95 */
+  display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 8px; /* Ajustar padding */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  cursor: pointer;
+  font-size: 0.8rem; /* Ajustar tamaño de fuente */
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-top: 10px;
+  margin-right: 5px;
+   /* Remover estilos previos */
+  /* background-color: #eee; */
+  /* border: 1px solid #ccc; */
+  /* border-radius: 4px; */
+}
+
+.playlist-actions button:hover {
+   background: #d0d0d0; /* Estilo hover */
+}
+
+.playlist-actions button:active {
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 7px 2px 9px; /* Ajuste de padding para efecto click */
+}
+
+.playlist-status {
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+   color: #000000; /* Color de texto por defecto negro */
+}
+
+.playlist-status.public {
+  color: #0000ff; /* Azul para público */
+  font-weight: bold;
+}
+
+.playlist-status.private {
+  color: #800080; /* Morado para privado */
+   font-weight: bold;
+}
+
+.toggle-public-btn, .share-btn {
+   /* Usar estilos de botón de acciones */
+   display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 8px; /* Ajustar padding */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  cursor: pointer;
+  font-size: 0.8rem; /* Ajustar tamaño de fuente */
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-top: 10px;
+  margin-right: 5px;
+   /* Remover estilos previos */
+  /* background-color: #eee; */
+  /* border: 1px solid #ccc; */
+  /* border-radius: 4px; */
+}
+
+.toggle-public-btn:hover, .share-btn:hover {
+   background: #d0d0d0; /* Estilo hover */
+}
+
+.toggle-public-btn:active, .share-btn:active {
+   border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 7px 2px 9px; /* Ajuste de padding para efecto click */
+}
+
+.public-url {
+  font-size: 0.8rem;
+  margin-top: 5px;
+  word-break: break-all; /* Romper palabras largas */
+   color: #000000; /* Texto negro */
+}
+
+.public-url a {
+  color: #0000ff; /* Azul para enlaces */
+  text-decoration: underline;
+}
+
+.public-url a:hover {
+  color: #ff00ff; /* Rosa al hacer hover */
+  text-decoration: underline;
+}
+
+/* Estilos para los modales de formulario - ahora como ventanas pop-up */
+.modal {
+  position: fixed; /* Posición fija para superponer */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+   /* Aplicar estilos de ventana de Windows 95 */
+  background: #c0c0c0; /* Fondo gris */
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000; /* Sombra */
+  padding: 3px; /* Padding para el borde */
+  z-index: 1000; /* Asegurar que esté por encima de otros elementos */
+   width: 300px; /* Ancho fijo para modales de formulario */
+    /* Permitir que el modal de detalle sea más ancho */
+  &.modal.playlist-detail-modal {
+    width: 500px; /* Ancho mayor para el detalle */
+  }
+  /* Remover estilos previos */
+  /* background-color: #fff; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 4px 12px rgba(0,0,0,0.15); */
+}
+
+.modal .window-titlebar {
+   /* Estilo de barra de título para el modal */
+  background: linear-gradient(90deg, #000080, #1084d0); /* Degradado de título */
+  color: white;
+  padding: 3px 6px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10px; /* Espacio debajo de la barra de título */
+   cursor: default; /* Cursor por defecto */
+   display: flex; /* Usar flexbox para alinear título y botón cerrar */
+   justify-content: space-between;
+   align-items: center;
+}
+
+.modal .window-titlebar h3 {
+    /* Resetear margen del h3 dentro de la barra de título */
+    margin: 0;
+    font-size: 1rem; /* Ajustar tamaño de fuente */
+    color: white; /* Color blanco para el título */
+    text-shadow: none; /* Remover sombra de texto */
+}
+
+.modal .window-titlebar .close-btn {
+    /* Estilo de botón cerrar simple */
+    background: #c0c0c0; /* Fondo gris */
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+    padding: 1px 4px;
+    font-size: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #000000;
+    font-weight: bold;
+}
+
+.modal .window-titlebar .close-btn:active {
+    border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+}
+
+.modal .modal-content-area {
+   /* Área de contenido del modal */
+  padding: 15px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde interior 3D */
+}
+
+/* Existing modal styles for input and buttons should apply */
+
+/* Estilos específicos para el modal de detalle de playlist */
+.modal.playlist-detail-modal .modal-content-area {
+  /* Ajustes si es necesario, pero los estilos generales de .modal-content-area deberían ser suficientes */
+}
+
+/* Estilos para la lista de canciones dentro del modal de detalle */
+.modal.playlist-detail-modal ul {
+   list-style: none; /* Quitar viñetas de lista */
+   padding: 0; /* Quitar padding por defecto */
+}
+
+.modal.playlist-detail-modal li {
+   background: #d0d0d0; /* Fondo ligeramente más oscuro */
+   border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D */
+  padding: 5px;
+  margin-bottom: 5px; /* Espacio entre elementos de lista */
+   display: flex;
+   justify-content: space-between; /* Espacio entre nombre y botón */
+   align-items: center;
+   font-size: 0.9rem;
+}
+
+.modal.playlist-detail-modal li button {
+   /* Estilo de botón de acciones */
+  display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 8px; /* Ajustar padding */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  cursor: pointer;
+  font-size: 0.8rem; /* Ajustar tamaño de fuente */
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-left: 10px; /* Espacio a la izquierda del botón */
+   margin-top: 0; /* Resetear margen superior */
+}
+
+.modal.playlist-detail-modal li button:hover {
+   background: #d0d0d0; /* Estilo hover */
+}
+
+.modal.playlist-detail-modal li button:active {
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 7px 2px 9px; /* Ajuste de padding para efecto click */
+}
+
+/* Eliminar estilos de la vista de detalle previa si existen y ya no se usan */
+/* .showDetail { display: none; } */
+
+.modal input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 4px; /* Ajustar padding */
+   /* Estilo de input de Windows 95 */
+  background: #ffffff; /* Fondo blanco */
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D */
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 0.9rem;
+   /* Remover estilos previos */
+  /* padding: 0.5rem; */
+  /* border: 1px solid #ccc; */
+  /* border-radius: 4px; */
+}
+
+.modal button {
+   /* Estilo de botón de Windows 95 */
+  display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 12px; /* Ajustar padding */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  cursor: pointer;
+  font-size: 0.9rem; /* Ajustar tamaño de fuente */
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-right: 10px;
+   /* Remover estilos previos */
+  /* padding: 0.5rem 1rem; */
+  /* border: none; */
+  /* border-radius: 4px; */
+}
+
+.modal button:hover {
+   background: #d0d0d0; /* Estilo hover */
+}
+
+.modal button:active {
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 11px 2px 13px; /* Ajuste de padding para efecto click */
+}
+
+.modal button:first-of-type {
+   /* Remover estilos previos */
+  /* background-color: #28a745; */
+  /* color: white; */
+}
+
+.modal button:first-of-type:hover {
+   /* Remover estilos previos */
+  /* background-color: #218838; */
+}
+
+.modal button:last-of-type {
+   /* Remover estilos previos */
+  /* background-color: #dc3545; */
+  /* color: white; */
+}
+
+.modal button:last-of-type:hover {
+   /* Remover estilos previos */
+  /* background-color: #c82333; */
+}
+
+.no-playlists-message {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: #000000; /* Texto negro */
+   text-shadow: 1px 1px 0px #ffffff; /* Sombra de texto blanco */
+}
+
+/* Estilos para la vista de detalle de playlist (ajustar según sea necesario) */
+.showDetail h3 {
+   /* Estilo de barra de título */
+  background: linear-gradient(90deg, #000080, #1084d0); /* Degradado de título */
+  color: white;
+  padding: 3px 6px;
+  font-weight: bold;
+  margin-bottom: 10px; /* Espacio debajo de la barra de título */
+}
+
+.showDetail > div {
+   /* Aplicar estilo de área de contenido */
+  padding: 15px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde interior 3D */
+  margin-bottom: 10px; /* Espacio entre secciones */
+}
+
+.showDetail p {
+  color: #000000; /* Texto negro */
+}
+
+.showDetail button {
+   /* Usar estilos de botón de acciones */
+  display: inline-block;
+  background: #c0c0c0; /* Fondo gris */
+  color: #000000;
+  padding: 3px 8px; /* Ajustar padding */
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Borde 3D */
+  cursor: pointer;
+  font-size: 0.9rem; /* Ajustar tamaño de fuente */
+  font-weight: bold;
+  text-align: center;
+  box-shadow: -1px -1px 0 0 #000000; /* Sombra */
+  position: relative;
+  outline: none;
+  margin-right: 5px;
+   margin-top: 5px; /* Ajuste de margen */
+}
+
+.showDetail button:hover {
+   background: #d0d0d0; /* Estilo hover */
+}
+
+.showDetail button:active {
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D invertido */
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 4px 7px 2px 9px; /* Ajuste de padding para efecto click */
+}
+
+.showDetail ul {
+   list-style: none; /* Quitar viñetas de lista */
+   padding: 0; /* Quitar padding por defecto */
+}
+
+.showDetail li {
+   background: #d0d0d0; /* Fondo ligeramente más oscuro */
+   border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D */
+  padding: 5px;
+  margin-bottom: 5px; /* Espacio entre elementos de lista */
+   display: flex;
+   justify-content: space-between; /* Espacio entre nombre y botón */
+   align-items: center;
+}
+
+.showDetail li button {
+   margin-top: 0; /* Resetear margen superior */
+}
+
+.showDetail .alert-danger {
+  /* Estilo básico para mensajes de error */
+  background: #ff8080; /* Fondo rojo claro */
+  color: #000000; /* Texto negro */
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Borde 3D */
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+/* Ajustes para el formulario de agregar canción */
+.showDetail .add-song-section h4 {
+   /* Estilo de subtítulo */
+   font-size: 1.1rem;
+  color: #ff00ff; /* Rosa neón */
+  margin-top: 15px;
+  margin-bottom: 10px;
+   text-shadow: 1px 1px 0px #ffffff; /* Sombra de texto blanco */
+}
+
+.showDetail .add-song-section ul li button {
+   /* Estilo específico para botones de agregar canción */
+   background-color: #28a745; /* Verde */
+   color: white;
+   border-color: #ffffff #1e7e34 #1e7e34 #ffffff; /* Borde 3D verde */
+}
+
+.showDetail .add-song-section ul li button:hover {
+   background-color: #218838; /* Verde más oscuro al hover */
+}
+
+.showDetail .add-song-section ul li button:active {
+   border-color: #1e7e34 #ffffff #ffffff #1e7e34; /* Borde 3D invertido */
+   background-color: #28a745;
+}
+

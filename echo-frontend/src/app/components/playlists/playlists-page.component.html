@@ -1,5 +1,4 @@
 <div class="playlists-page">
-  <h2>Mis Playlists</h2>
   <button class="create-btn" (click)="openCreateForm()">+ Nueva Playlist</button>
 
   <!-- Formulario crear playlist -->
@@ -22,65 +21,69 @@
   <div *ngIf="error">{{ error }}</div>
 
   <!-- Lista de playlists -->
-  <ul *ngIf="!loading && playlists.length">
-    <li *ngFor="let playlist of playlists">
-      <span>{{ playlist.name }}</span>
-      <span *ngIf="playlist.isPublic" title="Pública" style="color: green;">🌐 Pública</span>
-      <span *ngIf="!playlist.isPublic" title="Privada" style="color: gray;">🔒 Privada</span>
-      <button (click)="togglePublic(playlist)">
+  <div *ngIf="!loading && playlists.length" class="playlist-grid">
+    <div *ngFor="let playlist of playlists" class="playlist-card">
+      <!-- Aquí va el contenido de la tarjeta de playlist -->
+      <div class="playlist-thumbnail">
+        <!-- Puedes poner una miniatura aquí si hay alguna disponible, por ahora un placeholder -->
+        <img src="assets/images/placeholder-playlist.png" alt="Miniatura de playlist">
+      </div>
+      <div class="playlist-info">
+        <h3 class="playlist-name">{{ playlist.name }}</h3>
+        <!-- Puedes añadir más info aquí si quieres -->
+        <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
+      </div>
+      <div class="playlist-actions">
+        <button (click)="viewDetail(playlist)">Ver</button>
+        <button (click)="openEditForm(playlist)">Editar</button>
+        <button (click)="deletePlaylist(playlist)">Eliminar</button>
+      </div>
+      <!-- Indicador pública/privada -->
+      <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
+      <span *ngIf="!playlist.isPublic" title="Privada" class="playlist-status private">🔒 Privada</span>
+      <!-- Botón para cambiar visibilidad -->
+       <button (click)="togglePublic(playlist)" class="toggle-public-btn">
         {{ playlist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
       </button>
-      <button (click)="viewDetail(playlist)">Ver</button>
-      <button (click)="openEditForm(playlist)">Editar</button>
-      <button (click)="deletePlaylist(playlist)">Eliminar</button>
-      <button *ngIf="playlist.isPublic" (click)="sharePlaylist(playlist)">Compartir</button>
-      <span *ngIf="playlist.publicUrl">
-        <br>Enlace: <a [href]="playlist.publicUrl" target="_blank">{{ playlist.publicUrl }}</a>
+       <button *ngIf="playlist.isPublic" (click)="sharePlaylist(playlist)" class="share-btn">Compartir</button>
+      <span *ngIf="playlist.publicUrl" class="public-url">
+        Enlace: <a [href]="playlist.publicUrl" target="_blank">{{ playlist.publicUrl }}</a>
       </span>
-    </li>
-  </ul>
-  <div *ngIf="!loading && !playlists.length">No tienes playlists aún.</div>
+    </div>
+  </div>
+  <div *ngIf="!loading && !playlists.length" class="no-playlists-message">No tienes playlists aún.</div>
 
-  <!-- Vista detalle playlist -->
-  <div *ngIf="showDetail && selectedPlaylist">
-    <h3>{{ selectedPlaylist.name }}</h3>
-    <div *ngIf="selectedPlaylist.isPublic" style="color: green;">🌐 Playlist pública</div>
-    <div *ngIf="!selectedPlaylist.isPublic" style="color: gray;">🔒 Playlist privada</div>
-    <button (click)="togglePublic(selectedPlaylist)">
-      {{ selectedPlaylist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
-    </button>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <p>ID: {{ selectedPlaylist.id }}</p>
-    <button *ngIf="selectedPlaylist.isPublic" (click)="sharePlaylist(selectedPlaylist)">Compartir</button>
-    <span *ngIf="selectedPlaylist.publicUrl">
-      <br>Enlace público: <a [href]="selectedPlaylist.publicUrl" target="_blank">{{ selectedPlaylist.publicUrl }}</a>
-    </span>
+  <!-- Vista detalle playlist como modal -->
+  <div *ngIf="showDetail && selectedPlaylist" class="modal">
+    <div class="window-titlebar">
+      <h3>{{ selectedPlaylist.name }}</h3>
+       <button (click)="closeDetail()" class="close-btn">✕</button>
+    </div>
+     <div class="modal-content-area">
+      <div *ngIf="selectedPlaylist.isPublic" style="color: green;">🌐 Playlist pública</div>
+      <div *ngIf="!selectedPlaylist.isPublic" style="color: gray;">🔒 Playlist privada</div>
+      <button (click)="togglePublic(selectedPlaylist)">
+        {{ selectedPlaylist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
+      </button>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <p>ID: {{ selectedPlaylist.id }}</p>
+      <button *ngIf="selectedPlaylist.isPublic" (click)="sharePlaylist(selectedPlaylist)">Compartir</button>
+      <span *ngIf="selectedPlaylist.publicUrl">
+        <br>Enlace público: <a [href]="selectedPlaylist.publicUrl" target="_blank">{{ selectedPlaylist.publicUrl }}</a>
+      </span>
 
-    <h4>Canciones en esta playlist</h4>
-    <ul *ngIf="selectedPlaylist.songs && selectedPlaylist.songs.length; else noSongs">
-      <li *ngFor="let song of playlistSongsWithId">
-        {{ song.title }}
-        <button (click)="removeSongFromPlaylist(song)">Quitar</button>
-      </li>
-    </ul>
-    <ng-template #noSongs>
-      <div>No hay canciones en esta playlist.</div>
-    </ng-template>
-
-    <ng-container>
-      <h4>Agregar canción</h4>
-      <ul>
-        <li *ngFor="let song of allSongsWithId">
+      <h4>Canciones en esta playlist</h4>
+      <ul *ngIf="selectedPlaylist.songs && selectedPlaylist.songs.length; else noSongs">
+        <li *ngFor="let song of playlistSongsWithId">
           {{ song.title }}
-          <button (click)="addSongToPlaylist(song)"
-            [disabled]="isSongInPlaylist(song)">
-            Agregar
-          </button>
+          <button (click)="removeSongFromPlaylist(song)">Quitar</button>
         </li>
       </ul>
-    </ng-container>
+      <ng-template #noSongs>
+        <div>No hay canciones en esta playlist.</div>
+      </ng-template>
 
-    <button (click)="playPlaylist()">Reproducir Playlist</button>
-    <button (click)="closeDetail()">Cerrar</button>
+      <button (click)="playPlaylist()">Reproducir Playlist</button>
+    </div>
   </div>
 </div>
