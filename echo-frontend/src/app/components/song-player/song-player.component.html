@@ -22,7 +22,7 @@
           <div class="track-details">
             <div class="cd-player-artist">
               <span class="label">Artist:</span>
-              <div class="value">{{ song.user.username || 'Unknown' }}</div>
+              <div class="value">{{ song.user?.username || song.artist || 'Unknown' }}</div>
             </div>
             
             <div class="cd-player-title">

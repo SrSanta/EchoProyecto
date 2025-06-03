@@ -317,4 +317,66 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.selectedSongId = null; // Limpiar la canción seleccionada al cerrar
     this.contextMenuError = null; // Limpiar cualquier mensaje de error del menú
   }
+
+  // Método para reproducir la playlist seleccionada en el modal
+  playSelectedPlaylist(): void {
+    if (!this.selectedPlaylistForModal || !this.selectedPlaylistForModal.songs || this.selectedPlaylistForModal.songs.length === 0) {
+      console.log('No playlist selected or no songs in playlist.');
+      return;
+    }
+
+    const username = this.authService.getUsername();
+    if (!username) {
+      console.error('User not logged in, cannot play playlist.');
+      // Opcional: mostrar un mensaje al usuario indicando que debe loggearse
+      return;
+    }
+
+    const songsToPlay = this.selectedPlaylistForModal.songs;
+
+    // Lógica para añadir canciones a la cola y reproducir la primera, similar a playlists-page.component.ts
+    this.playbackQueueService.clearQueue(username).subscribe({
+      next: () => {
+        console.log('Queue cleared.');
+        // Añadir canciones una por una con un pequeño retraso para simular el comportamiento original si es necesario,
+        // o simplemente añadir todas de golpe si el servicio lo permite de forma eficiente.
+        // Replicando el patrón de playlists-page.component.ts:
+        const addNext = (index: number) => {
+          if (index < songsToPlay.length) {
+            const song = songsToPlay[index];
+            if (song.id !== undefined) {
+              this.playbackQueueService.addSongToQueue(username, song.id).subscribe({
+                next: () => {
+                  console.log(`Song ${song.title} added to queue. Index: ${index}`);
+                  // Si es la primera canción, iniciar la reproducción inmediatamente
+                  if (index === 0) {
+                    this.playerStateService.playSong(song);
+                  }
+                  // Continuar con la siguiente canción después de un breve retraso
+                  setTimeout(() => addNext(index + 1), 50); // Retraso de 50ms entre canciones
+                },
+                error: (err) => {
+                  console.error(`Error adding song ${song.title} to queue:`, err);
+                  // Continuar con la siguiente canción incluso si falla una
+                  setTimeout(() => addNext(index + 1), 50); // Retraso de 50ms entre canciones
+                }
+              });
+            } else {
+               console.warn(`Song at index ${index} has no ID, skipping.`, song);
+               setTimeout(() => addNext(index + 1), 50); // Continuar incluso si falta el ID
+            }
+          } else {
+            console.log('All songs processed.');
+            // Aquí podrías cerrar el modal o dar alguna indicación al usuario si es necesario
+          }
+        };
+
+        addNext(0); // Iniciar el proceso con la primera canción
+      },
+      error: (err) => {
+        console.error('Error clearing queue before playing playlist:', err);
+        // Manejar el error, quizás mostrando un mensaje al usuario
+      }
+    });
+  }
 }

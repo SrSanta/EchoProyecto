@@ -293,23 +293,23 @@
   </div>
   <div class="window-content">
     <h4>Canciones en esta playlist</h4>
-    @if (selectedPlaylistForModal.songs && selectedPlaylistForModal.songs.length > 0) {
-    <ul class="playlist-songs-list">
-      @for (song of selectedPlaylistForModal.songs; track song.id) {
-      <li class="song-item" (click)="playSong(song)">
-        <div class="song-info">
-          <h4 class="song-title">{{ song.title }}</h4>
-          <p class="song-artist">{{ song.artist || 'Artista desconocido' }}</p>
-        </div>
-        <span class="play-icon">▶️</span>
+    <ul *ngIf="selectedPlaylistForModal.songs && selectedPlaylistForModal.songs.length; else noSongs">
+      <!-- Aquí podrías listar las canciones si quieres, similar a la vista de playlists -->
+      <!-- Por ahora, solo mostramos el conteo -->
+      <li *ngFor="let song of selectedPlaylistForModal.songs">
+        {{ song.title }} - {{ song.artist || 'Artista desconocido' }}
       </li>
-      }
     </ul>
-    } @else {
-    <div class="no-songs">
-      <p>Esta playlist no tiene canciones.</p>
-    </div>
-    }
+    <ng-template #noSongs>
+      <div>Esta playlist no tiene canciones.</div>
+    </ng-template>
+
+    <!-- Botón para reproducir toda la playlist -->
+    <button (click)="playSelectedPlaylist()" [disabled]="!selectedPlaylistForModal || !selectedPlaylistForModal.songs || selectedPlaylistForModal.songs.length === 0">
+      Reproducir Playlist
+    </button>
+
+    <!-- Puedes añadir más detalles aquí si es necesario -->
   </div>
 </div>
 }
