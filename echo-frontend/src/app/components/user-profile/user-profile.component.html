@@ -30,6 +30,9 @@
           <button (click)="togglePlaylists()" class="btn" [class.active]="showPlaylists">
             {{ showPlaylists ? '📚 Ocultar playlists' : '🎵 Mis playlists' }}
           </button>
+          <button (click)="toggleLikedSongs()" class="btn" [class.active]="showLikedSongs">
+            {{ showLikedSongs ? '❤️ Ocultar favoritas' : '❤️ Mis favoritas' }}
+          </button>
         </div>
       </div>
     </div>
@@ -50,7 +53,7 @@
   <app-user-profile-edit *ngIf="editMode"></app-user-profile-edit>
 
   <!-- User Uploaded Songs Section -->
-  <div *ngIf="!editMode && !showPlaylists">
+  <div *ngIf="!editMode && !showPlaylists && !showLikedSongs">
     <div class="window-titlebar">
       <span>Mis Canciones Subidas</span>
       <span class="window-controls">
@@ -60,6 +63,39 @@
     </div>
     <div class="window-content">
       <app-user-uploaded-songs></app-user-uploaded-songs>
+    </div>
+  </div>
+
+  <!-- Liked Songs Section -->
+  <div *ngIf="showLikedSongs" class="liked-songs-section">
+    <div class="window-titlebar">
+      <span>Mis Canciones Favoritas</span>
+      <span class="window-controls">
+        <span class="window-minimize">-</span>
+        <span class="window-close" (click)="showLikedSongs = false">✕</span>
+      </span>
+    </div>
+    <div class="window-content liked-songs-window-content">
+      <div *ngIf="loadingLikedSongs" class="loading-message">
+        <span class="blink">⏳</span> Cargando canciones favoritas...
+      </div>
+
+      <div *ngIf="likedSongsError && !loadingLikedSongs" class="error-message">
+        ⚠️ {{ likedSongsError }}
+        <button (click)="likedSongsError = null" class="close-btn">✕</button>
+      </div>
+
+      <div *ngIf="!loadingLikedSongs && !likedSongsError && likedSongs.length > 0">
+        <h3>Canciones Favoritas:</h3>
+        <ul>
+          <li *ngFor="let song of likedSongs">{{ song.title }} - {{ song.artist || 'Artista desconocido' }}</li>
+        </ul>
+      </div>
+
+       <div *ngIf="!loadingLikedSongs && !likedSongsError && likedSongs.length === 0">
+        <p>Aún no tienes canciones favoritas.</p>
+      </div>
+
     </div>
   </div>
 

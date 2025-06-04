@@ -9,6 +9,9 @@ import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit
 import { PlaylistsPageComponent } from '../playlists/playlists-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserUploadedSongsComponent } from '../user-uploaded-songs/user-uploaded-songs.component';
+import { SongService } from '../../services/song.service';
+import { LikeService } from '../../services/like.service';
+import { Song } from '../../models/song.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,24 +23,94 @@ import { UserUploadedSongsComponent } from '../user-uploaded-songs/user-uploaded
 export class UserProfileComponent implements OnInit {
   editMode = false;
   showPlaylists = false;
+  showLikedSongs = false;
   user: any = null;
   loading = true;
   error: string | null = null;
   selectedFile: File | null = null;
   uploading = false;
+  likedSongs: Song[] = [];
+  loadingLikedSongs = false;
+  likedSongsError: string | null = null;
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private http: HttpClient, private songService: SongService, private likeService: LikeService) {}
 
   toggleEditMode() {
     this.editMode = !this.editMode;
     this.showPlaylists = false;
+    this.showLikedSongs = false;
   }
 
   togglePlaylists() {
     this.showPlaylists = !this.showPlaylists;
     if (this.showPlaylists) {
       this.editMode = false;
+      this.showLikedSongs = false;
     }
+  }
+
+  toggleLikedSongs() {
+    this.showLikedSongs = !this.showLikedSongs;
+    if (this.showLikedSongs) {
+      this.editMode = false;
+      this.showPlaylists = false;
+      this.loadLikedSongs();
+    }
+  }
+
+  loadLikedSongs(): void {
+    if (!this.user) {
+      this.likedSongsError = 'User not loaded.';
+      return;
+    }
+
+    this.loadingLikedSongs = true;
+    this.likedSongsError = null;
+    this.likedSongs = [];
+
+    this.likeService.getLikedSongs(this.user.id).subscribe({
+      next: (songIds: number[]) => {
+        if (songIds.length === 0) {
+          this.likedSongsError = 'No liked songs found.';
+          this.loadingLikedSongs = false;
+          return;
+        }
+
+        let loadedSongs: Song[] = [];
+        let completedFetches = 0;
+
+        songIds.forEach(id => {
+          this.songService.getSongById(id).subscribe({
+            next: (song) => {
+              if (song) {
+                loadedSongs.push(song);
+              }
+              completedFetches++;
+              if (completedFetches === songIds.length) {
+                this.likedSongs = loadedSongs;
+                this.loadingLikedSongs = false;
+              }
+            },
+            error: (err) => {
+              console.error(`Error loading song ${id}:`, err);
+              completedFetches++;
+              if (completedFetches === songIds.length) {
+                this.likedSongs = loadedSongs;
+                this.loadingLikedSongs = false;
+                if (this.likedSongsError === null) {
+                  this.likedSongsError = 'Some liked songs could not be loaded.';
+                }
+              }
+            }
+          });
+        });
+      },
+      error: (err) => {
+        this.likedSongsError = err.error || 'Error al cargar las canciones favoritas.';
+        this.loadingLikedSongs = false;
+        console.error('Error loading liked song IDs:', err);
+      }
+    });
   }
 
   ngOnInit(): void {
