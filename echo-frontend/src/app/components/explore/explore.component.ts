@@ -49,6 +49,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   userPlaylists: Playlist[] = [];
   loadingPlaylists = false;
   contextMenuError: string | null = null;
+  addToPlaylistSuccess: string | null = null;
+  showMessage: boolean = false; // <-- Nueva variable para controlar la visibilidad
 
   // Nueva variable para la ventana modal de playlist
   selectedPlaylistForModal: Playlist | null = null;
@@ -297,8 +299,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.playlistService.addSongToPlaylist(event.playlistId, event.songId).subscribe({
       next: () => {
         console.log('Song added to playlist successfully.');
-        // Éxito - podrías mostrar un mensaje de éxito aquí
+        this.addToPlaylistSuccess = 'Canción añadida a la playlist con éxito.';
+        this.showMessage = true; // <-- Mostrar el mensaje
+        console.log('showMessage set to:', this.showMessage); // <-- Añadir console.log aquí para verificar
         this.showContextMenu = false;
+        setTimeout(() => this.showMessage = false, 3100); // <-- Eliminar el mensaje del DOM después de la animación
       },
       error: (err) => {
         console.error('Error adding song to playlist:', err);

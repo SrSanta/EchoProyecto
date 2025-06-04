@@ -35,6 +35,8 @@ export class SongListComponent implements OnInit {
   userPlaylists: Playlist[] = [];
   loadingPlaylists = false;
   contextMenuError: string | null = null;
+  addToPlaylistSuccess: string | null = null;
+  showMessage: boolean = false;
 
   constructor(
     private songService: SongService,
@@ -169,8 +171,11 @@ export class SongListComponent implements OnInit {
     
     this.playlistService.addSongToPlaylist(event.playlistId, event.songId).subscribe({
       next: () => {
-        // Éxito - podrías mostrar un mensaje de éxito aquí
+        console.log('Song added to playlist successfully.');
+        this.addToPlaylistSuccess = 'Canción añadida a la playlist con éxito.';
+        this.showMessage = true;
         this.showContextMenu = false;
+        setTimeout(() => this.showMessage = false, 3100);
       },
       error: (err) => {
         console.error('Error al añadir canción a la playlist:', err);

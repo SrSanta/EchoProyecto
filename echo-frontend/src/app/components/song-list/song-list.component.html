@@ -1,4 +1,9 @@
 <div class="song-list-container">
+  @if (addToPlaylistSuccess) {
+    <div class="success-message">
+      {{ addToPlaylistSuccess }}
+    </div>
+  }
   @if (loading) {
     <div class="loading-message">
       <span class="blink">⏳</span> Cargando canciones...

@@ -5,6 +5,34 @@
   color: var(--text-primary);
 }
 
+/* Estilo para el mensaje de éxito */
+.success-message {
+  padding: 15px 20px;
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 0;
+  max-width: 300px;
+  animation: fadeout 3s forwards;
+  z-index: 1000;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  p {
+    color: #008000;
+    margin: 0;
+  }
+}
+
+@keyframes fadeout {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 .search-container {
   margin-bottom: 2rem;
   position: relative;

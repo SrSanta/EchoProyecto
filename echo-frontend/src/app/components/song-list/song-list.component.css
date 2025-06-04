@@ -212,3 +212,32 @@ ul {
     font-size: 0.8rem;
   }
 }
+
+/* Estilo para el mensaje de éxito */
+.success-message {
+  padding: 15px 20px; /* Espaciado interior */
+  background: #c0c0c0; /* Fondo gris de ventana */
+  border: 3px solid; /* Borde de ventana */
+  border-color: #ffffff #808080 #808080 #ffffff; /* Colores del borde de ventana */
+  box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000; /* Sombra de ventana */
+  color: #000000; /* Color de texto oscuro */
+  font-weight: bold;
+  text-align: center;
+  border-radius: 0; /* Sin bordes redondeados */
+  max-width: 300px; /* Reducir el ancho máximo para una esquina */
+  animation: fadeout 3s forwards; /* Animación de desvanecimiento */
+  z-index: 1000; /* Asegurar que esté encima */
+  position: fixed; /* Posición fija en la ventana */
+  top: 20px; /* 20px desde la parte superior */
+  right: 20px; /* 20px desde la parte derecha */
+  /* Estilo adicional para el texto de éxito dentro de la ventana */
+  p {
+    color: #008000; /* Texto verde para el mensaje de éxito */
+    margin: 0;
+  }
+}
+
+@keyframes fadeout {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
