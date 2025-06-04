@@ -14,7 +14,7 @@ import { User } from "../../models/user.model";
 @Component({
   selector: "app-song-player",
   standalone: true,
-  imports: [CommonModule, PlaybackQueueComponent],
+  imports: [CommonModule, PlaybackQueueComponent, FormsModule],
   templateUrl: "./song-player.component.html",
   styleUrls: ['./song-player.component.css']
 })
@@ -39,6 +39,9 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   volume = 1.0; // Volumen inicial al máximo
   isMuted = false; // Estado de silencio
   isFullscreen = false; // Estado de pantalla completa
+  
+  // Propiedad para controlar la visibilidad del contenido del reproductor
+  isContentVisible: boolean = true;
   
   // URLs
   audioUrl = "";
@@ -80,6 +83,11 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     if (this.song) {
       this.initializeSong();
     }
+
+     // Suscribirse a la canción actual para resetear la visibilidad si cambia
+     this.playerStateService.currentSong$.subscribe(() => {
+      this.isContentVisible = true; // Mostrar contenido al cambiar de canción
+    });
   }
 
   private initializeSong(): void {
@@ -597,5 +605,10 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       }
       this.isFullscreen = false;
     }
+  }
+
+  // Método para alternar la visibilidad del contenido del reproductor
+  toggleContentVisibility(): void {
+    this.isContentVisible = !this.isContentVisible;
   }
 }

@@ -35,23 +35,13 @@
 
 
   <!-- Reproductor de música flotante -->
-  <div class="floating-player" *ngIf="(isLoggedIn$ | async) && isPlayerVisible">
+  <div class="floating-player" *ngIf="isLoggedIn$ | async">
     @if (currentSongForPlayer$ | async; as currentSong) {
       <app-song-player [song]="currentSong"></app-song-player>
     } @else {
       <app-song-player></app-song-player>
     }
-
-    <!-- Botón para ocultar/mostrar el reproductor -->
-    <button class="toggle-player-button" (click)="togglePlayerVisibility()">
-      Ocultar Reproductor
-    </button>
   </div>
-
-  <!-- Botón para mostrar el reproductor cuando está oculto -->
-  <button *ngIf="(isLoggedIn$ | async) && !isPlayerVisible" class="toggle-player-button show" (click)="togglePlayerVisibility()">
-    Mostrar Reproductor
-  </button>
 
   <footer>
     <div class="window" style="margin: 0; border-radius: 0;">

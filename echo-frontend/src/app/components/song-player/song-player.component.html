@@ -1,9 +1,15 @@
-<div *ngIf="authService.isLoggedIn()">
-  <div class="cd-player">
-    <div class="cd-player-header">
-      <div class="cd-player-title">ECHO PLAYER</div>
-    </div>
-    
+<div class="cd-player">
+  <div class="cd-player-header">
+    <div class="cd-player-title">ECHO PLAYER</div>
+    <!-- Botón para ocultar el contenido del reproductor -->
+    <button class="toggle-content-button" (click)="toggleContentVisibility()" *ngIf="isContentVisible">
+      Ocultar Reproductor
+    </button>
+  </div>
+
+  <!-- Contenido del reproductor (visible si isContentVisible es true) -->
+  <div *ngIf="isContentVisible">
+
     @if (song) {
       <div class="cd-player-display">
         @if (song && song.videoFilename) {
@@ -76,10 +82,12 @@
             <!-- Controles de Volumen -->
             <input type="range" class="volume-slider" min="0" max="1" step="0.01" [value]="volume" (input)="setVolume($event)">
 
-            <!-- Botón de Pantalla Completa -->
-            <button class="control-btn" (click)="toggleFullscreen()" title="Fullscreen">
-              <span class="icon">{{ isFullscreen ? '❐' : '❑' }}</span> <!-- Símbolos para pantalla completa (Expandir/Reducir) -->
-            </button>
+            <!-- Botón de Pantalla Completa (temporalmente oculto si no es video) -->
+            @if (song && song.videoFilename) {
+              <button class="control-btn" (click)="toggleFullscreen()" title="Fullscreen">
+                <span class="icon">{{ isFullscreen ? '↔️' : '↖️' }}</span>
+              </button>
+            }
           </div>
 
           <!-- Controles de Calidad (Placeholder por ahora) -->
@@ -140,14 +148,31 @@
     </div>
   </div>
 
-  <audio #audioPlayer 
-         [src]="audioUrl" 
-         (timeupdate)="updateProgress()" 
-         (loadedmetadata)="onMetadataLoaded()"
-         (play)="onPlay()"
-         (pause)="onPause()"
-         (ended)="onSongEnded()"
-         style="display: none;">
-    Your browser does not support the audio element.
-  </audio>
+  <!-- Botón para mostrar el contenido del reproductor (visible si isContentVisible es false) -->
+   <button class="toggle-content-button show" (click)="toggleContentVisibility()" *ngIf="!isContentVisible">
+     Mostrar Reproductor
+   </button>
+
 </div>
+
+<audio #audioPlayer 
+       [src]="audioUrl" 
+       (timeupdate)="updateProgress()" 
+       (loadedmetadata)="onMetadataLoaded()"
+       (play)="onPlay()"
+       (pause)="onPause()"
+       (ended)="onSongEnded()"
+       style="display: none;">
+  Your browser does not support the audio element.
+</audio>
+
+<video #videoPlayer
+       [src]="videoUrl"
+       (timeupdate)="updateProgress()"
+       (loadedmetadata)="onMetadataLoaded()"
+       (play)="onPlay()"
+       (pause)="onPause()"
+       (ended)="onSongEnded()"
+       style="display: none;">
+  Your browser does not support the video element.
+</video>

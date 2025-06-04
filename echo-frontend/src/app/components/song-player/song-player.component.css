@@ -750,3 +750,54 @@ p { margin-bottom: 8px; }
     height: 20px; /* Aumentar altura del track para mejor toque */
   }
 }
+
+/* Estilos para los botones de ocultar/mostrar contenido dentro del reproductor */
+.toggle-content-button {
+  position: absolute; /* Posicionar absolutamente dentro de .cd-player-display */
+  top: 15px; /* Ajustar la posición vertical */
+  right: 15px; /* Ajustar la posición horizontal */
+  z-index: 10; /* Asegurarse de que esté por encima de otros elementos */
+  background: #c0c0c0;
+  color: #000000;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 2px 8px; /* Ajustar padding */
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 0.8rem; /* Ajustar tamaño de fuente */
+  width: auto;
+}
+
+.toggle-content-button:hover {
+  background: #e0e0e0;
+  color: #ff00ff; /* Rosa vaporwave al hacer hover */
+}
+
+.toggle-content-button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+  padding: 3px 7px 1px 9px; /* Ajustar padding para el efecto de click */
+}
+
+/* Estilos para el botón 'Mostrar Reproductor' cuando el contenido está oculto */
+.toggle-content-button.show {
+    position: absolute; /* Posicionar absolutamente dentro del .cd-player */
+    bottom: 15px; /* Posicionar en la parte inferior */
+    left: 50%; /* Centrar horizontalmente */
+    transform: translateX(-50%); /* Ajustar para centrar */
+    z-index: 10; /* Asegurarse de que esté por encima de otros elementos */
+    color: #000080; /* Azul oscuro */
+    /* Asegurar que tenga los mismos estilos base de botón */
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: -1px -1px 0 0 #000000;
+    padding: 3px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: 0.9rem;
+}
