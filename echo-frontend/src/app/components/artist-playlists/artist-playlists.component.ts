@@ -2,7 +2,6 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@ang
 import { CommonModule } from '@angular/common';
 import { PlaylistService } from '../../services/playlist.service';
 import { Playlist } from '../../models/playlist.model'; // Usaremos Playlist ya que el endpoint devuelve el modelo completo
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-artist-playlists',
@@ -20,7 +19,7 @@ export class ArtistPlaylistsComponent implements OnInit, OnChanges {
 
   private playlistService = inject(PlaylistService);
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
     // La carga inicial se manejará en ngOnChanges cuando se reciba el artistUsername
@@ -52,12 +51,5 @@ export class ArtistPlaylistsComponent implements OnInit, OnChanges {
         console.error('Error loading artist playlists:', err);
       }
     });
-  }
-
-  // Method to navigate to playlist detail page
-  viewPlaylist(playlist: Playlist): void {
-    if (playlist && playlist.id) {
-      this.router.navigate(['/playlist', playlist.id]);
-    }
   }
 } 

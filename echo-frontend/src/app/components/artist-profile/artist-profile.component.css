@@ -1,14 +1,13 @@
 .artist-profile-container {
-    max-width: 800px;
-    margin: 20px auto;
+    /* max-width: 800px; */ /* Remove max-width */
+    width: 100%; /* Make it occupy full width */
+    margin: 0px; /* Keep margin at 0 */
     /* Fondo y bordes de ventana de Windows 95 */
     background: #c0c0c0;
-    border: 3px solid;
-    border-color: #ffffff #808080 #808080 #ffffff;
-    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
     padding: 15px; /* Ajustar padding para simular contenido de ventana */
     color: #000000; /* Texto negro */
     font-family: 'MS Sans Serif', sans-serif; /* Fuente retro */
+    display: flex;
 }
 
 .profile-details {
