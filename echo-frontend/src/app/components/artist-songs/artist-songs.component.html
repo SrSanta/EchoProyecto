@@ -1,16 +1,42 @@
-<div class="artist-songs-list">
-  <div *ngIf="songs.length > 0" class="songs-grid">
-    <div *ngFor="let song of songs" class="song-item">
-      <!-- Aquí puedes mostrar la información de la canción -->
-      <h4>{{ song.title }}</h4>
-      <p>Artista: {{ song.artist }}</p>
-      <p>Género: {{ song.genre.name }}</p>
-      <img [src]="getThumbnailUrl(song.thumbnailFilename)" alt="Miniatura de {{ song.title }}">
-      <!-- Puedes añadir un botón para reproducir la canción, etc. -->
-    </div>
+<div class="song-list-container">
+  <div *ngIf="songs.length > 0" class="song-list-window">
+    <ul>
+      @for (song of songs; track song.id) {
+        <li class="song-item" (click)="playSong(song)">
+          <div class="song-content">
+            <div class="song-thumbnail">
+              @if (song.thumbnailFilename) {
+                <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')"
+                     [alt]="'Portada de ' + song.title"
+                     class="song-thumbnail-small">
+              } @else {
+                <img src="assets/images/placeholder-thumbnail.png"
+                     alt="Sin portada"
+                     class="song-thumbnail-small">
+              }
+            </div>
+            <div class="song-info">
+              <div class="song-title">{{ song.title }}</div>
+              <div class="song-details">
+                 @if (song.user?.username) {
+                    <span class="song-artist">👤 {{ song.user.username }}</span>
+                 }
+                 @if (song.genre?.name) {
+                    @if (song.user?.username) {
+                       <span class="song-separator">•</span>
+                    }
+                   <span class="song-genre">🎵 {{ song.genre.name }}</span>
+                 }
+              </div>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
   </div>
 
-  <div *ngIf="songs.length === 0">
-    <p>Este artista aún no ha subido canciones.</p>
+  <div *ngIf="songs.length === 0" class="empty-message">
+    <p>📭 Este artista aún no ha subido canciones.</p>
+     <p class="small">¡Sé el primero en subir una canción!</p>
   </div>
 </div> 
