@@ -31,6 +31,9 @@ export class AppComponent {
   currentSongForPlayer$: Observable<Song | null> = this.playerStateService.currentSong$;
   hasSongsInQueue = false;
 
+  // Propiedad para controlar la visibilidad del reproductor
+  isPlayerVisible: boolean = true;
+
   constructor() {
     this.isLoggedIn$ = this.authService.currentUser$.pipe(map(user => !!user));
     this.username$ = this.authService.currentUser$.pipe(map(user => user?.username ?? null));
@@ -100,5 +103,10 @@ export class AppComponent {
 
   getYear(): number {
     return new Date().getFullYear();
+  }
+
+  // Método para alternar la visibilidad del reproductor
+  togglePlayerVisibility(): void {
+    this.isPlayerVisible = !this.isPlayerVisible;
   }
 }

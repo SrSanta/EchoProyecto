@@ -144,9 +144,9 @@ footer {
 }
 
 /* Estilos para el mini reproductor */
-.mini-player-float {
+.floating-player {
   position: fixed;
-  bottom: 70px;
+  bottom: 40px;
   right: 20px;
   z-index: 1000;
   width: 350px;
@@ -155,6 +155,54 @@ footer {
   border: 3px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
+}
+
+/* Estilos para los botones de ocultar/mostrar reproductor */
+.toggle-player-button {
+  position: fixed;
+  bottom: 350px;
+  right: 20px;
+  z-index: 1001;
+  background: #c0c0c0;
+  color: #000000;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 0px 5px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 0.7rem;
+  width: auto;
+}
+
+.toggle-player-button:hover {
+  background: #e0e0e0;
+  color: #ff00ff;
+}
+
+.toggle-player-button:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 1px 4px -1px 6px;
+}
+
+.toggle-player-button.show {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+  color: #000080;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 3px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 0.9rem;
 }
 
 /* Efecto de escaneo para toda la aplicación */

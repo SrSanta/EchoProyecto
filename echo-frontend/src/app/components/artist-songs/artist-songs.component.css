@@ -1,7 +1,7 @@
 /* Artist Songs List - Applied Song List Styles */
 .song-list-container {
-  margin: 0 auto;
-  max-width: 900px; /* Adjust if artist profile container has a different max-width */
+  margin: 0; /* Cambiar a 0 para no centrar y permitir ancho completo */
+  max-width: none; /* Eliminar max-width */
   padding: 0; /* Remove container padding as it's handled by artist-profile */
 }
 
