@@ -85,15 +85,51 @@
         <button (click)="likedSongsError = null" class="close-btn">✕</button>
       </div>
 
-      <div *ngIf="!loadingLikedSongs && !likedSongsError && likedSongs.length > 0">
-        <h3>Canciones Favoritas:</h3>
-        <ul>
-          <li *ngFor="let song of likedSongs">{{ song.title }} - {{ song.artist || 'Artista desconocido' }}</li>
-        </ul>
-      </div>
-
-       <div *ngIf="!loadingLikedSongs && !likedSongsError && likedSongs.length === 0">
-        <p>Aún no tienes canciones favoritas.</p>
+      <div *ngIf="!loadingLikedSongs && !likedSongsError">
+        @if (likedSongs.length > 0) {
+          <h3>Canciones Favoritas:</h3>
+          <div class="song-list-window">
+            <ul>
+              @for (song of likedSongs; track song.id) {
+                <li class="song-item" (click)="playSong(song)">
+                  <div class="song-content">
+                    <div class="song-thumbnail">
+                       @if (song.thumbnailFilename) {
+                        <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')" 
+                             [alt]="'Portada de ' + song.title" 
+                             class="song-thumbnail-small">
+                      } @else {
+                        <img src="assets/images/placeholder-thumbnail.png" 
+                             alt="Sin portada" 
+                             class="song-thumbnail-small">
+                      }
+                    </div>
+                    <div class="song-info">
+                      <div class="song-title">{{ song.title }}</div>
+                      <div class="song-details">
+                        @if (song.user?.username) {
+                          <span class="song-artist">👤 {{ song.user.username }}</span>
+                        }
+                        @if (song.genre?.name) {
+                           @if (song.user?.username) {
+                              <span class="song-separator">•</span>
+                           }
+                          <span class="song-genre">🎵 {{ song.genre.name }}</span>
+                        }
+                       
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              }
+            </ul>
+          </div>
+        } @else {
+          <div class="empty-message">
+            <p>📭 Aún no tienes canciones favoritas.</p>
+            <p class="small">Explora y añade canciones que te gusten.</p>
+          </div>
+        }
       </div>
 
     </div>

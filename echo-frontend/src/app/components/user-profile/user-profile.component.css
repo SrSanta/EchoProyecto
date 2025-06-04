@@ -313,3 +313,158 @@
     /* It might be necessary to set a min-height here if content is smaller than container */
     min-height: 0; /* Allow shrinking below content size if needed */
 }
+
+/* Liked Songs Section */
+.liked-songs-section {
+  margin-top: 25px;
+}
+
+.liked-songs-section .window-content {
+  /* Adjust padding if needed to match song-list-window padding */
+  padding: 2px;
+}
+
+.liked-songs-section h3 {
+  color: #000080; /* Match song-list h2 color */
+  font-size: 1.5rem; /* Slightly smaller than h2 in song-list */
+  margin: 15px 0 10px 15px; /* Adjust margin */
+  text-shadow: 1px 1px 0 #ffffff;
+  border-bottom: 2px solid #808080;
+  padding-bottom: 5px;
+  font-family: 'MS Sans Serif', 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.liked-songs-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.liked-songs-section .song-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #808080;
+  transition: all 0.2s ease;
+  background: #c0c0c0;
+  position: relative;
+}
+
+.liked-songs-section .song-item:last-child {
+  border-bottom: none;
+}
+
+.liked-songs-section .song-item:hover {
+  background: #e0e0e0;
+  color: #0000ff;
+}
+
+.liked-songs-section .song-item:active {
+  background: #a0a0a0;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+}
+
+.liked-songs-section .song-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.liked-songs-section .song-thumbnail {
+  flex-shrink: 0;
+  margin-right: 15px;
+  position: relative;
+}
+
+.liked-songs-section .song-thumbnail-small {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  background: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.liked-songs-section .song-item:hover .song-thumbnail-small {
+  transform: scale(1.05);
+}
+
+.liked-songs-section .song-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.liked-songs-section .song-title {
+  font-weight: bold;
+  margin: 0 0 5px;
+  color: #000000;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liked-songs-section .song-details {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #000080;
+  gap: 8px;
+}
+
+.liked-songs-section .song-artist, .liked-songs-section .song-genre {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.liked-songs-section .song-separator {
+  color: #808080;
+  font-weight: bold;
+}
+
+/* Estilo para el mensaje de lista vacía */
+.liked-songs-section .empty-message {
+  padding: 30px 20px;
+  text-align: center;
+  background: #e8e8e8;
+  border: 2px solid #808080;
+  margin: 0;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+}
+
+.liked-songs-section .empty-message p {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: #000080;
+}
+
+.liked-songs-section .empty-message .small {
+  font-size: 0.9rem;
+  color: #808080;
+}
+
+/* Styles for small screens */
+@media (max-width: 600px) {
+  .liked-songs-section .song-item {
+    padding: 8px 10px;
+  }
+  
+  .liked-songs-section .song-thumbnail-small {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .liked-songs-section .song-title {
+    font-size: 1rem;
+  }
+  
+  .liked-songs-section .song-details {
+    font-size: 0.8rem;
+  }
+}
