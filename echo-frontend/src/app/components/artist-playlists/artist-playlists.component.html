@@ -3,16 +3,26 @@
 
   <div *ngIf="error" class="error-message">{{ error }}</div>
 
-  <div *ngIf="playlists.length > 0 && !loading && !error" class="playlists-grid">
-    <div *ngFor="let playlist of playlists" class="playlist-item">
-      <!-- Aquí puedes mostrar la información de la playlist -->
-      <h4>{{ playlist.name }}</h4>
-      <p>Canciones: {{ playlist.songs?.length || 0 }}</p>
-      <!-- Puedes añadir un enlace para ver la playlist, etc. -->
+  <div *ngIf="playlists.length > 0 && !loading && !error" class="playlist-grid">
+    <div *ngFor="let playlist of playlists" class="playlist-card" (click)="viewPlaylist(playlist)">
+      <!-- Nuevo contenedor para simular la etiqueta del disquete -->
+      <div class="playlist-label">
+        <div class="playlist-info">
+          <h3 class="playlist-name">{{ playlist.name }}</h3>
+          <p class="playlist-stats">{{ playlist.songs?.length || 0 }} canciones</p>
+        </div>
+      </div>
+
+      <!-- Botón para ver la playlist -->
+      <button class="view-playlist-button">Ver</button>
+
+      <!-- Indicador pública/privada si es necesario mostrarlo -->
+      <span title="Pública" class="playlist-status public">🌐 Pública</span>
+
     </div>
   </div>
 
-  <div *ngIf="playlists.length === 0 && !loading && !error">
+  <div *ngIf="playlists.length === 0 && !loading && !error" class="no-results-message">
     <p>Este artista aún no ha creado playlists públicas.</p>
   </div>
 </div> 

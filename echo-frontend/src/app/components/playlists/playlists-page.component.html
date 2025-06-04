@@ -20,17 +20,9 @@
   <div *ngIf="loading">Cargando playlists...</div>
   <div *ngIf="error">{{ error }}</div>
 
-  <!-- Lista de playlists -->
+  <!-- Lista de playlists con estilo de explore -->
   <div *ngIf="!loading && playlists.length" class="playlist-grid">
     <div *ngFor="let playlist of playlists" class="playlist-card">
-      <!-- Aquí va el contenido de la tarjeta de playlist -->
-      <!-- Lógica de miniatura de playlist eliminada -->
-      <!--
-      <div class="playlist-thumbnail">
-        <img [src]="playlist.coverImageUrl" alt="Miniatura de playlist">
-      </div>
-      -->
-
       <!-- Nuevo contenedor para simular la etiqueta del disquete -->
       <div class="playlist-label">
         <div class="playlist-info">
@@ -40,26 +32,26 @@
         </div>
       </div>
 
+      <!-- Botones de acción adaptados -->
       <div class="playlist-actions">
-        <button (click)="viewDetail(playlist)">Ver</button>
-        <button (click)="openEditForm(playlist)">Editar</button>
-        <button (click)="deletePlaylist(playlist)">Eliminar</button>
+        <button class="view-playlist-button" (click)="viewDetail(playlist)">Ver</button>
+        <button class="edit-playlist-button" (click)="openEditForm(playlist)">Editar</button>
+        <button class="delete-playlist-button" (click)="deletePlaylist(playlist)">Eliminar</button>
       </div>
-      
-      <!-- BOTÓN CORREGIDO: Cambiar estado público/privado -->
+
+      <!-- Indicador pública/privada -->
       <button class="toggle-public-btn" (click)="togglePublic(playlist)">
         {{ playlist.isPublic ? 'Hacer privada' : 'Hacer pública' }}
       </button>
-      
-      <!-- Enlace público solo si existe -->
-      <span *ngIf="playlist.publicUrl" class="public-url">
+
+      <!-- Enlace público solo si existe y es pública -->
+      <span *ngIf="playlist.isPublic && playlist.publicUrl" class="public-url">
         Enlace: <a [href]="playlist.publicUrl" target="_blank">{{ playlist.publicUrl }}</a>
       </span>
 
-      <!-- Indicador pública/privada -->
-      <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
+       <span *ngIf="playlist.isPublic" title="Pública" class="playlist-status public">🌐 Pública</span>
       <span *ngIf="!playlist.isPublic" title="Privada" class="playlist-status private">🔒 Privada</span>
-      
+
     </div>
   </div>
   <div *ngIf="!loading && !playlists.length" class="no-playlists-message">No tienes playlists aún.</div>

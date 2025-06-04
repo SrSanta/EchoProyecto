@@ -10,6 +10,7 @@
   margin: 0; /* Remover margen automático para que no afecte el llenado del contenedor */
   padding: 20px;
   background-color: #c6c3c6; /* Fondo gris claro similar a Windows 95 */
+  overflow-y: auto; /* Add scrolling if content overflows */
 }
 
 .playlists-page .window-titlebar-custom {
@@ -69,30 +70,31 @@ h2 {
   overflow: hidden; /* Asegurar que nada se salga de los bordes */
 }
 
-/* Estilos de la tarjeta individual de playlist - ahora como ventanas pequeñas */
+/* Estilos de la tarjeta individual de playlist - floppy disk style */
 .playlist-card {
-  background-color: #222222; /* Un gris aún más oscuro para el cuerpo */
-  /* Añadir una textura sutil con puntos */
+  background-color: #222222;
   background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-  background-size: 5px 5px; /* Espaciado de los puntos de textura */
-  border: 2px solid #606060; /* Borde del disquete */
-  border-radius: 0; /* Esquinas afiladas */
-  padding: 20px 15px 15px 15px; /* Ajustar padding para la muesca y el borde */
-  position: relative; /* Para posicionar elementos internos */
-  width: 250px; /* Ancho fijo */
-  height: 260px; /* Altura */
-  font-family: 'Courier New', Courier, monospace; /* Fuente tipo terminal */
-  color: #ffffff; /* Texto blanco en fondo oscuro */
+  background-size: 5px 5px;
+  border: 2px solid #606060;
+  border-radius: 0;
+  padding: 20px 15px 15px 15px;
+  position: relative;
+  width: 250px;
+  height: 260px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  overflow: hidden; /* Asegurar que nada se salga de los bordes */
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
 
 .playlist-card:hover {
-  transform: none; /* Eliminar efecto hover de traslación */
-  box-shadow: -2px -2px 0 0 #000000, 2px 2px 0 0 #c0c0c0, 2px 2px 0 1px #000000; /* Sombra más pronunciada al hover */
+  transform: none;
+  box-shadow: -2px -2px 0 0 #000000, 2px 2px 0 0 #c0c0c0, 2px 2px 0 1px #000000;
 }
 
 .playlist-thumbnail {
@@ -481,5 +483,27 @@ h2 {
    color: #333333; /* Gris oscuro para estadísticas */
    text-shadow: none; /* Eliminar sombra de texto */
    margin-top: 2px; /* Espacio arriba */
+}
+
+/* Keep existing media queries if needed for responsiveness */
+@media (max-width: 768px) {
+  .playlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .playlist-card {
+    width: auto;
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .playlist-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  .playlist-card {
+    width: 95%;
+    margin: 0 auto;
+  }
 }
 

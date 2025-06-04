@@ -1,1 +1,205 @@
- 
+/* Styles for the playlist grid */
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Styles for the individual playlist card - floppy disk style */
+.playlist-card {
+  background-color: #222222;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 5px 5px;
+  border: 2px solid #606060;
+  border-radius: 0;
+  padding: 20px 15px 15px 15px;
+  position: relative;
+  width: 250px;
+  height: 260px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: none;
+  box-shadow: -2px -2px 0 0 #000000, 2px 2px 0 0 #c0c0c0, 2px 2px 0 1px #000000;
+}
+
+/* Pseudo-element for the write-protect notch */
+.playlist-card::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 12px;
+  height: 30px;
+  background-color: #222222;
+  border-top: 2px solid #606060;
+  border-bottom: 2px solid #606060;
+  border-right: 2px solid #606060;
+  z-index: 1;
+}
+
+/* Pseudo-element for the read/write aperture and central ring */
+.playlist-card::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 25px;
+  background-color: #101010;
+  border: 1px solid #404040;
+  border-radius: 3px;
+  z-index: 1;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Simular el anillo central DENTRO del pseudo-elemento ::after */
+.playlist-card::after::before { /* Usamos ::before del ::after */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    height: 35px;
+    background-color: #a0a0a0;
+    border-radius: 50%;
+    border: 2px solid #606060;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+/* Adjust the position and z-index of main elements */
+.playlist-label, .playlist-info, .playlist-actions, .playlist-status, .public-url, .toggle-public-btn, .share-btn {
+  position: relative;
+  z-index: 3;
+}
+
+/* Styles for the white floppy disk label */
+.playlist-label {
+  width: 85%;
+  height: 80px;
+  background-color: #ffffff;
+  border: 2px inset #c6c3c6;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+  position: relative;
+  padding: 4px;
+  color: #000000; /* Text color on the white label */
+  font-family: 'MS Sans Serif', sans-serif; /* Font for the label */
+}
+
+/* Adjust styles for the content inside the label */
+.playlist-label .playlist-info {
+  margin: 0;
+}
+
+.playlist-label .playlist-name {
+  font-size: 1em;
+  margin: 0;
+  color: #000080;
+  text-shadow: none;
+}
+
+.playlist-label .playlist-stats {
+   font-size: 0.7em;
+   color: #333333;
+   text-shadow: none;
+   margin-top: 2px;
+}
+
+/* Styles for the action buttons */
+/* Adjustments for artist profile: only 'Ver' button may be present */
+.playlist-card .view-playlist-button {
+   padding: 4px 8px;
+  margin: 3px;
+  background-color: #c0c0c0;
+  border: 2px outset #ffffff;
+  font-size: 0.8em;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  color: #000000;
+  box-shadow: 1px 1px 0 0 #000000;
+  transition: all 0.05s ease;
+}
+
+.playlist-card .view-playlist-button:hover {
+   background: #d0d0d0;
+}
+
+.playlist-card .view-playlist-button:active {
+  border-style: inset;
+  box-shadow: inset 1px 1px 0 0 #000000;
+  padding: 5px 7px 3px 9px;
+  transform: translate(1px, 1px);
+}
+
+.playlist-status {
+  font-size: 0.85em;
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+.public {
+  color: #39ff14;
+  text-shadow: 0 0 5px #39ff14;
+}
+
+.private {
+  color: #ff00ff;
+   text-shadow: 0 0 5px #ff00ff;
+}
+
+.no-results-message {
+  text-align: center;
+  padding: 20px;
+  background: #e8e8e8;
+  border: 2px solid #808080;
+  margin: 20px 0;
+  box-shadow: -1px -1px 0 0 #000000 inset;
+}
+
+.no-results-message p {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: #000080;
+}
+
+/* Keep existing media queries if needed for responsiveness */
+@media (max-width: 768px) {
+  .playlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .playlist-card {
+    width: auto;
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .playlist-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  .playlist-card {
+    width: 95%;
+    margin: 0 auto;
+  }
+} 
