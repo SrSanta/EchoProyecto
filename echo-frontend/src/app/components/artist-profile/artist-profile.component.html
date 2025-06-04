@@ -3,9 +3,11 @@
 
   <div *ngIf="error" class="error-message">{{ error }}</div>
 
-  <div *ngIf="artist && !loading && !error" class="profile-details">
-    <h2>{{ artist.username }}</h2>
-    <img [src]="getProfileImageUrl()" alt="Imagen de perfil de {{ artist.username }}" class="profile-image">
+  <div *ngIf="artist && !loading && !error">
+    <div class="profile-details">
+      <h2>{{ artist.username }}</h2>
+      <img [src]="getProfileImageUrl()" alt="Imagen de perfil de {{ artist.username }}" class="profile-image">
+    </div>
 
     <!-- Aquí irán los componentes para mostrar canciones y playlists -->
     <div class="artist-songs-section">

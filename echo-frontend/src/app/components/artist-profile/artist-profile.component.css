@@ -7,7 +7,7 @@
     padding: 15px; /* Ajustar padding para simular contenido de ventana */
     color: #000000; /* Texto negro */
     font-family: 'MS Sans Serif', sans-serif; /* Fuente retro */
-    display: flex;
+    /* display: flex; */ /* Eliminar display flex */
 }
 
 .profile-details {
