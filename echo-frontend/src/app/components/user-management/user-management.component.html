@@ -35,8 +35,10 @@
         <td>
           <button (click)="confirmDeleteUser(user)" [disabled]="user.isProcessing">Eliminar</button>
           <select (change)="changeRole(user, $event)" [disabled]="user.isProcessing">
-            <!-- Iterar sobre los nombres de roles disponibles para las opciones del selector -->
-            <option *ngFor="let roleName of availableRoleNames" [value]="roleName" [selected]="getUserRoleName(user) === roleName">{{ roleName }}</option>
+            <!-- Iterar sobre los nombres de roles disponibles del backend para las opciones del selector -->
+            <!-- Usar el nombre del backend como valor y getRoleDisplayName para el texto visible -->
+            <!-- Seleccionar la opción si el rol actual del usuario (nombre del backend) coincide con el valor de la opción -->
+            <option *ngFor="let roleBackendName of availableRolesBackendNames" [value]="roleBackendName" [selected]="getUserRoleName(user) === roleBackendName">{{ getRoleDisplayName(roleBackendName) }}</option>
           </select>
         </td>
       </tr>

@@ -68,7 +68,22 @@ public class UserService {
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
-            return userRepository.save(user);
+
+            // --- Inicio: Lógica para actualizar roles ---
+            if (userDetails.getRoles() != null) {
+                // Mapear los roles recibidos por nombre a entidades Role existentes
+                List<Role> updatedRoles = userDetails.getRoles().stream()
+                    .map(roleDetail -> {
+                        // Buscar la entidad Role por nombre
+                        return roleRepository.findByName(roleDetail.getName())
+                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleDetail.getName())); // Lanzar error si el rol no existe
+                    })
+                    .collect(Collectors.toList());
+                user.setRoles(updatedRoles); // Establecer los nuevos roles al usuario
+            }
+            // --- Fin: Lógica para actualizar roles ---
+
+            return userRepository.save(user); // Guardar el usuario con los roles actualizados
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 

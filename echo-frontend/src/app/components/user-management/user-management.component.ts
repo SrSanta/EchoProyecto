@@ -4,19 +4,20 @@ import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { User } from '../../models/user.model';
 import { Role } from '../../models/role.model';
-
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.css']
+  styleUrls: ['./user-management.component.css'],
+  imports: [CommonModule]
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
   paginatedUsers: User[] = [];
   searchTerm: string = '';
-  availableRoleNames: string[] = ['Administrator', 'Moderator', 'Regular User'];
+  availableRolesBackendNames: string[] = ['ROLE_ADMIN', 'ROLE_USER'];
   
   isLoading: boolean = false;
   successMessage: string | null = null;
@@ -87,6 +88,17 @@ export class UserManagementComponent implements OnInit {
     }
   }
 
+  getRoleDisplayName(backendRoleName: string): string {
+    switch (backendRoleName) {
+      case 'ROLE_ADMIN':
+        return 'Administrator';
+      case 'ROLE_USER':
+        return 'Regular User';
+      default:
+        return backendRoleName;
+    }
+  }
+
   getUserRoleName(user: User): string {
     return user.roles && user.roles.length > 0 ? user.roles[0].name : '[Sin Rol]';
   }
@@ -127,16 +139,16 @@ export class UserManagementComponent implements OnInit {
   }
 
   changeRole(user: User, event: Event) {
-    const newRoleName = (event.target as HTMLSelectElement).value;
-    console.log('Intentando cambiar rol del usuario:', user, 'a', newRoleName);
+    const newRoleBackendName = (event.target as HTMLSelectElement).value;
+    console.log('Intentando cambiar rol del usuario:', user.username, 'a', newRoleBackendName);
 
     const currentRoleNames = user.roles ? user.roles.map(role => role.name) : [];
-    const currentMainRoleName = currentRoleNames.length > 0 ? currentRoleNames[0] : '';
+    const currentMainRoleBackendName = currentRoleNames.length > 0 ? currentRoleNames[0] : '';
 
-    if (currentMainRoleName === newRoleName || user.isProcessing) {
+    if (currentMainRoleBackendName === newRoleBackendName || user.isProcessing) {
       console.log('El rol es el mismo, el rol principal no ha cambiado o el usuario está procesando.');
       if (user.isProcessing) {
-        (event.target as HTMLSelectElement).value = currentMainRoleName;
+        (event.target as HTMLSelectElement).value = currentMainRoleBackendName;
       }
       return;
     }
@@ -144,13 +156,13 @@ export class UserManagementComponent implements OnInit {
     if (user.id === undefined) {
       console.error('No se puede cambiar el rol del usuario: el ID es indefinido.');
       this.handleError('No se puede cambiar el rol del usuario: ID no disponible.', null);
-      (event.target as HTMLSelectElement).value = currentMainRoleName;
+      (event.target as HTMLSelectElement).value = currentMainRoleBackendName;
       return;
     }
 
     const originalRoles = user.roles ? [...user.roles] : [];
 
-    const newRoleObject: Role = { name: newRoleName };
+    const newRoleObject: Role = { name: newRoleBackendName };
     const updatedUser = { ...user, roles: [newRoleObject] };
 
     this.clearMessages();
@@ -164,7 +176,7 @@ export class UserManagementComponent implements OnInit {
           this.users[index] = { ...updatedUserData, roles: updatedUserData.roles || [], isProcessing: false };
           this.filterUsers();
         }
-        this.showSuccessMessage(`Rol de usuario ${updatedUserData.username} cambiado a ${this.getUserRoleName(updatedUserData)}.`);
+        this.showSuccessMessage(`Rol de usuario ${updatedUserData.username} cambiado a ${this.getRoleDisplayName(this.getUserRoleName(updatedUserData))}.`);
       },
       error: (err) => {
         this.handleError(`Error al cambiar rol del usuario ${user.username}.`, err);
@@ -175,6 +187,7 @@ export class UserManagementComponent implements OnInit {
           this.users[index].isProcessing = false;
           this.filterUsers();
         }
+        (event.target as HTMLSelectElement).value = originalRoles.length > 0 ? originalRoles[0].name : '';
       }
     });
   }
