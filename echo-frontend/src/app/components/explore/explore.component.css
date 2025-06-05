@@ -17,20 +17,31 @@
   text-align: center;
   border-radius: 0;
   max-width: 300px;
-  animation: fadeout 3s forwards;
   z-index: 1000;
+  
+  /* Estilos para posicionar en la esquina superior derecha */
   position: fixed;
   top: 20px;
   right: 20px;
+  /* Eliminamos los estilos de centrado */
+  left: auto;
+  transform: none;
+
   p {
-    color: #008000;
+    color: #008000; /* Color para mensajes de éxito */
     margin: 0;
   }
 }
 
-@keyframes fadeout {
+/* Mantener el keyframes si la animación fadeout todavía se usa en algún lado, aunque lo eliminamos de .success-message */
+/* @keyframes fadeout {
   0% { opacity: 1; }
   100% { opacity: 0; }
+} */
+
+/* Podemos añadir un estilo específico para el color del texto de error si lo queremos diferente */
+.success-message.error p {
+  color: #ff0000; /* Ejemplo de color rojo para errores */
 }
 
 .search-container {

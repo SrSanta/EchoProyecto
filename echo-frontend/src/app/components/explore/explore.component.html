@@ -1,7 +1,8 @@
 <div class="explore-container">
-  @if (addToPlaylistSuccess) {
-    <div class="success-message">
-      {{ addToPlaylistSuccess }}
+  <!-- Mensaje flotante de éxito o error (posicionado por CSS) -->
+  @if (showMessage) {
+    <div class="success-message" [class.error]="contextMenuError">
+      <p>{{ addToPlaylistSuccess || contextMenuError }}</p>
     </div>
   }
   <div class="search-container">
@@ -274,19 +275,6 @@
   (addToPlaylist)="onAddToPlaylistHandler($event)" (addToQueue)="onAddToQueueFromContextMenu($event)"
   (closeMenu)="onCloseContextMenu()">
 </app-context-menu>
-
-<!-- Mensaje de error del menú contextual -->
-@if (contextMenuError) {
-<div class="context-menu-error window">
-  <div class="window-titlebar">
-    <span>Error del Menú</span>
-    <button (click)="contextMenuError = null" class="close-btn">✕</button>
-  </div>
-  <div class="window-content">
-    <p>⚠️ {{ contextMenuError }}</p>
-  </div>
-</div>
-}
 
 <!-- Nueva ventana modal para ver playlists -->
 @if (selectedPlaylistForModal) {

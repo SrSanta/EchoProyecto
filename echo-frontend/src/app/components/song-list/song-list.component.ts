@@ -175,7 +175,13 @@ export class SongListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al añadir canción a la playlist:', err);
-        this.contextMenuError = 'Error al añadir la canción a la playlist. Inténtalo de nuevo.';
+        if (err.status === 400) {
+          this.contextMenuError = 'La canción ya se encuentra en la playlist.';
+        } else {
+          this.contextMenuError = 'Error al añadir la canción a la playlist. Inténtalo de nuevo.';
+        }
+        this.showMessage = true;
+        this.showContextMenu = false;
       }
     });
   }

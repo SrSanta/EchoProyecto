@@ -292,24 +292,34 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   // Maneja el evento de añadir a playlist desde el menú contextual
   onAddToPlaylistHandler(event: { playlistId: number, songId: number }) {
-    console.log('Handling add to playlist:', event);
     if (!this.authService.isAuthenticated()) {
       this.contextMenuError = 'Debes iniciar sesión para añadir canciones a playlists.';
+      this.showMessage = true;
+      setTimeout(() => this.showMessage = false, 4000); // Mostrar mensaje de error temporalmente
       return;
     }
-
+    
     this.playlistService.addSongToPlaylist(event.playlistId, event.songId).subscribe({
       next: () => {
-        console.log('Song added to playlist successfully.');
+        console.debug('Song added to playlist successfully.');
         this.addToPlaylistSuccess = 'Canción añadida a la playlist con éxito.';
-        this.showMessage = true; // <-- Mostrar el mensaje
-        console.log('showMessage set to:', this.showMessage); // <-- Añadir console.log aquí para verificar
-        this.showContextMenu = false;
-        setTimeout(() => this.showMessage = false, 3100); // <-- Eliminar el mensaje del DOM después de la animación
+        this.contextMenuError = null; // Limpiar mensaje de error previo si lo hay
+        this.showMessage = true;
+        this.showContextMenu = false; // Cerrar el menú contextual al tener éxito
+        setTimeout(() => this.showMessage = false, 3100); // Ocultar mensaje de éxito después de un tiempo
       },
       error: (err) => {
-        console.error('Error adding song to playlist:', err);
-        this.contextMenuError = 'Error al añadir la canción a la playlist. Inténtalo de nuevo.';
+        console.error('Error al añadir canción a la playlist:', err);
+        this.addToPlaylistSuccess = null; // Limpiar mensaje de éxito previo si lo hay
+        // Verificar si es un error 400, que indica que la canción ya existe
+        if (err.status === 400) {
+          this.contextMenuError = 'La canción ya se encuentra en la playlist.';
+        } else {
+          this.contextMenuError = 'Error al añadir la canción a la playlist. Inténtalo de nuevo.';
+        }
+        this.showMessage = true; // Mostrar el mensaje de error
+        this.showContextMenu = false; // Cerrar el menú contextual al tener un error
+        setTimeout(() => this.showMessage = false, 4000); // Ocultar el mensaje de error después de un tiempo
       }
     });
   }
