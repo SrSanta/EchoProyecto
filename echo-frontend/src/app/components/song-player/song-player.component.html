@@ -12,9 +12,20 @@
 
     @if (song) {
       <div class="cd-player-display">
-        @if (song && song.videoFilename) {
-          <!-- Removed the visible video element as playback is handled by the hidden element -->
+        @if (song.videoFilename) {
+          <!-- Display video when available -->
+          <video #videoPlayer
+                 [src]="videoUrl"
+                 (timeupdate)="updateProgress()"
+                 (loadedmetadata)="onMetadataLoaded()"
+                 (play)="onPlay()"
+                 (pause)="onPause()"
+                 (ended)="onSongEnded()"
+                 style="width: 100%; height: auto; display: block;"> <!-- Make video visible -->
+            Your browser does not support the video element.
+          </video>
         } @else {
+          <!-- Show track info and image for audio only -->
           <div class="track-info-container">
             <div class="track-details">
               <div class="cd-player-artist">
@@ -156,6 +167,8 @@
   Your browser does not support the audio element.
 </audio>
 
+<!-- REMOVED: Hidden video element was moved and made conditional -->
+<!-- 
 <video #videoPlayer
        [src]="videoUrl"
        (timeupdate)="updateProgress()"
@@ -166,3 +179,4 @@
        style="display: none;">
   Your browser does not support the video element.
 </video>
+-->

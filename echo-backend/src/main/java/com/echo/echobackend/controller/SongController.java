@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,6 +40,7 @@ public class SongController {
     private final FileStorageProperties fileStorageProperties;
     private final UserRepository userRepository;
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(SongController.class);
 
     @Autowired
     public SongController(SongService songService, FileStorageProperties fileStorageProperties, UserRepository userRepository, UserService userService) {
@@ -75,16 +78,16 @@ public class SongController {
             Song savedSong = songService.storeAndSaveSong(mediaFile, thumbnailFile, title, userDetails.getUsername(), genreId, releaseYear);
             return new ResponseEntity<>(savedSong, HttpStatus.CREATED);
         } catch (IOException e) {
-            System.err.println("Upload failed (IO): " + e.getMessage());
+            logger.error("Upload failed (IO): {}", e.getMessage(), e);
             return new ResponseEntity<>("Could not upload the file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoSuchElementException e) {
-             System.err.println("Upload failed (Data): " + e.getMessage());
+             logger.error("Upload failed (Data): {}", e.getMessage(), e);
              return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
-             System.err.println("Upload failed (Input): " + e.getMessage());
+             logger.error("Upload failed (Input): {}", e.getMessage(), e);
              return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-             System.err.println("Upload failed (Runtime): " + e.getMessage());
+             logger.error("Upload failed (Runtime): {}", e.getMessage(), e);
              return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -96,7 +99,7 @@ public class SongController {
             Song updatedSong = songService.updateSong(id, songDetails);
             return ResponseEntity.ok(updatedSong);
         } catch (RuntimeException e) {
-             System.err.println("Update failed for song " + id + ": " + e.getMessage());
+             logger.error("Update failed for song {}: {}", id, e.getMessage(), e);
              return ResponseEntity.notFound().build();
         }
     }
@@ -134,7 +137,7 @@ public class SongController {
             return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // Still return NO_CONTENT for success
         } catch (RuntimeException e) {
             // Catch the ownership check exception or SongNotFoundException
-            System.err.println("Deletion failed for song " + id + ": " + e.getMessage());
+            logger.error("Deletion failed for song {}: {}", id, e.getMessage(), e);
             // Depending on the exception, return 403 Forbidden or 404 Not Found
             if (e.getMessage().contains("No tienes permiso")) {
                  return new ResponseEntity<String>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -145,7 +148,7 @@ public class SongController {
             }
         } catch (Exception e) {
              // Catch any other unexpected exceptions
-             System.err.println("Unexpected error during deletion of song " + id + ": " + e.getMessage());
+             logger.error("Unexpected error during deletion of song {}: {}", id, e.getMessage(), e);
              return new ResponseEntity<String>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -160,7 +163,7 @@ public class SongController {
             if (genre != null && !genre.isEmpty()) return ResponseEntity.ok(songService.findByGenre(genre));
             if (artist != null && !artist.isEmpty()) return ResponseEntity.ok(songService.findByArtist(artist));
         } catch (UnsupportedOperationException e) {
-             System.err.println("Search method not implemented: " + e.getMessage());
+             logger.error("Search method not implemented: {}", e.getMessage(), e);
              return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
         }
         return ResponseEntity.badRequest().body(List.of());
@@ -182,14 +185,14 @@ public class SongController {
                         .contentType(MediaType.parseMediaType(contentType))
                         .body(resource); // No need for Accept-Ranges header for images
             } else {
-                System.err.println("Thumbnail file not found or not readable: " + filename);
+                logger.error("Thumbnail file not found or not readable: {}", filename);
                 return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException ex) {
-             System.err.println("Malformed URL for thumbnail file: " + filename + " - " + ex.getMessage());
+             logger.error("Malformed URL for thumbnail file: {} - {}", filename, ex.getMessage(), ex);
             return ResponseEntity.badRequest().build();
         } catch (IOException ex) {
-             System.err.println("IO Error serving thumbnail file: " + filename + " - " + ex.getMessage());
+             logger.error("IO Error serving thumbnail file: {} - {}", filename, ex.getMessage(), ex);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -211,14 +214,14 @@ public class SongController {
                         .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                         .body(resource);
             } else {
-                System.err.println("Audio file not found or not readable: " + filename);
+                logger.error("Audio file not found or not readable: {}", filename);
                 return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException ex) {
-             System.err.println("Malformed URL for audio file: " + filename + " - " + ex.getMessage());
+             logger.error("Malformed URL for audio file: {} - {}", filename, ex.getMessage(), ex);
             return ResponseEntity.badRequest().build();
         } catch (IOException ex) {
-             System.err.println("IO Error serving audio file: " + filename + " - " + ex.getMessage());
+             logger.error("IO Error serving audio file: {} - {}", filename, ex.getMessage(), ex);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -252,14 +255,14 @@ public class SongController {
                         .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                         .body(resource);
             } else {
-                System.err.println("Video file not found or not readable: " + filename);
+                logger.error("Video file not found or not readable: {}", filename);
                 return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException ex) {
-            System.err.println("Malformed URL for video file: " + filename + " - " + ex.getMessage());
+            logger.error("Malformed URL for video file: {} - {}", filename, ex.getMessage(), ex);
             return ResponseEntity.badRequest().build();
         } catch (IOException ex) {
-            System.err.println("IO Error serving video file: " + filename + " - " + ex.getMessage());
+            logger.error("IO Error serving video file: {} - {}", filename, ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

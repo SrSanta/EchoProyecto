@@ -32,16 +32,18 @@
           <ul>
             @for (song of songs; track song.id) {
               <li class="song-item" (contextmenu)="onSongContextMenu($event, song.id); $event.preventDefault()">
-                <div (click)="playSong(song)" class="song-content">
+                <div (click)="playbackManagerService.playSong(song)" class="song-content">
                   <div class="song-thumbnail">
                     @if (song.thumbnailFilename) {
                       <img [src]="environment.apiUrl + '/api/thumbnails/' + song.thumbnailFilename.replace('thumbnail/', '')" 
                            [alt]="'Portada de ' + song.title" 
-                           class="song-thumbnail-small">
+                           class="song-thumbnail-small"
+                           loading="lazy">
                     } @else {
                       <img src="assets/images/placeholder-thumbnail.png" 
                            alt="Sin portada" 
-                           class="song-thumbnail-small">
+                           class="song-thumbnail-small"
+                           loading="lazy">
                     }
                   </div>
                   <div class="song-info">

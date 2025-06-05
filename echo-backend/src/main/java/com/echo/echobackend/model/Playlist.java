@@ -30,14 +30,6 @@ public class Playlist {
     @Column(nullable = false)
     private boolean isPublic = false;
 
-    public boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
     @OneToMany(mappedBy = "playlist")
     @JsonIgnore
     private List<PlaylistSong> playlistSongs;

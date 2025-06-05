@@ -14,6 +14,4 @@ public class PlaylistWithFollowDTO {
     private boolean followed;
     private boolean favorite;
     private List<SongDTO> songs;
-    public void setIsPublic(boolean isPublic) { this.isPublic = isPublic; }
-    public boolean getIsPublic() { return isPublic; }
 }

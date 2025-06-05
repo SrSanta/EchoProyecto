@@ -231,7 +231,7 @@ ul {
   top: 20px; /* 20px desde la parte superior */
   right: 20px; /* 20px desde la parte derecha */
   /* Estilo adicional para el texto de éxito dentro de la ventana */
-  p {
+  .success-message p {
     color: #008000; /* Texto verde para el mensaje de éxito */
     margin: 0;
   }

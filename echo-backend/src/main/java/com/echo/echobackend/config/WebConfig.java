@@ -13,6 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${file.uploadDir}")
     private String uploadDir;
 
+    // El método addResourceHandlers está comentado y la funcionalidad de servir archivos se maneja en SongController.
+    // Eliminar este bloque de código comentado para mejorar la legibilidad y reducir el tamaño del código.
     //@Override
     //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
     //    String resolvedUploadDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
@@ -25,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     //            .addResourceLocations(resourceLocation);
     //}
 
+    // El siguiente bloque también está comentado y no parece estar en uso.
     //@Override
     //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
     //    // No mapear rutas bajo /api/** como recursos estáticos

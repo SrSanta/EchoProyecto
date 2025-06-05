@@ -97,20 +97,12 @@ public class UserController {
             if (updatedUser.getUsername() == null || updatedUser.getEmail() == null) {
                 return new ResponseEntity<>("Username y Email son obligatorios", HttpStatus.BAD_REQUEST);
             }
-            // Permitir solo si es admin o el dueño del perfil
-            boolean isAdmin = false;
-            String username = principal.getName();
-            // Busca el usuario autenticado por username
-            Optional<User> authUserOpt = userService.findByUsername(username);
-            if (authUserOpt.isPresent()) {
-                User authUser = authUserOpt.get();
-                isAdmin = authUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
-                if (!isAdmin && !authUser.getId().equals(id)) {
-                    return new ResponseEntity<>("No tienes permiso para editar este usuario", HttpStatus.FORBIDDEN);
-                }
-            } else {
-                return new ResponseEntity<>("Usuario autenticado no encontrado", HttpStatus.FORBIDDEN);
+
+            // Usar el método auxiliar para verificar permisos
+            if (!isAuthorizedToModifyUser(id, principal)) {
+                 return new ResponseEntity<>("No tienes permiso para editar este usuario", HttpStatus.FORBIDDEN);
             }
+
             User savedUser = userService.updateUser(id, updatedUser);
             return ResponseEntity.ok(savedUser);
         } catch (RuntimeException e) {
@@ -155,18 +147,12 @@ public class UserController {
         if (newPassword == null || newPassword.trim().isEmpty()) {
             return new ResponseEntity<>("La nueva contraseña es obligatoria", HttpStatus.BAD_REQUEST);
         }
-        // Solo el dueño del perfil o un admin puede cambiar la contraseña
-        String username = principal.getName();
-        Optional<User> authUserOpt = userService.findByUsername(username);
-        if (authUserOpt.isPresent()) {
-            User authUser = authUserOpt.get();
-            boolean isAdmin = authUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
-            if (!isAdmin && !authUser.getId().equals(id)) {
-                return new ResponseEntity<>("No tienes permiso para cambiar la contraseña de este usuario", HttpStatus.FORBIDDEN);
-            }
-        } else {
-            return new ResponseEntity<>("Usuario autenticado no encontrado", HttpStatus.FORBIDDEN);
+
+        // Usar el método auxiliar para verificar permisos
+        if (!isAuthorizedToModifyUser(id, principal)) {
+            return new ResponseEntity<>("No tienes permiso para cambiar la contraseña de este usuario", HttpStatus.FORBIDDEN);
         }
+
         String currentPassword = passwordRequest.get("currentPassword");
         if (currentPassword == null || currentPassword.trim().isEmpty()) {
             return new ResponseEntity<>("La contraseña actual es obligatoria", HttpStatus.BAD_REQUEST);
@@ -201,12 +187,28 @@ public class UserController {
 
             return ResponseEntity.ok()
                     .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
                     .body(file);
         } catch (Exception e) {
             // Manejar errores, por ejemplo, archivo no encontrado
             logger.error("Error serving profile image {}", filename, e);
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Método auxiliar para verificar si el usuario autenticado tiene permiso para modificar el usuario con el ID proporcionado
+    private boolean isAuthorizedToModifyUser(Long targetUserId, java.security.Principal principal) {
+        String username = principal.getName();
+        Optional<User> authUserOpt = userService.findByUsername(username);
+
+        if (authUserOpt.isPresent()) {
+            User authUser = authUserOpt.get();
+            boolean isAdmin = authUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+            // Permitir si es admin O es el dueño del perfil
+            return isAdmin || authUser.getId().equals(targetUserId);
+        } else {
+            // Esto no debería pasar si @PreAuthorize("isAuthenticated()") funciona, pero es defensivo.
+            return false; // Usuario autenticado no encontrado
         }
     }
 }

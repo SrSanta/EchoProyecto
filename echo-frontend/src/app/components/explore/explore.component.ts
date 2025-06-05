@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 import { PlaylistService } from '../../services/playlist.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { firstValueFrom } from 'rxjs';
+import { PlaybackManagerService } from '../../services/playback-manager.service';
 
 @Component({
   selector: 'app-explore',
@@ -30,6 +31,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
   private playlistService = inject(PlaylistService);
+  private playbackManagerService = inject(PlaybackManagerService);
   
   searchQuery: string = '';
   searchResults: { songs: Song[]; playlists: Playlist[]; artists: any[] } | null = null;

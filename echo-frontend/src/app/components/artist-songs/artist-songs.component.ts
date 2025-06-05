@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { PlayerStateService } from '../../services/player-state.service';
 import { PlaybackQueueService } from '../../services/playback-queue.service';
 import { AuthService } from '../../services/auth.service';
+import { PlaybackManagerService } from '../../services/playback-manager.service';
 
 @Component({
   selector: 'app-artist-songs',
@@ -23,7 +24,8 @@ export class ArtistSongsComponent {
 
   constructor(private playerStateService: PlayerStateService,
               private playbackQueueService: PlaybackQueueService,
-              private authService: AuthService
+              private authService: AuthService,
+              private playbackManagerService: PlaybackManagerService
   ) {}
 
   getSongUrl(songFilename: string | undefined): string {

@@ -12,6 +12,7 @@ import org.springframework.core.io.UrlResource;
 import java.net.MalformedURLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.echo.echobackend.config.FileStorageProperties;
 
 @Service
 public class FileStorageService {
@@ -20,13 +21,24 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    public FileStorageService() {
-        // Directorio donde se guardan las imágenes de perfil
+    public FileStorageService(FileStorageProperties fileStorageProperties) {
+        // Directorio base configurado en FileStorageProperties
+        // Añadir subdirectorio específico para imágenes de perfil si es necesario, o manejarlo en el controlador/servicio que usa FileStorageService
+        // Aquí, usaremos el directorio base de FileStorageProperties y asumiremos que ya apunta al lugar correcto o añadimos un subdirectorio si es consistente
+        String uploadDir = fileStorageProperties.getUploadDir();
+        if (uploadDir.trim().isEmpty()) {
+             throw new IllegalArgumentException("File upload directory is not configured. Please set 'file.upload-dir' in application properties.");
+        }
+        // Podríamos añadir un subdirectorio específico si este servicio es solo para perfiles, ej: Paths.get(uploadDir, "perfiles")
+        // Por ahora, usamos el directorio base y la lógica de filename en storeFile determinará el subdirectorio
         this.fileStorageLocation = Paths.get(System.getProperty("user.dir"), "mis_uploads", "perfile").toAbsolutePath().normalize();
+
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
+            String errorMsg = "Could not create the directory where the uploaded files will be stored: " + this.fileStorageLocation + " - " + ex.getMessage();
+            logger.error(errorMsg, ex); // Usar logger para el error
+            throw new RuntimeException(errorMsg, ex);
         }
     }
 

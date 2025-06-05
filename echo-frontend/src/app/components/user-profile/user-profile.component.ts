@@ -14,6 +14,7 @@ import { LikeService } from '../../services/like.service';
 import { Song } from '../../models/song.model';
 import { PlayerStateService } from '../../services/player-state.service';
 import { PlaybackQueueService } from '../../services/playback-queue.service';
+import { PlaybackManagerService } from '../../services/playback-manager.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -36,7 +37,7 @@ export class UserProfileComponent implements OnInit {
   likedSongsError: string | null = null;
   protected environment = environment;
 
-  constructor(private authService: AuthService, private http: HttpClient, private songService: SongService, private likeService: LikeService, private playerStateService: PlayerStateService, private playbackQueueService: PlaybackQueueService) {}
+  constructor(private authService: AuthService, private http: HttpClient, private songService: SongService, private likeService: LikeService, private playerStateService: PlayerStateService, private playbackQueueService: PlaybackQueueService, public playbackManagerService: PlaybackManagerService) {}
 
   toggleEditMode() {
     this.editMode = !this.editMode;
@@ -162,28 +163,5 @@ export class UserProfileComponent implements OnInit {
       return `${environment.apiUrl}/api/users/profile-image/${this.user.profileImage}`;
     }
     return 'https://ui-avatars.com/api/?name=' + (this.user?.username || 'U') + '&background=cccccc&color=333333&size=128';
-  }
-
-  playSong(song: Song) {
-    const username = this.authService.getUsername();
-    if (username && typeof song.id === 'number') {
-      this.playbackQueueService.clearQueue(username).subscribe({
-        next: () => {
-          this.playbackQueueService.addSongToQueue(username, song.id as number).subscribe({
-            next: () => {
-              this.playerStateService.playSong(song);
-            },
-            error: () => {
-              this.playerStateService.playSong(song);
-            }
-          });
-        },
-        error: () => {
-          this.playerStateService.playSong(song);
-        }
-      });
-    } else {
-      this.playerStateService.playSong(song);
-    }
   }
 }

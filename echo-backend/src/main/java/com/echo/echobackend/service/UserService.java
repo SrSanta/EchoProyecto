@@ -68,33 +68,20 @@ public class UserService {
             user.setEmail(userDetails.getEmail());
 
             // --- Inicio: Lógica para actualizar roles preservando ROLE_ARTIST ---
-            // Obtener los roles actuales del usuario
             List<Role> currentRoles = user.getRoles();
             boolean wasArtist = currentRoles != null && currentRoles.stream()
                                     .anyMatch(role -> "ROLE_ARTIST".equals(role.getName()));
 
-            // Crear una lista de roles basada en los roles recibidos en userDetails
-            List<Role> rolesFromDetails = new java.util.ArrayList<>();
-            if (userDetails.getRoles() != null) {
-                 rolesFromDetails = userDetails.getRoles().stream()
-                    .map(roleDetail -> {
-                        String roleName = roleDetail.getName();
-                        return roleRepository.findByName(roleName)
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-                    })
-                    .collect(Collectors.toList());
-            }
+            List<Role> rolesFromDetails = getRolesFromDetails(userDetails.getRoles());
 
-            // Crear la lista final de roles comenzando con los roles de userDetails
             List<Role> finalRoles = new java.util.ArrayList<>(rolesFromDetails);
 
-            // Si era artista y ROLE_ARTIST no está en la lista final, añadirlo
             if (wasArtist && finalRoles.stream().noneMatch(role -> "ROLE_ARTIST".equals(role.getName()))) {
                  roleRepository.findByName("ROLE_ARTIST")
-                    .ifPresent(artistRole -> finalRoles.add(artistRole));
+                    .ifPresent(finalRoles::add);
             }
 
-            user.setRoles(finalRoles); // Establecer los roles actualizados al usuario
+            user.setRoles(finalRoles);
             // --- Fin: Lógica para actualizar roles preservando ROLE_ARTIST ---
 
             // Permitir actualizar profileImage si se envía en userDetails (asumiendo que este campo también viene)
@@ -104,6 +91,19 @@ public class UserService {
 
             return userRepository.save(user); // Guardar el usuario con los roles y potentially profile image actualizados
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    private List<Role> getRolesFromDetails(List<Role> userDetailsRoles) {
+        if (userDetailsRoles == null) {
+            return new java.util.ArrayList<>();
+        }
+        return userDetailsRoles.stream()
+                .map(roleDetail -> {
+                    String roleName = roleDetail.getName();
+                    return roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+                })
+                .collect(Collectors.toList());
     }
 
     public void changePassword(Long userId, String newPassword) {

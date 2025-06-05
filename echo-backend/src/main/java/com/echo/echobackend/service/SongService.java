@@ -211,9 +211,9 @@ public class SongService {
         // Si el usuario ES el propietario O ES administrador, procede con la eliminación
 
         // Optionally delete the files from the file system
-        // deleteFile(song.getAudioFilename());
-        // deleteFile(song.getThumbnailFilename());
-        // deleteFile(song.getVideoFilename());
+        deleteFile(song.getAudioFilename());
+        deleteFile(song.getThumbnailFilename());
+        // deleteFile(song.getVideoFilename()); // Assuming video is not used, keep commented for now
 
         // Delete associated playback history records
         playbackHistoryRepository.deleteBySong(song);

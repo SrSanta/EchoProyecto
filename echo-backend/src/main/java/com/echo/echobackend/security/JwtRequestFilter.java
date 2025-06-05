@@ -14,9 +14,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 // extends OncePerRequestFilter: Asegura que este filtro se ejecute solo UNA VEZ por cada petición HTTP
 public class JwtRequestFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     private final MyUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -50,24 +55,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        System.out.println("[JWT DEBUG] Authorization header: " + authHeader);
+        logger.debug("[JWT DEBUG] Authorization header: " + authHeader);
 
         // Verificamos si la cabecera existe
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
                 username = jwtUtil.extractUsername(jwt);
-                System.out.println("[JWT DEBUG] Token extraído, usuario: " + username);
+                logger.debug("[JWT DEBUG] Token extraído, usuario: " + username);
             } catch (Exception e) {
-                System.out.println("[JWT DEBUG] Error al extraer usuario del token: " + e.getMessage());
+                logger.debug("[JWT DEBUG] Error al extraer usuario del token: " + e.getMessage());
             }
         } else {
-            System.out.println("[JWT DEBUG] No hay cabecera Authorization válida");
+            logger.debug("[JWT DEBUG] No hay cabecera Authorization válida");
         }
 
         // Validar el Token y Establecer la Autenticación en Spring Security
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            System.out.println("[JWT DEBUG] Intentando autenticar usuario " + username);
+            logger.debug("[JWT DEBUG] Intentando autenticar usuario " + username);
 
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);

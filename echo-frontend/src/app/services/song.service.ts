@@ -102,10 +102,4 @@ export class SongService {
       })
     );
   }
-
-  // updateSongMetadata(id: number, songData: Partial<Song>): Observable<Song> {
-  //   // Asegúrate de enviar solo los campos permitidos para actualizar
-  //   const updatePayload = { title: songData.title, genre: songData.genre /* otros */ };
-  //   return this.http.put<Song>(`${this.apiUrl}/${id}`, updatePayload);
-  // }
 }

@@ -18,8 +18,6 @@ public class Song {
     @Column(nullable = false)
     private String title;
 
-//    private String artist;
-
     @ManyToOne
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;

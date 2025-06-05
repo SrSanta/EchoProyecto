@@ -19,9 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final UserService userService;
     private final AuthService authService;
@@ -104,9 +109,8 @@ public class AuthController {
             return ResponseEntity.ok(Map.of("token", jwtToken));
 
         } catch (Exception e) {
-        e.printStackTrace();
-        return new ResponseEntity<>("Credenciales inválidas", HttpStatus.UNAUTHORIZED);
+            logger.error("Credenciales inválidas", e);
+            return new ResponseEntity<>("Credenciales inválidas", HttpStatus.UNAUTHORIZED);
+        }
     }
-
-}
 }

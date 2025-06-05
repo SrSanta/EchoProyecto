@@ -26,7 +26,7 @@ public class PlaylistFollowService {
     public void followPlaylist(Long playlistId, String username) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new ResourceNotFoundException("Playlist no encontrada con ID: " + playlistId));
-        if (!playlist.getIsPublic()) throw new IllegalArgumentException("Solo puedes seguir playlists públicas");
+        if (!playlist.isPublic()) throw new IllegalArgumentException("Solo puedes seguir playlists públicas");
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + username));
         if (followRepository.findByUserAndPlaylist(user, playlist).isPresent()) {

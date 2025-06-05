@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistService {
@@ -51,7 +52,7 @@ public class PlaylistService {
         playlist.setCreationDate(LocalDateTime.now());
         if (playlist.getName() != null) playlist.setName(playlist.getName().trim());
         // Si no se especifica, por defecto es privada
-        if (playlist.getIsPublic() == false) playlist.setIsPublic(false);
+        if (playlist.isPublic() == false) playlist.setPublic(false);
         logger.info("Usuario {} creó una nueva playlist: {}", username, playlist.getName());
         return playlistRepository.save(playlist);
     }
@@ -105,7 +106,7 @@ public class PlaylistService {
         }
         playlist.setName(playlistDetails.getName().trim());
         // Actualiza visibilidad pública
-        playlist.setIsPublic(playlistDetails.getIsPublic());
+        playlist.setPublic(playlistDetails.isPublic());
         logger.info("Usuario {} actualizó la playlist: {}", username, playlist.getName());
         return playlistRepository.save(playlist);
     }
@@ -161,15 +162,29 @@ public class PlaylistService {
     @Transactional
     public void reorderSongs(Long playlistId, List<Long> songIds, String username) {
         Playlist playlist = validatePlaylistOwnership(playlistId, username);
+
+        // 1. Obtener todas las relaciones PlaylistSong para esta playlist una sola vez
+        List<PlaylistSong> playlistSongs = playlistSongRepository.findByPlaylist(playlist);
+
+        // 2. Crear un mapa para acceder rápidamente a PlaylistSong por songId
+        java.util.Map<Long, PlaylistSong> playlistSongMap = playlistSongs.stream()
+                .collect(Collectors.toMap(ps -> ps.getSong().getId(), ps -> ps));
+
+        // 3. Iterar sobre la lista de IDs y actualizar el orden
         int order = 1;
         for (Long songId : songIds) {
-            Song song = songRepository.findById(songId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Canción no encontrada con ID: " + songId));
-            PlaylistSong ps = (PlaylistSong) playlistSongRepository.findByPlaylistAndSong(playlist, song)
-                    .orElseThrow(() -> new ResourceNotFoundException("La canción no está en la playlist"));
-            ps.setSongOrder(order++);
-            playlistSongRepository.save(ps);
+            PlaylistSong ps = playlistSongMap.get(songId);
+            if (ps != null) {
+                ps.setSongOrder(order++);
+            } else {
+                // Opcional: manejar caso donde un songId en la lista proporcionada no está en la playlist
+                logger.warn("Canción con ID {} no encontrada en la playlist {} durante reordenamiento", songId, playlistId);
+                // Podríamos lanzar una excepción o simplemente ignorarlo, dependiendo del requisito
+                // throw new IllegalArgumentException("La canción con ID " + songId + " no está en la playlist.");
+            }
         }
+
+        // JPA persistirá los cambios automáticamente al final de la transacción
         logger.info("Usuario {} reordenó las canciones de la playlist {}", username, playlist.getName());
     }
 

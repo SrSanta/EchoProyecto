@@ -91,7 +91,7 @@
           <div class="song-list-window">
             <ul>
               @for (song of likedSongs; track song.id) {
-                <li class="song-item" (click)="playSong(song)">
+                <li class="song-item" (click)="playbackManagerService.playSong(song)">
                   <div class="song-content">
                     <div class="song-thumbnail">
                        @if (song.thumbnailFilename) {

@@ -10,6 +10,7 @@ import { PlaylistService } from '../../services/playlist.service';
 import { Playlist } from '../../models/playlist.model';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { firstValueFrom } from 'rxjs';
+import { PlaybackManagerService } from '../../services/playback-manager.service';
 
 @Component({
   selector: 'app-song-list',
@@ -43,7 +44,8 @@ export class SongListComponent implements OnInit {
     private playerStateService: PlayerStateService,
     private playbackQueueService: PlaybackQueueService,
     public authService: AuthService,
-    private playlistService: PlaylistService
+    private playlistService: PlaylistService,
+    protected playbackManagerService: PlaybackManagerService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -92,7 +94,7 @@ export class SongListComponent implements OnInit {
     if (confirm(`¿Estás seguro de que quieres eliminar la canción "${songToDelete.title}"?`)) {
       this.songService.deleteSong(songToDelete.id!).subscribe({
         next: () => {
-          console.log(`Canción con ID ${songToDelete.id} eliminada correctamente.`);
+          console.debug(`Canción con ID ${songToDelete.id} eliminada correctamente.`);
           this.songs = this.songs.filter(song => song.id !== songToDelete.id);
         },
         error: (err) => {
@@ -121,29 +123,6 @@ export class SongListComponent implements OnInit {
         setTimeout(() => (this.addToQueueSuccess[songId] = null), 2000);
       },
     });
-  }
-
-  playSong(song: Song) {
-    const username = this.authService.getUsername();
-    if (username && typeof song.id === 'number') {
-      this.playbackQueueService.clearQueue(username).subscribe({
-        next: () => {
-          this.playbackQueueService.addSongToQueue(username, song.id as number).subscribe({
-            next: () => {
-              this.playerStateService.playSong(song);
-            },
-            error: () => {
-              this.playerStateService.playSong(song);
-            }
-          });
-        },
-        error: () => {
-          this.playerStateService.playSong(song);
-        }
-      });
-    } else {
-      this.playerStateService.playSong(song);
-    }
   }
 
   onSongContextMenu(event: MouseEvent, songId: number | undefined) {
@@ -188,7 +167,7 @@ export class SongListComponent implements OnInit {
     
     this.playlistService.addSongToPlaylist(event.playlistId, event.songId).subscribe({
       next: () => {
-        console.log('Song added to playlist successfully.');
+        console.debug('Song added to playlist successfully.');
         this.addToPlaylistSuccess = 'Canción añadida a la playlist con éxito.';
         this.showMessage = true;
         this.showContextMenu = false;

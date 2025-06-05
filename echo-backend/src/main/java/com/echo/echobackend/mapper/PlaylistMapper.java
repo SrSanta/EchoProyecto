@@ -18,7 +18,7 @@ public class PlaylistMapper {
         dto.setId(playlist.getId());
         dto.setName(playlist.getName());
         dto.setUserId(playlist.getUser() != null ? playlist.getUser().getId() : null);
-        dto.setIsPublic(playlist.getIsPublic());
+        dto.setPublic(playlist.isPublic());
         dto.setFollowed(followed);
         dto.setFavorite(favorite);
         if (playlist.getPlaylistSongs() != null) {
