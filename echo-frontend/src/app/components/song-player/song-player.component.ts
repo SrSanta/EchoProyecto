@@ -22,7 +22,7 @@ import { User } from "../../models/user.model";
 export class SongPlayerComponent implements OnInit, OnChanges {
   @Input() song!: Song;
   @ViewChild('audioPlayer') audioPlayerRef!: ElementRef<HTMLAudioElement>;
-  @ViewChild('videoPlayerVisible') videoPlayerRef!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoPlayer') videoPlayerRef!: ElementRef<HTMLVideoElement>;
   
   // Player state
   isPlaying = false;

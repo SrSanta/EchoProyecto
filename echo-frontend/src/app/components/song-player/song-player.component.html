@@ -13,17 +13,7 @@
     @if (song) {
       <div class="cd-player-display">
         @if (song && song.videoFilename) {
-          <video #videoPlayerVisible
-                 [src]="videoUrl"
-                 (timeupdate)="updateProgress()"
-                 (loadedmetadata)="onMetadataLoaded()"
-                 (play)="onPlay()"
-                 (pause)="onPause()"
-                 (ended)="onSongEnded()"
-                 class="video-player-visible"
-                 controls>
-            Your browser does not support the video element.
-          </video>
+          <!-- Removed the visible video element as playback is handled by the hidden element -->
         } @else {
           <div class="track-info-container">
             <div class="track-details">
