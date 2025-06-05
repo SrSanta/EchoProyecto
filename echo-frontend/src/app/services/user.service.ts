@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user.model';
@@ -60,6 +60,53 @@ export class UserService {
       catchError(error => {
         console.error('Error cargando artistas:', error);
         return of([]);
+      })
+    );
+  }
+
+  /**
+   * Obtiene todos los usuarios registrados.
+   * Llama al endpoint /api/users/search sin parámetro para obtener todos.
+   * @returns Observable con el array de todos los usuarios.
+   */
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/search`).pipe(
+      catchError(error => {
+        console.error('Error obteniendo todos los usuarios:', error);
+        // Puedes ajustar el manejo de errores según necesites
+        return of([]); // Retornar un array vacío en caso de error
+      })
+    );
+  }
+
+  /**
+   * Elimina un usuario por su ID.
+   * @param id El ID del usuario a eliminar.
+   * @returns Observable<void>
+   */
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error(`Error eliminando usuario con ID ${id}:`, error);
+        return throwError(() => new Error(`No se pudo eliminar el usuario con ID ${id}`));
+      })
+    );
+  }
+
+  /**
+   * Actualiza la información de un usuario (incluyendo el rol).
+   * @param user El objeto User con la información actualizada.
+   * @returns Observable<User> con el usuario actualizado.
+   */
+  updateUser(user: User): Observable<User> {
+    if (user && user.id === undefined) {
+      console.error('Error actualizando usuario: El ID del usuario es indefinido.');
+      return throwError(() => new Error('El ID del usuario es indefinido.'));
+    }
+    return this.http.put<User>(`${this.apiUrl}/${user.id}`, user).pipe(
+      catchError(error => {
+        console.error(`Error actualizando usuario con ID ${user.id}:`, error);
+        return throwError(() => new Error(`No se pudo actualizar el usuario con ID ${user.id}`));
       })
     );
   }

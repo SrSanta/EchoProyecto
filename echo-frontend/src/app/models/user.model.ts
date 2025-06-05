@@ -9,4 +9,5 @@ export interface User {
   registrationDate?: string;
   isProfilePublic?: boolean;
   profileImage?: string;
+  isProcessing?: boolean;
 }

@@ -1,0 +1,59 @@
+<h2>Gestión de Usuarios</h2>
+
+<!-- Indicador de carga general (ej: al cargar la lista de usuarios) -->
+@if (isLoading) {
+  <div>Cargando usuarios...</div>
+}
+
+<!-- Mensajes de éxito o error -->
+@if (successMessage) {
+  <div style="color: green;">{{ successMessage }}</div>
+}
+@if (errorMessage) {
+  <div style="color: red;">{{ errorMessage }}</div>
+}
+
+<div>
+  <input type="text" placeholder="Buscar usuario..." (input)="onSearchChange($event)">
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (user of paginatedUsers; track user.id) {
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ getUserRoleName(user) }}</td>
+        <td>
+          <button (click)="confirmDeleteUser(user)" [disabled]="user.isProcessing">Eliminar</button>
+          <select (change)="changeRole(user, $event)" [disabled]="user.isProcessing">
+            <!-- Iterar sobre los nombres de roles disponibles para las opciones del selector -->
+            <option *ngFor="let roleName of availableRoleNames" [value]="roleName" [selected]="getUserRoleName(user) === roleName">{{ roleName }}</option>
+          </select>
+        </td>
+      </tr>
+    }
+    @empty {
+      <tr>
+        <td colspan="4">No se encontraron usuarios.</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<!-- Controles de paginación -->
+<div>
+  <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+  <span>Página {{ currentPage }} de {{ totalPages }}</span>
+  <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Siguiente</button>
+  <!-- Opcional: añadir botones para números de página -->
+  <!-- <button *ngFor="let page of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)" [disabled]="currentPage === i + 1">{{ i + 1 }}</button> -->
+</div> 

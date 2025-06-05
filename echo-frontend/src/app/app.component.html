@@ -5,9 +5,8 @@
     <nav>
       @if (isAdmin$ | async) {
         <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
-      }
-      @if (isAdmin$ | async) {
         <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
+        <a routerLink="/admin/users" routerLinkActive="active">👥 Gestión Usuarios</a>
       }
       
       @if (isLoggedIn$ | async; as loggedIn) {

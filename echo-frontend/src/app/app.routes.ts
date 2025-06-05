@@ -12,6 +12,7 @@ import { PublicPlaylistsPageComponent } from './components/public-playlists/publ
 import { ArtistProfileComponent } from './components/artist-profile/artist-profile.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 
 export const routes: Routes = [
   {
@@ -69,6 +70,11 @@ export const routes: Routes = [
     path: 'artist/:username',
     component: ArtistProfileComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin/users',
+    component: UserManagementComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: '',
