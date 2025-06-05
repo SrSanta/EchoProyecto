@@ -42,7 +42,7 @@ export class SongListComponent implements OnInit {
     private songService: SongService,
     private playerStateService: PlayerStateService,
     private playbackQueueService: PlaybackQueueService,
-    private authService: AuthService,
+    public authService: AuthService,
     private playlistService: PlaylistService
   ) {}
 
@@ -73,16 +73,33 @@ export class SongListComponent implements OnInit {
   private async loadUserPlaylists(): Promise<void> {
     try {
       this.loadingPlaylists = true;
-      const username = this.authService.getUsername();
-      if (!username) return;
-      
       const playlists = await firstValueFrom(this.playlistService.getUserPlaylists());
       this.userPlaylists = playlists;
     } catch (error) {
       console.error('Error al cargar las playlists:', error);
-      this.contextMenuError = 'No se pudieron cargar las playlists.';
+      this.contextMenuError = 'No se pudieron cargar las playlists para el menú contextual.';
     } finally {
       this.loadingPlaylists = false;
+    }
+  }
+
+  deleteSong(songToDelete: Song): void {
+    if (!this.authService.isAdmin()) {
+      alert('No tienes permisos de administrador para eliminar canciones.');
+      return;
+    }
+
+    if (confirm(`¿Estás seguro de que quieres eliminar la canción "${songToDelete.title}"?`)) {
+      this.songService.deleteSong(songToDelete.id!).subscribe({
+        next: () => {
+          console.log(`Canción con ID ${songToDelete.id} eliminada correctamente.`);
+          this.songs = this.songs.filter(song => song.id !== songToDelete.id);
+        },
+        error: (err) => {
+          console.error(`Error al eliminar la canción con ID ${songToDelete.id}:`, err);
+          alert('Error al eliminar la canción. Inténtalo de nuevo.');
+        }
+      });
     }
   }
 
@@ -96,7 +113,7 @@ export class SongListComponent implements OnInit {
         this.isAddingToQueue[songId] = false;
         this.addToQueueSuccess[songId] = true;
         setTimeout(() => (this.addToQueueSuccess[songId] = null), 2000);
-        this.playbackQueueService.notifyQueueUpdated(); // Notifica actualización
+        this.playbackQueueService.notifyQueueUpdated();
       },
       error: () => {
         this.isAddingToQueue[songId] = false;
@@ -116,12 +133,12 @@ export class SongListComponent implements OnInit {
               this.playerStateService.playSong(song);
             },
             error: () => {
-              this.playerStateService.playSong(song); // Reproduce aunque falle la cola
+              this.playerStateService.playSong(song);
             }
           });
         },
         error: () => {
-          this.playerStateService.playSong(song); // Reproduce aunque falle limpiar
+          this.playerStateService.playSong(song);
         }
       });
     } else {
@@ -129,24 +146,24 @@ export class SongListComponent implements OnInit {
     }
   }
 
-  // Métodos para el menú contextual
   onSongContextMenu(event: MouseEvent, songId: number | undefined) {
-    // Si no hay un ID de canción válido, no hacemos nada
     if (songId === undefined) return;
     
     event.preventDefault();
     
-    // Si no hay playlists, no mostramos el menú
-    if (this.userPlaylists.length === 0 && !this.loadingPlaylists) {
-      this.contextMenuError = 'No tienes playlists. Crea una desde tu perfil.';
-      return;
+    if (!this.loadingPlaylists && (this.userPlaylists.length === 0 || !this.authService.isAuthenticated())) {
+        this.contextMenuError = !this.authService.isAuthenticated() ?
+                                'Debes iniciar sesión para añadir canciones a playlists.' :
+                                'No tienes playlists. Crea una desde tu perfil.';
+        this.showMessage = true;
+        setTimeout(() => this.showMessage = false, 4000);
+        return;
     }
     
     this.selectedSongId = songId;
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     this.showContextMenu = true;
     
-    // Asegurarse de que el menú no se salga de la pantalla
     setTimeout(() => {
       if (this.contextMenuRef && this.contextMenuRef.nativeElement) {
         const menu = this.contextMenuRef.nativeElement;
@@ -184,17 +201,14 @@ export class SongListComponent implements OnInit {
     });
   }
   
-  // Maneja el evento de añadir a la cola desde el menú contextual
   onAddToQueueFromContextMenu(songId: number) {
     const song = this.songs.find(s => s.id === songId);
     if (!song) return;
     
-    // Cerrar el menú después de un breve retraso para dar feedback visual
     setTimeout(() => {
       this.showContextMenu = false;
     }, 300);
     
-    // Llamar al método existente para añadir a la cola
     this.addToQueue(song);
   }
 }

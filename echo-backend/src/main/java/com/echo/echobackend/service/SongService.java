@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Set;
 
 @Service
 public class SongService {
@@ -198,9 +199,16 @@ public class SongService {
         Song song = songRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Canción no encontrada con ID: " + id));
 
-        if (!song.getUser().getId().equals(authenticatedUser.getId())) {
-            throw new RuntimeException("No tienes permiso para eliminar esta canción."); // Or a more specific exception
+        // Verificar si el usuario autenticado es un ADMINISTRADOR
+        boolean isAdmin = authenticatedUser.getRoles().stream()
+                                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+
+        // Si el usuario NO es el propietario de la canción Y NO es administrador, lanzar la excepción
+        if (!song.getUser().getId().equals(authenticatedUser.getId()) && !isAdmin) {
+            throw new RuntimeException("No tienes permiso para eliminar esta canción.");
         }
+
+        // Si el usuario ES el propietario O ES administrador, procede con la eliminación
 
         // Optionally delete the files from the file system
         // deleteFile(song.getAudioFilename());

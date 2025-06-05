@@ -56,12 +56,12 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: UserProfileComponent,
-    canActivate: [AdminGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'edit',
         component: UserProfileEditComponent,
-        canActivate: [AdminGuard]
+        canActivate: [AuthGuard]
       }
     ]
   },

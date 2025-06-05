@@ -4,6 +4,17 @@
       {{ addToPlaylistSuccess }}
     </div>
   }
+  @if (showMessage && contextMenuError) {
+    <div class="error-message window">
+      <div class="window-titlebar">
+        <span>Error</span>
+        <button (click)="showMessage = false; contextMenuError = null" class="close-btn">✕</button>
+      </div>
+      <div class="window-content">
+        <p>⚠️ {{ contextMenuError }}</p>
+      </div>
+    </div>
+  }
   @if (loading) {
     <div class="loading-message">
       <span class="blink">⏳</span> Cargando canciones...
@@ -42,6 +53,11 @@
                     </div>
                   </div>
                 </div>
+                @if (authService.isAdmin()) {
+                  <button class="delete-song-btn" (click)="deleteSong(song); $event.stopPropagation();" title="Eliminar canción">
+                    ❌
+                  </button>
+                }
               </li>
             }
           </ul>
@@ -68,16 +84,3 @@
   (addToQueue)="onAddToQueueFromContextMenu($event)"
   (closeMenu)="showContextMenu = false">
 </app-context-menu>
-
-<!-- Mensaje de error del menú contextual -->
-@if (contextMenuError) {
-  <div class="context-menu-error window">
-    <div class="window-titlebar">
-      <span>Error</span>
-      <button (click)="contextMenuError = null" class="close-btn">✕</button>
-    </div>
-    <div class="window-content">
-      <p>⚠️ {{ contextMenuError }}</p>
-    </div>
-  </div>
-}
