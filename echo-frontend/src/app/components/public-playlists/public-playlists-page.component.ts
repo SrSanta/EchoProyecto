@@ -21,6 +21,7 @@ export class PublicPlaylistsPageComponent implements OnInit {
   search: string = '';
   filterUser: string = '';
   filterSong: string = '';
+  isAdmin: boolean = false;
 
   constructor(
     private playlistService: PlaylistService,
@@ -30,6 +31,8 @@ export class PublicPlaylistsPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isAdmin = this.authService.isAdmin();
+
     this.playlistService.getAllPublicPlaylists().subscribe(playlists => {
       this.publicPlaylists = playlists;
       this.filteredPlaylists = playlists;
@@ -82,5 +85,21 @@ export class PublicPlaylistsPageComponent implements OnInit {
         alert('No se pudo limpiar la cola de reproducción.');
       }
     });
+  }
+
+  deletePlaylist(playlistId: number | undefined) {
+    if (playlistId !== undefined && confirm('¿Estás seguro de que quieres eliminar esta playlist?')) {
+      this.playlistService.deletePlaylist(playlistId).subscribe({
+        next: () => {
+          this.publicPlaylists = this.publicPlaylists.filter(p => p.id !== playlistId);
+          this.applyFilters();
+          alert('Playlist eliminada con éxito.');
+        },
+        error: (err) => {
+          console.error('Error al eliminar playlist:', err);
+          alert('No se pudo eliminar la playlist.');
+        }
+      });
+    }
   }
 }

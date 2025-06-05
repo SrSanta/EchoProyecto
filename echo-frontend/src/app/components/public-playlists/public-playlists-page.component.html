@@ -13,7 +13,7 @@
       <ul *ngIf="playlist.songs?.length">
         <li *ngFor="let song of playlist.songs">🎵 {{ song.title }}</li>
       </ul>
-      <button (click)="playPlaylist(playlist)">Reproducir Playlist</button>
+      <button *ngIf="isAdmin" (click)="deletePlaylist(playlist.id)">Eliminar Playlist</button>
     </li>
   </ul>
   <ng-template #noResults>
