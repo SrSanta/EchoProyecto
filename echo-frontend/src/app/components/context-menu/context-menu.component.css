@@ -118,14 +118,18 @@
 .submenu {
   position: absolute;
   top: -3px; /* Ajuste para alinear con el menú principal */
-  left: calc(100% - 8px); /* Ajuste fino de la posición */
   width: 220px; /* Ancho fijo para el submenú */
   min-height: 100%;
   background: #c0c0c0;
   border: 3px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
-  transform: translateX(10px);
+  /* Posición por defecto a la derecha (ahora manejado por ngStyle) */
+  /* left: calc(100% - 8px); */
+  /* right: auto; */
+
+  /* Transición para opacity y transform */
+  transform: translateX(10px); /* Ajuste de transformación inicial */
   opacity: 0;
   pointer-events: none;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -136,11 +140,22 @@
 }
 
 .submenu.show {
-  transform: translateX(0);
+  transform: translateX(0); /* Transformación final al mostrarse */
   opacity: 1;
   pointer-events: auto;
-  display: flex;
+  /* display: flex; */ /* La transición de display a veces causa problemas, mantenemos flex siempre */
 }
+
+/* Eliminamos la regla .submenu.open-left ya que el posicionamiento se maneja con ngStyle */
+/* .submenu.open-left {
+  left: auto;
+  right: calc(100% - 8px);
+  transform: translateX(-10px);
+}
+
+.submenu.open-left.show {
+   transform: translateX(0);
+} */
 
 .submenu-header {
   padding: 8px 12px;

@@ -2,7 +2,8 @@
   class="context-menu" 
   *ngIf="show" 
   [ngStyle]="{'left.px': position.x, 'top.px': position.y}"
-  (click)="stopPropagation($event)">
+  (click)="stopPropagation($event)"
+  #contextMenuElement>
   
   <!-- Opción para añadir a la cola -->
   <div class="menu-item" (click)="onAddToQueue()" [class.disabled]="addingToQueue">
@@ -28,8 +29,13 @@
     </div>
     
     <!-- Submenú de playlists -->
-    <div class="submenu" [class.show]="showPlaylistSubmenu">
-      <div class="submenu-header" (click)="$event.stopPropagation()">
+    <div 
+      class="submenu" 
+      [class.show]="showPlaylistSubmenu"
+      [ngStyle]="submenuStyles">
+      
+      <!-- Añadir referencia al elemento del submenú -->
+      <div class="submenu-header" (click)="$event.stopPropagation()" #playlistSubmenuElement>
         <button class="back-button" (click)="showPlaylistSubmenu = false">
           <i class="fas fa-arrow-left"></i>
         </button>
