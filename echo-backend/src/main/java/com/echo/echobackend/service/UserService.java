@@ -63,27 +63,46 @@ public class UserService {
     }
 
     public User updateUser(Long id, User userDetails) {
-    // Permitir actualizar profileImage
-
         return userRepository.findById(id).map(user -> {
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
 
-            // --- Inicio: Lógica para actualizar roles ---
+            // --- Inicio: Lógica para actualizar roles preservando ROLE_ARTIST ---
+            // Obtener los roles actuales del usuario
+            List<Role> currentRoles = user.getRoles();
+            boolean wasArtist = currentRoles != null && currentRoles.stream()
+                                    .anyMatch(role -> "ROLE_ARTIST".equals(role.getName()));
+
+            // Crear una lista de roles basada en los roles recibidos en userDetails
+            List<Role> rolesFromDetails = new java.util.ArrayList<>();
             if (userDetails.getRoles() != null) {
-                // Mapear los roles recibidos por nombre a entidades Role existentes
-                List<Role> updatedRoles = userDetails.getRoles().stream()
+                 rolesFromDetails = userDetails.getRoles().stream()
                     .map(roleDetail -> {
-                        // Buscar la entidad Role por nombre
-                        return roleRepository.findByName(roleDetail.getName())
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleDetail.getName())); // Lanzar error si el rol no existe
+                        String roleName = roleDetail.getName();
+                        return roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
                     })
                     .collect(Collectors.toList());
-                user.setRoles(updatedRoles); // Establecer los nuevos roles al usuario
             }
-            // --- Fin: Lógica para actualizar roles ---
 
-            return userRepository.save(user); // Guardar el usuario con los roles actualizados
+            // Crear la lista final de roles comenzando con los roles de userDetails
+            List<Role> finalRoles = new java.util.ArrayList<>(rolesFromDetails);
+
+            // Si era artista y ROLE_ARTIST no está en la lista final, añadirlo
+            if (wasArtist && finalRoles.stream().noneMatch(role -> "ROLE_ARTIST".equals(role.getName()))) {
+                 roleRepository.findByName("ROLE_ARTIST")
+                    .ifPresent(artistRole -> finalRoles.add(artistRole));
+            }
+
+            user.setRoles(finalRoles); // Establecer los roles actualizados al usuario
+            // --- Fin: Lógica para actualizar roles preservando ROLE_ARTIST ---
+
+            // Permitir actualizar profileImage si se envía en userDetails (asumiendo que este campo también viene)
+            if (userDetails.getProfileImage() != null) {
+                 user.setProfileImage(userDetails.getProfileImage());
+            }
+
+            return userRepository.save(user); // Guardar el usuario con los roles y potentially profile image actualizados
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
@@ -112,5 +131,9 @@ public class UserService {
     
     public List<User> findAllArtists() {
         return userRepository.findByRoles_Name("ROLE_ARTIST");
+    }
+
+    public List<User> findAllPublicProfiles() {
+        return userRepository.findByIsProfilePublic(true);
     }
 }

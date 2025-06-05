@@ -76,8 +76,8 @@ public class UserController {
     @GetMapping("/artists")
     public ResponseEntity<List<User>> getAllArtists() {
         try {
-            List<User> artists = userService.findAllArtists();
-            return ResponseEntity.ok(artists);
+            List<User> publicProfiles = userService.findAllPublicProfiles();
+            return ResponseEntity.ok(publicProfiles);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
