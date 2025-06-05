@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Playlist } from '../../models/playlist.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faList, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-context-menu',
@@ -11,7 +12,7 @@ import { faPlus, faList, faChevronRight } from '@fortawesome/free-solid-svg-icon
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.css']
 })
-export class ContextMenuComponent implements OnChanges {
+export class ContextMenuComponent implements OnChanges, OnInit, OnDestroy {
   // Iconos
   faPlus = faPlus;
   faList = faList;
@@ -41,22 +42,36 @@ export class ContextMenuComponent implements OnChanges {
   @ViewChild('contextMenuElement') contextMenuElementRef!: ElementRef;
   @ViewChild('playlistSubmenuElement') playlistSubmenuElementRef!: ElementRef;
 
-  constructor(private cdr: ChangeDetectorRef) {} // Inyectar ChangeDetectorRef
+  private outsideContextMenuListener: any;
+  private outsideClickListener: any;
+
+  constructor(private cdr: ChangeDetectorRef, private renderer: Renderer2) {}
+
+  ngOnInit() {
+    // Adjuntar listeners solo una vez
+    this.outsideClickListener = this.renderer.listen('document', 'click', this.handleOutsideClick);
+    this.outsideContextMenuListener = this.renderer.listen('document', 'contextmenu', this.handleOutsideClick);
+  }
+
+  ngOnDestroy() {
+    // Limpiar listeners al destruir el componente
+    if (this.outsideClickListener) { this.outsideClickListener(); }
+    if (this.outsideContextMenuListener) { this.outsideContextMenuListener(); }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Cerrar el menú si se hace clic fuera de él
+    // La lógica de apertura y cierre ahora se maneja principalmente por la entrada @Input() show
+    // Los listeners fuera del clic están adjuntos persistentemente y reaccionan a this.show
+    
     if (changes['show'] && changes['show'].currentValue) {
-      setTimeout(() => {
-        document.addEventListener('click', this.onClickOutside);
-        // Recalcular la posición del submenú cuando se abre el menú principal
+        // Cuando el menú se abre, recalculamos la posición del submenú
         this.calculateSubmenuPosition();
-      });
     } else if (changes['show'] && !changes['show'].currentValue) {
-      document.removeEventListener('click', this.onClickOutside);
       // Resetear el estado del submenú al cerrar el menú principal
       this.showPlaylistSubmenu = false;
        document.body.classList.remove('submenu-open'); // Asegurarse de limpiar la clase
        this.submenuStyles = {}; // Limpiar estilos del submenú
+       this.cdr.detectChanges(); // Forzar detección de cambios
     }
   }
 
@@ -103,17 +118,28 @@ export class ContextMenuComponent implements OnChanges {
      }, 50); // Aumentar el retraso ligeramente
   }
 
+  // Un solo manejador para clics y clics derechos fuera
+  handleOutsideClick = (event: MouseEvent) => {
+    // Si el menú no está visible, no hacemos nada
+    if (!this.show) {
+      return;
+    }
 
-  onClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     
     // No hacer nada si el clic fue en el menú contextual o en un submenú
     if (this.contextMenuElementRef && this.contextMenuElementRef.nativeElement.contains(target)) {
-      // Si el clic es dentro del menú principal, no cerramos
-      return;
+      return; // El clic fue dentro del menú, no cerramos
     }
 
-    // Si el clic fue fuera del menú principal
+    // Si el clic fue fuera del menú y el menú está visible
+    
+    // Para clics derechos fuera, prevenimos el comportamiento por defecto
+    if (event.type === 'contextmenu') {
+        event.preventDefault();
+    }
+
+    // Siempre cerramos el menú si el clic fue fuera (para clics izquierdos o derechos)
     this.closeMenu.emit();
   }
 
@@ -129,21 +155,19 @@ export class ContextMenuComponent implements OnChanges {
   }
   
   togglePlaylistSubmenu(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
+    event.stopPropagation(); // Detener propagación del evento de clic/contextmenu
     this.showPlaylistSubmenu = !this.showPlaylistSubmenu;
     
     // Al abrir el submenú, recalculamos la posición
     if (this.showPlaylistSubmenu) {
       console.log('Submenu toggled ON, calculating position.');
-      // Llamamos a calculateSubmenuPosition, que ya tiene su propio setTimeout interno
       this.calculateSubmenuPosition();
-      document.body.classList.add('submenu-open'); // Añadir clase al body para manejar clics fuera
+      document.body.classList.add('submenu-open');
     } else {
        console.log('Submenu toggled OFF.');
-       document.body.classList.remove('submenu-open'); // Limpiar clase al cerrar el submenú
-       this.submenuStyles = {}; // Limpiar estilos del submenú al cerrar
-       this.cdr.detectChanges(); // Forzar detección de cambios
+       document.body.classList.remove('submenu-open');
+       this.submenuStyles = {};
+       this.cdr.detectChanges();
     }
   }
   
