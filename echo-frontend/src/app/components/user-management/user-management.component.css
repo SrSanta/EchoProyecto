@@ -1,1 +1,72 @@
- 
+/* Estilos específicos para el componente de gestión de usuarios */
+
+/* Asegurar que el selector de rol sea visible y funcional */
+td select {
+  /* Anular estilos globales que puedan ocultarlo o distorsionarlo */
+  appearance: menulist; /* Intentar usar el estilo de lista de menú nativo */
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+
+  /* Asegurar un fondo visible, bordes claros y padding */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #000000; /* Borde simple negro */
+  padding: 2px;
+  margin-left: 5px; /* Espacio entre el botón Eliminar y el selector */
+  cursor: pointer;
+  font-size: 0.9rem; /* Asegurar un tamaño de fuente legible */
+  vertical-align: middle; /* Alinear verticalmente con el botón */
+  width: auto; /* Permitir que el ancho se ajuste al contenido si es necesario */
+}
+
+/* Estilo para el selector deshabilitado */
+td select:disabled {
+  background-color: #d3d3d3; /* Un gris claro para indicar que está deshabilitado */
+  color: #808080;
+  cursor: not-allowed;
+}
+
+/* Ajustes básicos para la tabla si son necesarios, aunque los estilos globales ya definen algunos */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Asegurar que los bordes de las celdas colapsen */
+  margin-top: 15px; /* Espacio encima de la tabla */
+}
+
+th, td {
+  border: 1px solid #808080; /* Bordes de celda */
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #c0c0c0; /* Fondo gris para encabezados */
+  font-weight: bold;
+}
+
+/* Estilo para las filas de la tabla */
+tbody tr:nth-child(even) {
+  background-color: #d3d3d3; /* Color de fondo alterno para filas pares */
+}
+
+/* Estilo para la columna de acciones */
+td:last-child {
+  white-space: nowrap; /* Evitar que los elementos se envuelvan en la celda de acciones */
+}
+
+/* Estilo para el campo de búsqueda */
+input[type="text"] {
+  width: auto; /* Permitir que el campo de búsqueda se ajuste si es necesario */
+  margin-bottom: 15px; /* Espacio debajo del campo de búsqueda */
+  display: inline-block; /* Asegurar que esté en línea con otros elementos si los hay */
+}
+
+/* Estilos para los mensajes de estado */
+div[style*="color: green"] {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+div[style*="color: red"] {
+  margin-bottom: 10px;
+  font-weight: bold;
+} 
