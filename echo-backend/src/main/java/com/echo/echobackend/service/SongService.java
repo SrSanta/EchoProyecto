@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Set;
 
 @Service
 public class SongService {
@@ -88,6 +87,7 @@ public class SongService {
             throw new IOException("Could not create storage directory for type " + fileTypePrefix + ". Please check permissions and path.", ex);
         }
 
+        @SuppressWarnings("null")
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         String fileExtension = "";
         if (originalFilename != null && originalFilename.contains(".")) {

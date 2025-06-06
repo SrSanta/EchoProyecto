@@ -18,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -42,7 +40,6 @@ public class SongController {
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(SongController.class);
 
-    @Autowired
     public SongController(SongService songService, FileStorageProperties fileStorageProperties, UserRepository userRepository, UserService userService) {
         this.songService = songService;
         this.fileStorageProperties = fileStorageProperties;
@@ -172,7 +169,7 @@ public class SongController {
     @GetMapping("/thumbnails/{filename:.+}")
     public ResponseEntity<Resource> serveThumbnailFile(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename.replace("thumbnail/", "")).normalize();
+            Path filePath = Paths.get(fileStorageProperties.getUploadDir()).resolve("thumbnail").resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {

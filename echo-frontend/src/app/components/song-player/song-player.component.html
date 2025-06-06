@@ -8,7 +8,7 @@
   </div>
 
   <!-- Contenido del reproductor (visible si isContentVisible es true) -->
-  <div *ngIf="isContentVisible">
+  <div [style.display]="isContentVisible ? 'block' : 'none'">
 
     @if (song) {
       <div class="cd-player-display">

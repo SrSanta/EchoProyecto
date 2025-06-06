@@ -2,10 +2,8 @@ package com.echo.echobackend.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.file.Paths;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -13,26 +11,4 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${file.uploadDir}")
     private String uploadDir;
 
-    // El método addResourceHandlers está comentado y la funcionalidad de servir archivos se maneja en SongController.
-    // Eliminar este bloque de código comentado para mejorar la legibilidad y reducir el tamaño del código.
-    //@Override
-    //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
-    //    String resolvedUploadDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
-    //
-    //    String resourceLocation = "file:" + resolvedUploadDir.replace("\\", "/") + (resolvedUploadDir.endsWith("/") || resolvedUploadDir.endsWith("\\") ? "" : "/");
-    //
-    //    System.out.println("--- [WebConfig] Mapeando /audio/** a la ubicación física: " + resourceLocation);
-    //
-    //    registry.addResourceHandler("/audio/**")
-    //            .addResourceLocations(resourceLocation);
-    //}
-
-    // El siguiente bloque también está comentado y no parece estar en uso.
-    //@Override
-    //public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
-    //    // No mapear rutas bajo /api/** como recursos estáticos
-    //    registry.addResourceHandler("/api/**")
-    //            .addResourceLocations()
-    //            .setCachePeriod(0); // Deshabilitar caché si es necesario para depuración
-    //}
 }

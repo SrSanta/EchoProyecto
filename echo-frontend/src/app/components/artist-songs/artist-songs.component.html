@@ -18,11 +18,11 @@
             <div class="song-info">
               <div class="song-title">{{ song.title }}</div>
               <div class="song-details">
-                 @if (song.user?.username) {
+                 @if (song.user.username) {
                     <span class="song-artist">👤 {{ song.user.username }}</span>
                  }
-                 @if (song.genre?.name) {
-                    @if (song.user?.username) {
+                 @if (song.genre.name) {
+                    @if (song.user.username) {
                        <span class="song-separator">•</span>
                     }
                    <span class="song-genre">🎵 {{ song.genre.name }}</span>

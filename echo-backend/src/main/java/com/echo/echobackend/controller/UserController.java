@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,7 +31,6 @@ public class UserController {
     private final FileStorageService fileStorageService;
     private final HttpServletRequest request;
 
-    @Autowired
     public UserController(UserService userService, FileStorageService fileStorageService, HttpServletRequest request) {
         this.userService = userService;
         this.fileStorageService = fileStorageService;
