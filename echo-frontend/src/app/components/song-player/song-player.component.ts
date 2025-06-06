@@ -106,7 +106,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     }
     
     if (this.song.thumbnailFilename) {
-      this.thumbnailUrl = `${environment.apiUrl}/api/${this.song.thumbnailFilename}`;
+      this.thumbnailUrl = `${environment.apiUrl}/api/thumbnails/${this.song.thumbnailFilename.replace('thumbnail/', '')}`;
     } else {
       this.thumbnailUrl = '';
     }
@@ -200,7 +200,7 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     }
 
     if (this.song.thumbnailFilename) {
-      this.thumbnailUrl = `${environment.apiUrl}/api/${this.song.thumbnailFilename}`;
+      this.thumbnailUrl = `${environment.apiUrl}/api/thumbnails/${this.song.thumbnailFilename.replace('thumbnail/', '')}`;
     } else {
       this.thumbnailUrl = '';
     }
