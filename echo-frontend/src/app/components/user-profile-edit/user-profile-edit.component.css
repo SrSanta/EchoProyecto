@@ -207,3 +207,110 @@ button[disabled] {
   opacity: 0.5;
   animation: scanline 8s linear infinite;
 }
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  :host {
+    padding: 15px; /* Reduced padding */
+  }
+
+  .profile-edit-container, .change-password-form {
+    padding: 10px; /* Reduced padding */
+    margin-bottom: 20px; /* Adjusted margin */
+  }
+
+  h2, h3 {
+    font-size: 1.3rem; /* Reduced font size */
+    margin-bottom: 15px; /* Adjusted margin */
+  }
+
+  h3 {
+    font-size: 1.1rem; /* Reduced font size */
+    margin-top: 20px; /* Adjusted margin */
+  }
+
+  .profile-image-container {
+    margin-bottom: 15px; /* Adjusted margin */
+  }
+
+  .profile-image {
+    width: 120px; /* Smaller image */
+    height: 120px;
+  }
+
+  label {
+    margin: 10px 0 3px; /* Adjusted margin */
+    font-size: 0.85rem; /* Reduced font size */
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="file"] {
+    padding: 6px 8px; /* Adjusted padding */
+    margin-bottom: 8px; /* Adjusted margin */
+    font-size: 0.85rem; /* Reduced font size */
+  }
+
+  button {
+    padding: 5px 12px; /* Adjusted padding */
+    margin: 8px 4px 8px 0; /* Adjusted margin */
+    font-size: 0.85rem; /* Reduced font size */
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 10px; /* Further reduced padding */
+  }
+
+  .profile-edit-container, .change-password-form {
+    padding: 8px; /* Further reduced padding */
+    margin-bottom: 15px; /* Adjusted margin */
+  }
+
+  h2, h3 {
+    font-size: 1.1rem; /* Further reduced font size */
+    margin-bottom: 10px; /* Adjusted margin */
+  }
+
+  h3 {
+    font-size: 1rem; /* Further reduced font size */
+    margin-top: 15px; /* Adjusted margin */
+  }
+
+  .profile-image-container {
+    margin-bottom: 10px; /* Adjusted margin */
+  }
+
+  .profile-image {
+    width: 100px; /* Even smaller image */
+    height: 100px;
+  }
+
+  label {
+    margin: 8px 0 2px; /* Adjusted margin */
+    font-size: 0.8rem; /* Further reduced font size */
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="file"] {
+    padding: 5px 6px; /* Further adjusted padding */
+    margin-bottom: 6px; /* Adjusted margin */
+    font-size: 0.8rem; /* Further reduced font size */
+  }
+
+  button {
+    padding: 4px 10px; /* Further adjusted padding */
+    margin: 6px 3px 6px 0; /* Adjusted margin */
+    font-size: 0.8rem; /* Further reduced font size */
+  }
+
+  .success, .error {
+    padding: 8px; /* Adjusted padding */
+    margin: 8px 0; /* Adjusted margin */
+    font-size: 0.9em; /* Adjusted font size */
+  }
+}

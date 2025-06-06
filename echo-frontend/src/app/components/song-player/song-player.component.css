@@ -725,59 +725,182 @@ p { margin-bottom: 8px; }
 
   .controls-row,
   .controls-row-bottom {
-    gap: 4px; /* Reducir espacio entre elementos en pantallas pequeñas */
-    flex-wrap: wrap; /* Permitir que los elementos se envuelvan en múltiples líneas */
-    justify-content: center; /* Centrar los botones si se envuelven */
-    padding: 0 4px; /* Reducir padding horizontal */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
   }
 
   .control-btn {
-    width: 40px; /* Aumentar tamaño de los botones para mejor toque */
-    height: 40px;
-    font-size: 18px; /* Ajustar tamaño del icono */
+    width: 28px;
+    height: 28px;
   }
 
   .volume-slider {
-    width: 80px; /* Ancho fijo más pequeño para el deslizador en móvil */
-    max-width: 80px;
+    width: 80px;
   }
-  
+
   .progress-container {
-    padding: 0 4px; /* Reducir padding */
+    padding: 0 5px;
   }
 
   .progress-track {
-    height: 20px; /* Aumentar altura del track para mejor toque */
+    height: 12px;
+  }
+
+  .track-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .track-info {
+    font-size: 1em;
+  }
+}
+
+/* New media query for 768px to align with global styles */
+@media (max-width: 768px) {
+  :host {
+    padding: 2px;
+  }
+
+  .cd-player-header {
+    padding: 2px 4px;
+  }
+
+  .cd-player-display {
+    padding: 10px;
+    margin: 6px 0;
+  }
+
+  .track-info-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .track-details {
+    padding-right: 0;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  .track-image {
+    margin-bottom: 10px;
+  }
+
+  .track-info {
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.05em;
+  }
+
+  .time-display {
+    margin-bottom: 5px;
+  }
+
+  .label {
+    min-width: unset;
+    margin-right: 5px;
+  }
+
+  .value {
+    text-align: center;
+  }
+
+  .cd-player-controls {
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .controls-row, .controls-row-bottom {
+     max-width: 100%;
+     padding: 0 5px;
+     gap: 5px;
+  }
+
+  .control-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .progress-container {
+    margin: 10px 0;
+  }
+
+  .cd-player-status {
+    margin: 10px 0 0 0;
+    padding: 6px 4px;
+    width: calc(100% - 8px);
+  }
+
+  .status-item {
+    gap: 3px;
+  }
+
+  .no-song {
+    padding: 20px 10px;
+  }
+
+  .no-song-message {
+    font-size: 1.1em;
+  }
+
+  .queue-container {
+    max-width: 100%;
+  }
+
+  :host ::ng-deep .playback-queue {
+     padding: 8px;
+  }
+
+  :host ::ng-deep .playback-queue h3 {
+     font-size: 15px;
+     margin: 0 0 8px 0;
+     padding-bottom: 3px;
+  }
+
+  :host ::ng-deep .playback-queue ul {
+     max-height: 200px;
+     margin: 0 0 8px 0;
+  }
+
+  :host ::ng-deep .playback-queue li {
+     padding: 6px;
+     margin: 3px 0;
+  }
+
+  .volume-container .control-btn, .fullscreen-container .control-btn {
+      width: 28px;
+      height: 28px;
   }
 }
 
 /* Estilos para los botones de ocultar/mostrar contenido dentro del reproductor */
 .toggle-content-button {
-  position: absolute; /* Posicionar absolutamente dentro de .cd-player-display */
-  top: 15px; /* Ajustar la posición vertical */
-  right: 15px; /* Ajustar la posición horizontal */
-  z-index: 10; /* Asegurarse de que esté por encima de otros elementos */
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
   background: #c0c0c0;
   color: #000000;
   border: 2px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   box-shadow: -1px -1px 0 0 #000000;
-  padding: 2px 8px; /* Ajustar padding */
+  padding: 2px 8px;
   font-weight: bold;
   cursor: pointer;
   font-family: 'MS Sans Serif', sans-serif;
-  font-size: 0.8rem; /* Ajustar tamaño de fuente */
+  font-size: 0.8rem;
   width: auto;
 }
 
 .toggle-content-button:hover {
   background: #e0e0e0;
-  color: #ff00ff; /* Rosa vaporwave al hacer hover */
+  color: #ff00ff;
 }
 
 .toggle-content-button:active {
   border-color: #808080 #ffffff #ffffff #808080;
   background: #c0c0c0;
   box-shadow: -1px -1px 0 0 #000000 inset;
-  padding: 3px 7px 1px 9px; /* Ajustar padding para el efecto de click */
+  padding: 3px 7px 1px 9px;
 }

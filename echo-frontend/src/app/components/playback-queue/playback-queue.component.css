@@ -76,3 +76,54 @@
   margin: 5px 0;
   border: 1px solid #ff0000;
 }
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .playback-queue {
+    padding: 8px; /* Adjusted padding */
+    font-size: 12px; /* Slightly smaller font */
+    max-height: 180px; /* Adjusted max height */
+  }
+
+  .playback-queue h3 {
+    font-size: 13px; /* Adjusted font size */
+    margin-bottom: 8px; /* Adjusted margin */
+    padding: 4px 0; /* Adjusted padding */
+  }
+
+  .playback-queue li {
+    padding: 4px 6px; /* Adjusted padding */
+    margin: 3px 0; /* Adjusted margin */
+  }
+
+  .playback-queue button {
+    padding: 2px 8px; /* Adjusted padding */
+    font-size: 11px; /* Adjusted font size */
+    margin-top: 8px; /* Adjusted margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .playback-queue {
+    padding: 6px; /* Further adjusted padding */
+    font-size: 11px; /* Further smaller font */
+    max-height: 150px; /* Further adjusted max height */
+  }
+
+  .playback-queue h3 {
+    font-size: 12px; /* Further adjusted font size */
+    margin-bottom: 6px; /* Further adjusted margin */
+    padding: 3px 0; /* Further adjusted padding */
+  }
+
+  .playback-queue li {
+    padding: 3px 5px; /* Further adjusted padding */
+    margin: 2px 0; /* Further adjusted margin */
+  }
+
+  .playback-queue button {
+    padding: 1px 6px; /* Further adjusted padding */
+    font-size: 10px; /* Further adjusted font size */
+    margin-top: 6px; /* Further adjusted margin */
+  }
+}

@@ -16,3 +16,20 @@ li {
   border-bottom: 1px solid #ddd;
   padding: 1rem 0;
 }
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .public-playlists-page {
+    max-width: 100%; /* Allow container to take full width */
+    padding: 1rem; /* Adjusted padding */
+  }
+
+  .filters {
+    flex-direction: column; /* Stack filters vertically */
+    gap: 0.5rem; /* Reduced gap */
+  }
+
+  li {
+    padding: 0.8rem 0; /* Slightly reduced padding for list items */
+  }
+}

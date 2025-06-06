@@ -84,4 +84,87 @@
 
 .songs-list li:last-child, .playlists-list li:last-child {
     margin-bottom: 0;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .artist-profile-container {
+    padding: 15px; /* Reduced padding */
+  }
+
+  .profile-details {
+    flex-direction: column; /* Stack profile details */
+    align-items: center; /* Center items */
+    gap: 15px; /* Reduced gap */
+    margin-bottom: 20px; /* Adjusted margin */
+    padding-bottom: 10px; /* Adjusted padding */
+  }
+
+  .profile-image {
+    width: 80px; /* Smaller image */
+    height: 80px;
+  }
+
+  .profile-details h2 {
+    font-size: 1.5em; /* Reduced font size */
+  }
+
+  .artist-songs-section,
+  .artist-playlists-section {
+    margin-top: 20px; /* Adjusted margin */
+    margin-bottom: 20px; /* Adjusted margin */
+    padding: 0 10px; /* Adjusted padding */
+  }
+
+  .artist-songs-section h3,
+  .artist-playlists-section h3 {
+    font-size: 1.2em; /* Reduced font size */
+    margin-bottom: 10px; /* Adjusted margin */
+    padding-bottom: 3px; /* Adjusted padding */
+  }
+
+  .songs-list li, .playlists-list li {
+    padding: 6px; /* Reduced padding */
+    margin-bottom: 4px; /* Adjusted margin */
+    font-size: 0.9em; /* Reduced font size */
+  }
+}
+
+@media (max-width: 480px) {
+  .artist-profile-container {
+    padding: 10px; /* Further reduced padding */
+  }
+
+  .profile-details {
+    gap: 10px; /* Further reduced gap */
+    margin-bottom: 15px; /* Adjusted margin */
+  }
+
+  .profile-image {
+    width: 70px; /* Even smaller image */
+    height: 70px;
+  }
+
+  .profile-details h2 {
+    font-size: 1.3em; /* Further reduced font size */
+  }
+
+  .artist-songs-section,
+  .artist-playlists-section {
+    margin-top: 15px; /* Adjusted margin */
+    margin-bottom: 15px; /* Adjusted margin */
+    padding: 0 5px; /* Further reduced padding */
+  }
+
+  .artist-songs-section h3,
+  .artist-playlists-section h3 {
+    font-size: 1.1em; /* Further reduced font size */
+    margin-bottom: 8px; /* Adjusted margin */
+  }
+
+  .songs-list li, .playlists-list li {
+    padding: 5px; /* Further reduced padding */
+    margin-bottom: 3px; /* Adjusted margin */
+    font-size: 0.85em; /* Further reduced font size */
+  }
 } 

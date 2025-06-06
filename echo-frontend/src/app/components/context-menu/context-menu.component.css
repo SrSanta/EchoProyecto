@@ -374,3 +374,161 @@
   z-index: 1;
   opacity: 0.3;
 }
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .context-menu {
+    min-width: 200px; /* Adjusted minimum width */
+    max-width: 250px; /* Adjusted maximum width */
+    padding: 2px; /* Adjusted padding */
+  }
+
+  .menu-header {
+    padding: 6px 8px 4px; /* Adjusted padding */
+    font-size: 0.75em; /* Slightly smaller font */
+  }
+
+  .menu-items {
+    max-height: 200px; /* Adjusted max height */
+  }
+
+  .menu-divider {
+    margin: 2px 4px; /* Adjusted margin */
+  }
+
+  .menu-item {
+    padding: 5px 10px; /* Adjusted padding */
+    font-size: 0.8em; /* Slightly smaller font */
+    min-height: 28px; /* Adjusted min height */
+  }
+
+  .menu-item-arrow {
+    margin-left: 6px; /* Adjusted margin */
+    width: 18px; /* Adjusted width */
+  }
+
+  .submenu {
+    width: 180px; /* Adjusted submenu width */
+  }
+
+  .submenu-header {
+    padding: 6px 8px; /* Adjusted padding */
+    font-size: 0.8em; /* Adjusted font size */
+  }
+
+  .back-button {
+    padding: 1px 4px; /* Adjusted padding */
+    margin-right: 6px; /* Adjusted margin */
+    font-size: 0.7em; /* Adjusted font size */
+  }
+
+  .error-message {
+    padding: 6px 8px; /* Adjusted padding */
+    font-size: 0.8em; /* Adjusted font size */
+    margin: 2px; /* Adjusted margin */
+  }
+
+  .menu-item i {
+    margin-right: 6px; /* Adjusted margin */
+    width: 14px; /* Adjusted width */
+  }
+
+  .badge {
+    font-size: 0.6em; /* Adjusted font size */
+    padding: 0px 3px; /* Adjusted padding */
+  }
+
+  .no-playlists {
+    padding: 15px 10px; /* Adjusted padding */
+    font-size: 0.8em; /* Adjusted font size */
+    min-height: 100px; /* Adjusted min height */
+    margin: 2px; /* Adjusted margin */
+  }
+
+  .no-playlists i {
+    font-size: 1.3em; /* Adjusted font size */
+    margin-bottom: 6px; /* Adjusted margin */
+  }
+
+  .no-playlists p {
+     margin: 0 0 3px; /* Adjusted margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .context-menu {
+    min-width: 180px; /* Further adjusted minimum width */
+    max-width: 220px; /* Further adjusted maximum width */
+    padding: 1px; /* Further adjusted padding */
+  }
+
+  .menu-header {
+    padding: 5px 6px 3px; /* Further adjusted padding */
+    font-size: 0.7em; /* Further smaller font */
+  }
+
+  .menu-items {
+    max-height: 180px; /* Further adjusted max height */
+  }
+
+  .menu-divider {
+    margin: 1px 3px; /* Further adjusted margin */
+  }
+
+  .menu-item {
+    padding: 4px 8px; /* Further adjusted padding */
+    font-size: 0.75em; /* Further smaller font */
+    min-height: 24px; /* Further adjusted min height */
+  }
+
+  .menu-item-arrow {
+    margin-left: 4px; /* Further adjusted margin */
+    width: 16px; /* Further adjusted width */
+  }
+
+  .submenu {
+    width: 160px; /* Further adjusted submenu width */
+  }
+
+  .submenu-header {
+    padding: 5px 6px; /* Further adjusted padding */
+    font-size: 0.75em; /* Further adjusted font size */
+  }
+
+  .back-button {
+    padding: 0px 3px; /* Further adjusted padding */
+    margin-right: 4px; /* Further adjusted margin */
+    font-size: 0.6em; /* Further adjusted font size */
+  }
+
+  .error-message {
+    padding: 5px 6px; /* Further adjusted padding */
+    font-size: 0.75em; /* Further adjusted font size */
+    margin: 1px; /* Further adjusted margin */
+  }
+
+  .menu-item i {
+    margin-right: 4px; /* Further adjusted margin */
+    width: 12px; /* Further adjusted width */
+  }
+
+   .badge {
+    font-size: 0.55em; /* Adjusted font size */
+    padding: 0px 2px; /* Adjusted padding */
+  }
+
+  .no-playlists {
+    padding: 10px; /* Further adjusted padding */
+    font-size: 0.7em; /* Further adjusted font size */
+    min-height: 80px; /* Further adjusted min height */
+    margin: 1px; /* Further adjusted margin */
+  }
+
+  .no-playlists i {
+    font-size: 1.1em; /* Further adjusted font size */
+    margin-bottom: 4px; /* Further adjusted margin */
+  }
+   .no-playlists p {
+     margin: 0 0 2px; /* Adjusted margin */
+  }
+}

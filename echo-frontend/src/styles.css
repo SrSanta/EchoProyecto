@@ -235,3 +235,75 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: #a0a0a0;
 }
+
+/* Adaptaciones para multidispositivo */
+@media (max-width: 768px) {
+  body {
+    background-image: linear-gradient(to bottom, #ff00ff, #00ffff); /* Degradado vertical para móviles */
+    font-size: 14px; /* Reducir tamaño de fuente base */
+  }
+
+  .window {
+    margin: 10px; /* Menor margen en pantallas pequeñas */
+    box-shadow: -0.5px -0.5px 0 0 #000000, 0.5px 0.5px 0 0 #c0c0c0, 0.5px 0.5px 0 0.5px #000000; /* Ajustar sombra */
+    border-width: 2px; /* Ajustar borde */
+  }
+
+  .window-titlebar {
+    padding: 2px 4px; /* Ajustar padding de la barra de título */
+  }
+
+  .window-content {
+    padding: 10px; /* Ajustar padding del contenido de la ventana */
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Reducir tamaño de H1 */
+  }
+
+  h2 {
+    font-size: 1.2rem; /* Reducir tamaño de H2 */
+  }
+
+  h3 {
+    font-size: 1rem; /* Reducir tamaño de H3 */
+  }
+
+  /* Ajustar mini-player para móviles */
+  .mini-player-float {
+    bottom: 10px;
+    right: 10px;
+    min-width: unset; /* Permitir que el ancho se ajuste */
+    width: calc(100vw - 20px); /* Ancho casi completo */
+    max-width: unset; /* Ancho máximo no limitado */
+    max-height: 80vh; /* Ajustar altura máxima */
+    padding: 2px; /* Ajustar padding */
+  }
+
+  .mini-player-float .playback-queue {
+    max-height: 200px; /* Reducir altura máxima de la cola */
+  }
+
+  button, input[type="submit"], .btn {
+    padding: 2px 8px; /* Ajustar padding de botones */
+    font-size: 0.8rem; /* Reducir tamaño de fuente de botones */
+  }
+
+  button:active, input[type="submit"]:active, .btn:active {
+    padding: 3px 7px 1px 9px; /* Ajustar padding activo */
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 13px; /* Reducir tamaño de fuente base aún más */
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+}

@@ -488,22 +488,111 @@ h2 {
 /* Keep existing media queries if needed for responsiveness */
 @media (max-width: 768px) {
   .playlist-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Ajustar tamaño mínimo de tarjeta */
+    gap: 20px; /* Reducir espacio entre tarjetas */
+    padding: 10px; /* Reducir padding del grid */
   }
   .playlist-card {
-    width: auto;
-    height: 220px;
+    width: auto; /* Permitir ancho automático */
+    height: 200px; /* Ajustar altura de tarjeta */
+    padding: 15px 10px 10px 10px; /* Ajustar padding de tarjeta */
+  }
+  .playlist-label {
+    height: 60px; /* Ajustar altura de la etiqueta */
+  }
+  .playlist-label .playlist-name {
+    font-size: 0.9em; /* Ajustar tamaño de fuente */
+  }
+  .playlist-stats, .playlist-owner {
+    font-size: 0.65em; /* Ajustar tamaño de fuente */
+  }
+  .playlist-actions button, .toggle-public-btn, .share-btn {
+    padding: 3px 6px; /* Ajustar padding de botones */
+    font-size: 0.7em; /* Ajustar tamaño de fuente */
+    margin: 2px; /* Ajustar margen */
+  }
+  .modal {
+    width: 90%; /* Ancho del modal en pantallas pequeñas */
+    padding: 15px; /* Ajustar padding del modal */
+  }
+  .window-titlebar {
+    padding: 3px 6px; /* Ajustar padding de la barra de título del modal */
+    margin: -15px -15px 15px -15px; /* Ajustar margen de la barra de título */
+  }
+  .showDetail h3 {
+     padding: 2px 4px; /* Ajustar padding del título de detalle */
+     margin-bottom: 8px; /* Ajustar margen */
+  }
+  .showDetail > div {
+     padding: 10px; /* Ajustar padding */
+     margin-bottom: 8px; /* Ajustar margen */
+  }
+  .showDetail button {
+     padding: 2px 6px; /* Ajustar padding de botones */
+     font-size: 0.8rem; /* Ajustar tamaño de fuente */
+     margin-right: 3px; /* Ajustar margen */
+     margin-top: 3px; /* Ajustar margen */
+  }
+  .showDetail li {
+     padding: 4px; /* Ajustar padding de lista */
+     margin-bottom: 3px; /* Ajustar margen */
   }
 }
 
 @media (max-width: 480px) {
   .playlist-grid {
-    grid-template-columns: 1fr;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajustar tamaño mínimo de tarjeta */
+    gap: 15px; /* Reducir espacio entre tarjetas */
+    padding: 5px; /* Reducir padding del grid */
   }
   .playlist-card {
-    width: 95%;
-    margin: 0 auto;
+    height: 180px; /* Ajustar altura de tarjeta */
+    padding: 10px 5px 5px 5px; /* Ajustar padding de tarjeta */
+  }
+  .playlist-label {
+    height: 50px; /* Ajustar altura de la etiqueta */
+  }
+  .playlist-label .playlist-name {
+    font-size: 0.8em; /* Ajustar tamaño de fuente */
+  }
+  .playlist-stats, .playlist-owner {
+    font-size: 0.6em; /* Ajustar tamaño de fuente */
+  }
+  .playlist-actions button, .toggle-public-btn, .share-btn {
+    padding: 2px 4px; /* Ajustar padding de botones */
+    font-size: 0.6em; /* Ajustar tamaño de fuente */
+    margin: 1px; /* Ajustar margen */
+  }
+  .modal {
+    width: 95%; /* Ancho del modal */
+    padding: 10px; /* Ajustar padding del modal */
+  }
+   .window-titlebar {
+    padding: 2px 4px; /* Ajustar padding de la barra de título del modal */
+    margin: -10px -10px 10px -10px; /* Ajustar margen de la barra de título */
+  }
+   .showDetail h3 {
+     padding: 1px 3px; /* Ajustar padding del título de detalle */
+     margin-bottom: 5px; /* Ajustar margen */
+     font-size: 1.2rem;
+  }
+  .showDetail > div {
+     padding: 8px; /* Ajustar padding */
+     margin-bottom: 5px; /* Ajustar margen */
+  }
+   .showDetail button {
+     padding: 1px 5px; /* Ajustar padding de botones */
+     font-size: 0.7rem; /* Ajustar tamaño de fuente */
+  }
+   .showDetail li {
+     padding: 3px; /* Ajustar padding de lista */
+     margin-bottom: 2px; /* Ajustar margen */
+     font-size: 0.9em;
+  }
+  .showDetail .add-song-section h4 {
+      font-size: 1rem; /* Ajustar tamaño de fuente */
+      margin-top: 10px;
+      margin-bottom: 8px;
   }
 }
 

@@ -131,20 +131,92 @@ ul {
 /* Estilos para pantallas pequeñas */
 @media (max-width: 600px) {
   .song-item {
-    padding: 8px 10px;
+    padding: 8px 10px; /* Ajustar padding */
+    flex-direction: column; /* Apilar contenido */
+    align-items: flex-start; /* Alinear al inicio */
+  }
+
+  .song-thumbnail {
+    margin-right: 0; /* Eliminar margen derecho */
+    margin-bottom: 8px; /* Añadir margen inferior */
   }
   
   .song-thumbnail-small {
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Ajustar tamaño */
+    height: 50px;
   }
   
+  .song-info {
+    flex: none; /* No permitir crecimiento */
+    min-width: unset; /* Eliminar mínimo width */
+    width: 100%; /* Ancho completo */
+  }
+
   .song-title {
-    font-size: 1rem;
+    font-size: 1em; /* Ajustar tamaño de fuente */
+    white-space: normal; /* Permitir que el título se envuelva */
+    overflow: visible;
+    text-overflow: clip;
   }
   
   .song-details {
-    font-size: 0.8rem;
+    font-size: 0.8rem; /* Ajustar tamaño de fuente */
+    flex-direction: column; /* Apilar detalles */
+    align-items: flex-start; /* Alinear al inicio */
+    gap: 4px; /* Reducir espacio */
+  }
+
+  .song-artist, .song-genre {
+    display: block; /* Mostrar como bloque */
+    margin-bottom: 2px; /* Espacio entre detalles apilados */
+  }
+
+  .song-separator {
+    display: none; /* Ocultar separador al apilar */
+  }
+
+  .empty-message {
+    padding: 15px 10px; /* Ajustar padding */
+    margin: 10px 0; /* Ajustar margen */
+  }
+
+  .empty-message p {
+    font-size: 1rem; /* Ajustar tamaño de fuente */
+  }
+}
+
+/* New media query for 768px to align with global styles */
+@media (max-width: 768px) {
+  .song-list-window {
+    padding: 1px; /* Ajustar padding de la ventana */
+    margin-bottom: 15px; /* Ajustar margen inferior */
+  }
+
+  .song-item {
+    padding: 8px 12px; /* Ajustar padding */
+  }
+
+  .song-thumbnail {
+    margin-right: 10px; /* Ajustar margen derecho */
+  }
+
+  .song-thumbnail-small {
+    width: 45px; /* Ajustar tamaño */
+    height: 45px;
+  }
+
+  .song-title {
+    font-size: 1.05rem; /* Ajustar tamaño de fuente */
+  }
+
+  .song-details {
+    font-size: 0.82rem; /* Ajustar tamaño de fuente */
+    gap: 6px; /* Ajustar espacio */
+  }
+
+  .empty-message {
+    padding: 20px 15px; /* Ajustar padding */
+    margin: 15px 0; /* Ajustar margen */
   }
 }
 

@@ -183,21 +183,56 @@
 /* Keep existing media queries if needed for responsiveness */
 @media (max-width: 768px) {
   .playlist-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
   }
   .playlist-card {
-    width: auto;
-    height: 220px;
+    height: 200px;
+    padding: 15px 10px 10px 10px;
+  }
+  .playlist-label {
+    height: 60px;
+  }
+  .playlist-label .playlist-name {
+    font-size: 0.9em;
+  }
+  .playlist-stats, .playlist-owner {
+    font-size: 0.65em;
+  }
+  .playlist-card .view-playlist-button {
+    padding: 3px 6px;
+    font-size: 0.7em;
+    margin: 2px;
   }
 }
 
 @media (max-width: 480px) {
   .playlist-grid {
-    grid-template-columns: 1fr;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 5px;
   }
   .playlist-card {
-    width: 95%;
-    margin: 0 auto;
+    height: 180px;
+    padding: 10px 5px 5px 5px;
+  }
+  .playlist-label {
+    height: 50px;
+  }
+  .playlist-label .playlist-name {
+    font-size: 0.8em;
+  }
+  .playlist-stats, .playlist-owner {
+    font-size: 0.6em;
+  }
+  .playlist-card .view-playlist-button {
+    padding: 2px 4px;
+    font-size: 0.6em;
+    margin: 1px;
+  }
+  .no-results-message {
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 1em;
   }
 } 

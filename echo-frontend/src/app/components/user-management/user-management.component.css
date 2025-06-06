@@ -69,4 +69,51 @@ div[style*="color: green"] {
 div[style*="color: red"] {
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  /* Adjust table and cell padding */
+  table, th, td {
+    padding: 6px; /* Reduced padding */
+  }
+
+  /* Adjust font size in table */
+  th, td {
+    font-size: 0.9em; /* Slightly smaller font */
+  }
+
+  /* Adjust width for select dropdown */
+  td select {
+    font-size: 0.85rem; /* Smaller font for select */
+    margin-left: 3px; /* Reduced margin */
+  }
+
+  /* Adjust actions column */
+  td:last-child {
+    white-space: normal; /* Allow wrapping in actions column */
+    word-break: break-word; /* Break long words */
+  }
+
+  /* Adjust search input */
+  input[type="text"] {
+    width: 100%; /* Full width on smaller screens */
+    box-sizing: border-box; /* Include padding and border in width */
+  }
+}
+
+@media (max-width: 480px) {
+  th, td {
+    padding: 4px; /* Further reduced padding */
+    font-size: 0.8em; /* Even smaller font */
+  }
+
+  td select {
+    font-size: 0.8rem; /* Further smaller font for select */
+  }
+
+  /* Stack table headers and data if needed for better mobile view (optional, depends on layout complexity) */
+  /* Example (more complex transformation): */
+  /* td:before { content: attr(data-label); float: left; font-weight: bold; } */
+  /* td:last-child { text-align: center; } */
 } 
