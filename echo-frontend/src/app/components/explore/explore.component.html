@@ -50,6 +50,10 @@
       <button class="tab-button" [class.active]="isTabActive('artists')" (click)="setActiveTab('artists')">
         Artistas
       </button>
+      <!-- Botón para limpiar todos los filtros y búsqueda -->
+      <button class="clear-all-filters" (click)="clearAllFiltersAndSearch()">
+        Limpiar Filtros y Búsqueda
+      </button>
     </div>
 
     <div class="tab-content">
