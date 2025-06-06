@@ -137,16 +137,18 @@ export class PlaylistsPageComponent implements OnInit, OnDestroy {
   togglePublic(playlist: Playlist): void {
     console.log('Intentando alternar visibilidad:');
     console.log('isOwner:', this.isOwner(playlist));
-    console.log('Objeto Playlist:', playlist);
+    console.log('Objeto Playlist antes de la actualización:', playlist);
     if (!this.isOwner(playlist)) return;
     const nuevoEstado = !playlist.isPublic;
     this.playlistService.updatePlaylist(playlist.id!, { name: playlist.name, isPublic: nuevoEstado }).subscribe({
       next: (updated) => {
+        console.log('Playlist actualizada recibida:', updated);
         playlist.isPublic = updated.isPublic;
         // Limpiar enlace público si se vuelve privada
         if (!updated.isPublic) {
           playlist.publicUrl = undefined;
         }
+        console.log('Objeto Playlist después de la actualización local:', playlist);
       },
       error: () => {
         alert('No se pudo cambiar el estado pública/privada');

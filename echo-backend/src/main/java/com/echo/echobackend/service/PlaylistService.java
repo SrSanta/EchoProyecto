@@ -106,9 +106,19 @@ public class PlaylistService {
         }
         playlist.setName(playlistDetails.getName().trim());
         // Actualiza visibilidad pública
-        playlist.setPublic(playlistDetails.isPublic());
+        boolean nuevoEstadoPublico = playlistDetails.isPublic(); // Guarda el estado deseado
+        logger.info("Estado isPublic recibido en playlistDetails: {}", nuevoEstadoPublico);
+        playlist.setPublic(nuevoEstadoPublico); // Actualiza el objeto local
         logger.info("Usuario {} actualizó la playlist: {}", username, playlist.getName());
-        return playlistRepository.save(playlist);
+
+        Playlist updatedPlaylist = playlistRepository.save(playlist); // Guarda y obtiene el resultado
+
+        // --- AÑADE ESTE LOG ---
+        logger.info("Playlist guardada y a devolver: ID={}, Nombre={}, isPublic={}",
+                    updatedPlaylist.getId(), updatedPlaylist.getName(), updatedPlaylist.isPublic());
+        // --------------------
+
+        return updatedPlaylist; // Devuelve el objeto guardado
     }
 
     @Transactional

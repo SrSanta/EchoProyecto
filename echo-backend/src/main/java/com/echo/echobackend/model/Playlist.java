@@ -1,6 +1,7 @@
 package com.echo.echobackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,5 +41,10 @@ public class Playlist {
         return playlistSongs.stream()
                 .map(PlaylistSong::getSong)
                 .toList();
+    }
+
+    @JsonProperty("isPublic")
+    public boolean isPublic() {
+        return isPublic;
     }
 }
