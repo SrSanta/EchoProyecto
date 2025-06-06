@@ -122,6 +122,33 @@ nav button:active {
   padding: 4px 11px 2px 13px;
 }
 
+/* Estilos del botón de hamburguesa (oculto por defecto) */
+.hamburger-icon {
+  display: none;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: -1px -1px 0 0 #000000;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-weight: bold;
+  color: #000000;
+}
+
+.hamburger-icon:hover {
+   background: #e0e0e0;
+   color: #ff00ff; /* Rosa vaporwave al hacer hover */
+}
+
+.hamburger-icon:active {
+   border-color: #808080 #ffffff #ffffff #808080;
+   background: #c0c0c0;
+   box-shadow: -1px -1px 0 0 #000000;
+   padding: 6px 9px 4px 11px;
+}
+
 main {
   flex-grow: 1;
   padding: 20px;
@@ -185,4 +212,124 @@ footer {
 @keyframes scanline {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(100%); }
+}
+
+/* Responsive Adjustments */
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+  }
+
+  header h1 a {
+    font-size: 1.5rem;
+    padding: 3px 8px;
+  }
+
+  nav {
+    display: none; /* Ocultar navegación por defecto en móvil */
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
+    position: absolute; /* Posicionar el menú desplegable */
+    top: 100%; /* Debajo del header */
+    left: 0;
+    background: #c0c0c0; /* Fondo para el menú */
+    border-top: 3px solid;
+    border-color: #ffffff #808080 #808080 #ffffff; /* Bordes Windows 95 */
+    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
+    z-index: 999; /* Asegurarse de que esté por encima del contenido principal */
+    padding: 10px;
+  }
+
+  nav.open { /* Mostrar navegación cuando tenga la clase 'open' */
+    display: flex;
+  }
+
+  /* Mostrar el botón de hamburguesa en móvil */
+  .hamburger-icon {
+    display: block;
+  }
+
+  nav a {
+    width: calc(100% - 24px); /* Adjust for padding/border */
+    text-align: center;
+    padding: 8px 12px;
+  }
+
+  nav a:active {
+     padding: 9px 11px 7px 13px; /* Adjust active padding */
+  }
+
+  nav div {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    border-top: 2px solid #808080;
+    padding-top: 10px;
+  }
+
+  nav div span {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  nav button {
+     width: 100%;
+     text-align: center;
+     padding: 8px 12px;
+     font-size: 1rem;
+  }
+
+  nav button:active {
+    padding: 9px 11px 7px 13px; /* Adjust active padding */
+  }
+
+  main {
+    padding: 10px;
+  }
+
+  .floating-player {
+    width: 100%;
+    right: 0;
+    bottom: 0; /* Stick to the bottom on small screens */
+    left: 0;
+    max-width: none;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000; /* Keep shadow style */
+  }
+}
+
+@media (max-width: 480px) {
+   header h1 a {
+    font-size: 1.2rem;
+  }
+
+  nav a,
+  nav button {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+   nav a:active {
+     padding: 7px 7px 5px 9px; /* Adjust active padding */
+  }
+
+   nav button:active {
+     padding: 7px 7px 5px 9px; /* Adjust active padding */
+   }
+
+  .floating-player {
+     bottom: 0; /* Ensure it stays at the very bottom */
+  }
 }

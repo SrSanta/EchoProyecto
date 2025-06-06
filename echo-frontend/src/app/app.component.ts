@@ -30,6 +30,7 @@ export class AppComponent {
   isAdmin$: Observable<boolean>;
   currentSongForPlayer$: Observable<Song | null> = this.playerStateService.currentSong$;
   hasSongsInQueue = false;
+  isMenuOpen = false;
 
   constructor() {
     this.isLoggedIn$ = this.authService.currentUser$.pipe(map(user => !!user));
@@ -100,5 +101,9 @@ export class AppComponent {
 
   getYear(): number {
     return new Date().getFullYear();
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

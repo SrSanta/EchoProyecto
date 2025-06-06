@@ -2,7 +2,12 @@
   <header>
     <h1><a routerLink="/" class="window">Echo 🎵</a></h1>
     
-    <nav>
+    <!-- Botón de hamburguesa para móvil -->
+    <button class="hamburger-icon" (click)="toggleMenu()">
+      &#9776;
+    </button>
+
+    <nav [class.open]="isMenuOpen">
       @if (isAdmin$ | async) {
         <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
         <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
