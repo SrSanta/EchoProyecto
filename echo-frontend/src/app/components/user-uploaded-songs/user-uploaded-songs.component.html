@@ -8,7 +8,6 @@
   <div *ngIf="songs.length > 0" class="songs-list">
     <div *ngFor="let song of songs" class="song-item">
       <h3>{{ song.title }}</h3>
-      <p>Artist: {{ song.artist }}</p>
       <p>Genre: {{ song.genre.name }}</p>
       <p>Release Year: {{ song.releaseYear }}</p>
       <!-- Add play button and other controls here -->
