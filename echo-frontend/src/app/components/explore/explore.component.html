@@ -148,7 +148,7 @@
         <div class="content-section">
           <h2 class="section-title">Artistas</h2>
           <div class="artist-grid">
-            @for (artist of searchResults.artists; track artist.id) {
+            @for (artist of searchResults.artists | slice:1; track artist.id) {
             <a class="artist-card" [routerLink]="['/artist', artist.username]">
               <div class="artist-avatar">
                 <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" [alt]="'Avatar de ' + artist.name">
@@ -244,7 +244,7 @@
       <div class="tab-pane">
         <h2 class="section-title">Artistas</h2>
         <div class="artist-grid">
-          @for (artist of searchResults.artists; track artist.id) {
+          @for (artist of searchResults.artists | slice:1; track artist.id) {
           <a class="artist-card" [routerLink]="['/artist', artist.username]">
             <div class="artist-avatar">
               <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" [alt]="'Avatar de ' + artist.name">

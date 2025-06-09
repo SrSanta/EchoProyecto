@@ -28,6 +28,7 @@ public class Playlist {
 
     private LocalDateTime creationDate;
 
+    @JsonProperty("isPublic")
     @Column(nullable = false)
     private boolean isPublic = false;
 
@@ -41,10 +42,5 @@ public class Playlist {
         return playlistSongs.stream()
                 .map(PlaylistSong::getSong)
                 .toList();
-    }
-
-    @JsonProperty("isPublic")
-    public boolean isPublic() {
-        return isPublic;
     }
 }

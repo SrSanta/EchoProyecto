@@ -29,7 +29,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER) // Cargar los roles al cargar el usuario
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // Cargar los roles al cargar el usuario
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -42,15 +42,15 @@ public class User {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isProfilePublic;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Song> songs;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Playlist> playlists;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Like> likes;
 

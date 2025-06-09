@@ -154,13 +154,15 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.searchQuery = '';
     this.searchResults = null;
     this.error = null;
+    this.setActiveTab(null);
     this.loadAllContent();
   }
 
   // Nueva función para limpiar filtros y búsqueda
   clearAllFiltersAndSearch(): void {
     console.log('Clear all filters and search function called.');
-    this.searchQuery = ''; // Limpiar el campo de búsqueda
+    this.searchQuery = '';
+    this.setActiveTab(null);
     // Aquí deberías añadir lógica para limpiar cualquier otra variable de filtro si existen
     // Por ahora, solo reinicia la búsqueda
     this.loadAllContent(); // Volver a cargar el contenido inicial

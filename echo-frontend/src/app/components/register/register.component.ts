@@ -13,58 +13,7 @@ import { User } from '../../models/user.model';
     FormsModule
   ],
   templateUrl: './register.component.html',
-  styles: [`
-    .window {
-      max-width: 450px;
-      margin: 30px auto;
-    }
-    
-    .register-form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    
-    .form-group {
-      margin-bottom: 10px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 4px;
-      margin-top: 2px;
-    }
-    
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    
-    .error-message {
-      margin-top: 15px;
-      padding: 8px;
-      background: #ffdddd;
-      border: 2px solid #ff0000;
-      color: #ff0000;
-      font-weight: bold;
-    }
-    
-    .login-link {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 0.9em;
-    }
-  `]
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   registrationData: Omit<User, 'id' | 'roles' | 'registrationDate' | 'isProfilePublic'> = {

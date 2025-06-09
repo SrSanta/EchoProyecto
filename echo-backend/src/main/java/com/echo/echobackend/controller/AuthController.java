@@ -75,6 +75,10 @@ public class AuthController {
             return new ResponseEntity<>("Todos los campos y al menos un rol son obligatorios", HttpStatus.BAD_REQUEST);
         }
 
+        if (password.length() < 6) {
+            return new ResponseEntity<>("La contraseña debe tener al menos 6 caracteres", HttpStatus.BAD_REQUEST);
+        }
+
         for (Map<String, String> roleData : rolesData) {
             if (roleData == null || roleData.get("name") == null || roleData.get("name").trim().isEmpty()) {
                 return new ResponseEntity<>("Formato de roles inválido. Se espera: [{name: 'ROLE_USER'}, ...]", HttpStatus.BAD_REQUEST);

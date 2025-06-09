@@ -3,6 +3,9 @@ package com.echo.echobackend.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +23,6 @@ public class PlaylistDTO {
 
     private List<SongDTO> songs;
 
+    @JsonProperty("isPublic")
     private boolean isPublic;
 }

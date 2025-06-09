@@ -7,7 +7,7 @@
   </div>
   <ul *ngIf="filteredPlaylists.length; else noResults">
     <li *ngFor="let playlist of filteredPlaylists">
-      <strong>{{ playlist.name }}</strong> por {{ playlist.user.username || 'Desconocido' }}<br>
+      <strong>{{ playlist.name }}</strong> por {{ getUserUsername(playlist.userId) }}<br>
       <span *ngIf="playlist.songs?.length">Canciones: {{ playlist.songs?.length || 0 }}</span>
       <span *ngIf="!playlist.songs?.length">Sin canciones</span>
       <ul *ngIf="playlist.songs?.length">

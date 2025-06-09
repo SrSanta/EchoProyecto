@@ -51,8 +51,8 @@ public class PlaylistService {
         playlist.setUser(user);
         playlist.setCreationDate(LocalDateTime.now());
         if (playlist.getName() != null) playlist.setName(playlist.getName().trim());
-        // Si no se especifica, por defecto es privada
-        if (playlist.isPublic() == false) playlist.setPublic(false);
+        // Si el frontend no envía isPublic, o si es false, se mantendrá false por defecto del modelo.
+        // Si el frontend envía isPublic: true, entonces se respetará ese valor.
         logger.info("Usuario {} creó una nueva playlist: {}", username, playlist.getName());
         return playlistRepository.save(playlist);
     }
