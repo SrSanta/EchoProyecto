@@ -10,13 +10,15 @@
     <nav [class.open]="isMenuOpen">
       @if (isAdmin$ | async) {
         <a routerLink="/songs" routerLinkActive="active">🎵 Canciones</a>
-        <a routerLink="/public-playlists" routerLinkActive="active">📋 Explorar Playlists</a>
-        <a routerLink="/admin/users" routerLinkActive="active">👥 Gestión Usuarios</a>
+        <a routerLink="/public-playlists" routerLinkActive="active">📋 Playlists</a>
+        <a routerLink="/admin/users" routerLinkActive="active">👥 Usuarios</a>
       }
       
       @if (isLoggedIn$ | async; as loggedIn) {
         <a routerLink="/upload-song" routerLinkActive="active">⬆️ Subir Canción</a>
         <a routerLink="/playback-history" routerLinkActive="active">⏱️ Historial</a>
+        <a routerLink="/profile" [queryParams]="{ view: 'playlists' }" routerLinkActive="active">📋 Mis Playlists</a>
+        <a routerLink="/profile" [queryParams]="{ view: 'liked-songs' }" routerLinkActive="active">❤️ Mis Favoritas</a>
         <a routerLink="/profile" routerLinkActive="active">👤 Mi Perfil</a>
         <div>
           <span>👋 Hola, {{ username$ | async }}</span>

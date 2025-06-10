@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 import { PlaylistsPageComponent } from '../playlists/playlists-page.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,6 +15,8 @@ import { Song } from '../../models/song.model';
 import { PlayerStateService } from '../../services/player-state.service';
 import { PlaybackQueueService } from '../../services/playback-queue.service';
 import { PlaybackManagerService } from '../../services/playback-manager.service';
+import { Subject, throwError } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-profile',
@@ -23,7 +25,7 @@ import { PlaybackManagerService } from '../../services/playback-manager.service'
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnDestroy {
   editMode = false;
   showPlaylists = false;
   showLikedSongs = false;
@@ -37,7 +39,18 @@ export class UserProfileComponent implements OnInit {
   likedSongsError: string | null = null;
   protected environment = environment;
 
-  constructor(private authService: AuthService, private http: HttpClient, private songService: SongService, private likeService: LikeService, private playerStateService: PlayerStateService, private playbackQueueService: PlaybackQueueService, public playbackManagerService: PlaybackManagerService) {}
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private songService: SongService,
+    private likeService: LikeService,
+    private playerStateService: PlayerStateService,
+    private playbackQueueService: PlaybackQueueService,
+    public playbackManagerService: PlaybackManagerService,
+    private route: ActivatedRoute
+  ) {}
 
   toggleEditMode() {
     this.editMode = !this.editMode;
@@ -63,8 +76,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   loadLikedSongs(): void {
-    if (!this.user) {
-      this.likedSongsError = 'User not loaded.';
+    if (!this.user || !this.user.id) {
+      this.likedSongsError = 'User not loaded or user ID is missing.';
       return;
     }
 
@@ -93,6 +106,11 @@ export class UserProfileComponent implements OnInit {
               if (completedFetches === songIds.length) {
                 this.likedSongs = loadedSongs;
                 this.loadingLikedSongs = false;
+                if (loadedSongs.length < songIds.length) {
+                  this.likedSongsError = 'Some liked songs could not be loaded.';
+                } else {
+                  this.likedSongsError = null;
+                }
               }
             },
             error: (err) => {
@@ -101,7 +119,7 @@ export class UserProfileComponent implements OnInit {
               if (completedFetches === songIds.length) {
                 this.likedSongs = loadedSongs;
                 this.loadingLikedSongs = false;
-                if (this.likedSongsError === null) {
+                if (loadedSongs.length < songIds.length && this.likedSongsError === null) {
                   this.likedSongsError = 'Some liked songs could not be loaded.';
                 }
               }
@@ -110,7 +128,7 @@ export class UserProfileComponent implements OnInit {
         });
       },
       error: (err) => {
-        this.likedSongsError = err.error || 'Error al cargar las canciones favoritas.';
+        this.likedSongsError = err.error?.message || err.message || 'Error al cargar las canciones favoritas.';
         this.loadingLikedSongs = false;
         console.error('Error loading liked song IDs:', err);
       }
@@ -118,21 +136,53 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchUser();
+    this.fetchUser().subscribe({
+      next: () => {
+        this.route.queryParams.pipe(
+          takeUntil(this.destroy$)
+        ).subscribe(params => {
+          this.resetViewFlags();
+          if (params['view'] === 'liked-songs') {
+            this.showLikedSongs = true;
+            this.loadLikedSongs();
+          } else if (params['view'] === 'playlists') {
+            this.showPlaylists = true;
+          } else if (params['view'] === 'edit') {
+            this.editMode = true;
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error al cargar el usuario para el perfil:', err);
+      }
+    });
+  }
+
+  private resetViewFlags(): void {
+    this.editMode = false;
+    this.showPlaylists = false;
+    this.showLikedSongs = false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   fetchUser() {
     this.loading = true;
-    this.http.get(`${environment.apiUrl}/api/users/me`).subscribe({
-      next: (user: any) => {
+    return this.http.get(`${environment.apiUrl}/api/users/me`).pipe(
+      map((user: any) => {
         this.user = user;
         this.loading = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.error = err.error || 'Error al cargar el perfil';
+        return user;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.error = err.error?.message || err.message || 'Error al cargar el perfil';
         this.loading = false;
-      }
-    });
+        return throwError(() => err);
+      })
+    );
   }
 
   onFileSelected(event: any) {
@@ -152,7 +202,7 @@ export class UserProfileComponent implements OnInit {
         this.uploading = false;
       },
       error: (err: HttpErrorResponse) => {
-        this.error = err.error || 'Error al subir la imagen';
+        this.error = err.error?.message || err.message || 'Error al subir la imagen';
         this.uploading = false;
       }
     });
