@@ -258,7 +258,7 @@ footer {
     display: none;
     /* Ocultar navegación por defecto en móvil */
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
     gap: 5px;
     margin-top: 10px;

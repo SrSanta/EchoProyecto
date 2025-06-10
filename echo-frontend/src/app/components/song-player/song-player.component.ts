@@ -39,6 +39,8 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   volume = 1.0; // Volumen inicial al máximo
   isMuted = false; // Estado de silencio
   isFullscreen = false; // Estado de pantalla completa
+  showFullscreenControls = true; // Controla la visibilidad de los controles en pantalla completa
+  private fullscreenControlsTimeout: any; // Para ocultar los controles después de inactividad
   
   // Propiedad para controlar la visibilidad del contenido del reproductor
   isContentVisible: boolean = true;
@@ -60,7 +62,13 @@ export class SongPlayerComponent implements OnInit, OnChanges {
   private playbackHistoryService = inject(PlaybackHistoryService);
   private playbackQueueService = inject(PlaybackQueueService);
 
-  constructor() {}
+  constructor() {
+    // Escuchar cambios en el estado de pantalla completa del documento
+    document.addEventListener('fullscreenchange', this.onFullscreenChange.bind(this));
+    document.addEventListener('webkitfullscreenchange', this.onFullscreenChange.bind(this));
+    document.addEventListener('mozfullscreenchange', this.onFullscreenChange.bind(this));
+    document.addEventListener('MSFullscreenChange', this.onFullscreenChange.bind(this));
+  }
 
   private checkIfLiked(): void {
     if (!this.userId || !this.song?.id) return;
@@ -260,6 +268,23 @@ export class SongPlayerComponent implements OnInit, OnChanges {
          this.mediaElement.removeEventListener('loadedmetadata', this.playAfterLoad);
       }
   };
+
+  // Helper method to update `isFullscreen` based on document state
+  private onFullscreenChange(): void {
+    this.isFullscreen = !!document.fullscreenElement;
+    const hostElement = (this.audioPlayerRef?.nativeElement?.closest('app-song-player') || this.videoPlayerRef?.nativeElement?.closest('app-song-player'));
+    if (this.isFullscreen) {
+      // Activar clase en el host para aplicar estilos de pantalla completa
+      hostElement?.classList.add('fullscreen-active');
+      this.showFullscreenControls = true; // Mostrar controles al entrar en fullscreen
+      this.resetFullscreenControlsTimeout();
+    } else {
+      // Desactivar clase en el host al salir de pantalla completa
+      hostElement?.classList.remove('fullscreen-active');
+      this.showFullscreenControls = true; // Restaurar visibilidad por defecto al salir
+      clearTimeout(this.fullscreenControlsTimeout);
+    }
+  }
 
   toggleLike(): void {
     if (!this.song) {
@@ -581,17 +606,19 @@ export class SongPlayerComponent implements OnInit, OnChanges {
     if (!this.mediaElement) return; // Solo aplicar si hay un elemento multimedia
 
     if (!document.fullscreenElement) {
-      // Entrar en pantalla completa
-      if (this.mediaElement.requestFullscreen) {
-        this.mediaElement.requestFullscreen();
-      } else if ((this.mediaElement as any).mozRequestFullScreen) { // Firefox
-        (this.mediaElement as any).mozRequestFullScreen();
-      } else if ((this.mediaElement as any).webkitRequestFullscreen) { // Chrome, Safari and Opera
-        (this.mediaElement as any).webkitRequestFullscreen();
-      } else if ((this.mediaElement as any).msRequestFullscreen) { // IE/Edge
-        (this.mediaElement as any).msRequestFullscreen();
+      // Entrar en pantalla completa: pedir fullscreen para el contenedor del video
+      const elementToFullscreen = this.videoPlayerRef?.nativeElement?.closest('.video-player-wrapper');
+      if (elementToFullscreen) {
+        if (elementToFullscreen.requestFullscreen) {
+          elementToFullscreen.requestFullscreen();
+        } else if ((elementToFullscreen as any).mozRequestFullScreen) { // Firefox
+          (elementToFullscreen as any).mozRequestFullScreen();
+        } else if ((elementToFullscreen as any).webkitRequestFullscreen) { // Chrome, Safari and Opera
+          (elementToFullscreen as any).webkitRequestFullscreen();
+        } else if ((elementToFullscreen as any).msRequestFullscreen) { // IE/Edge
+          (elementToFullscreen as any).msRequestFullscreen();
+        }
       }
-      this.isFullscreen = true;
     } else {
       // Salir de pantalla completa
       if (document.exitFullscreen) {
@@ -601,10 +628,36 @@ export class SongPlayerComponent implements OnInit, OnChanges {
       } else if ((document as any).webkitExitFullscreen) { // Chrome, Safari and Opera
         (document as any).webkitExitFullscreen();
       } else if ((document as any).msExitFullscreen) { // IE/Edge
-        (document as any).msExitFullscreen();
+        (document as any).msCancelFullScreen();
       }
-      this.isFullscreen = false;
     }
+    // El listener onFullscreenChange se encargará de actualizar this.isFullscreen
+  }
+
+  // Método para manejar la actividad del usuario en pantalla completa
+  onFullscreenActivity(): void {
+    if (this.isFullscreen) {
+      this.showFullscreenControls = true;
+      this.resetFullscreenControlsTimeout();
+    }
+  }
+
+  // Método para ocultar los controles después de un tiempo
+  hideFullscreenControls(): void {
+    if (this.isFullscreen) {
+      clearTimeout(this.fullscreenControlsTimeout);
+      this.fullscreenControlsTimeout = setTimeout(() => {
+        this.showFullscreenControls = false;
+      }, 3000); // Ocultar después de 3 segundos de inactividad
+    }
+  }
+
+  // Método para reiniciar el temporizador de ocultación de controles
+  private resetFullscreenControlsTimeout(): void {
+    clearTimeout(this.fullscreenControlsTimeout);
+    this.fullscreenControlsTimeout = setTimeout(() => {
+      this.showFullscreenControls = false;
+    }, 3000); // Ocultar después de 3 segundos de inactividad
   }
 
   // Método para alternar la visibilidad del contenido del reproductor

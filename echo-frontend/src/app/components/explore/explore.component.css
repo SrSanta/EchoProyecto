@@ -594,6 +594,26 @@
     width: 120px;
     height: 120px;
   }
+
+  .tab-button {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    min-width: 60px;
+  }
+
+  .tab-button:first-child {
+    margin-right: 0;
+  }
+
+  .tab-button:first-child::after {
+    display: none;
+  }
+
+  .clear-all-filters {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    min-width: unset;
+  }
 }
 
 @media (max-width: 480px) {

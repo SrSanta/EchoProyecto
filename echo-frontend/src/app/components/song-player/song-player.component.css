@@ -13,6 +13,7 @@
   line-height: 1.4;
   box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #c0c0c0, 1px 1px 0 1px #000000;
   padding: 3px;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho/alto total */
 }
 
 /* Reset default margins */
@@ -73,6 +74,10 @@
   overflow: hidden;
   box-shadow: inset 1px 1px 0 0 #000000;
   width: calc(100% - 4px);
+  display: flex; /* Permite que el contenido interno se alinee */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-player-visible {
@@ -903,4 +908,219 @@ p { margin-bottom: 8px; }
   background: #c0c0c0;
   box-shadow: -1px -1px 0 0 #000000 inset;
   padding: 3px 7px 1px 9px;
+}
+
+
+/* --- NUEVOS ESTILOS PARA PANTALLA COMPLETA --- */
+
+/* Estilos para el elemento host cuando está en pantalla completa */
+:host.fullscreen-active {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  background-color: black !important; /* Fondo negro para el video */
+  z-index: 9999 !important; /* Asegura que esté por encima de todo */
+  position: fixed !important; /* Posición fija para pantalla completa */
+  top: 0;
+  left: 0;
+  padding: 0 !important; /* Elimina cualquier padding */
+  box-shadow: none !important; /* Elimina cualquier sombra */
+  border: none !important; /* Elimina cualquier borde */
+}
+
+/* Ocultar los controles normales y otros elementos cuando está en pantalla completa */
+:host.fullscreen-active .cd-player-controls,
+:host.fullscreen-active .like-button,
+:host.fullscreen-active .queue-container,
+:host.fullscreen-active .no-song,
+:host.fullscreen-active .toggle-content-button {
+    display: none !important;
+}
+
+/* Ajustes para el área de visualización principal cuando el video está presente en fullscreen */
+:host.fullscreen-active .cd-player-display {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: black;
+  box-shadow: none;
+  /* Ya es flex y centrado, esto asegura que el video wrapper se ajuste */
+}
+
+/* Contenedor del video y sus controles superpuestos */
+.video-player-wrapper {
+  position: relative; /* Crucial para posicionar los controles superpuestos */
+  width: 100%;
+  height: 100%; /* Llenará el espacio disponible */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black; /* Fondo si el video no llena todo el espacio */
+}
+
+/* Estilos específicos para el elemento de video dentro del wrapper */
+.video-player-wrapper video {
+  width: 100%;
+  height: 100%; /* Llenar el wrapper */
+  object-fit: contain; /* Mantiene la relación de aspecto, añade barras negras si es necesario */
+  display: block;
+  background-color: black;
+}
+
+/* Overlay de Controles en Pantalla Completa */
+.fullscreen-controls-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 1; /* Por defecto visible, se controlará con JS para el fade */
+  transition: opacity 0.3s ease-in-out;
+  padding: 10px;
+  box-sizing: border-box;
+  pointer-events: all; /* Hace que sea clickeable por defecto */
+}
+
+/* Cuando los controles están ocultos (por inactividad) */
+.fullscreen-controls-overlay.hidden {
+  opacity: 0;
+  pointer-events: none; /* No clickeable cuando está oculto */
+}
+
+/* Secciones individuales para los controles de pantalla completa */
+.fs-top-bar, .fs-bottom-bar, .fs-center-controls {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: white;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 1em;
+}
+
+.fs-top-bar {
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.fs-song-info {
+  flex-grow: 1;
+  text-align: left;
+  padding-left: 10px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.fs-center-controls {
+  justify-content: center;
+  flex-grow: 1; /* Ocupa el espacio disponible en el medio */
+  gap: 20px;
+}
+
+.fs-bottom-bar {
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.fs-bottom-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Estilos para los botones dentro de los controles de pantalla completa */
+.fs-control-btn {
+  background: rgba(255, 255, 255, 0.2); /* Blanco semi-transparente */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  width: 40px; /* Botones más grandes para pantalla completa */
+  height: 40px;
+  border-radius: 50%; /* Botones redondos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5em; /* Iconos más grandes */
+  transition: background 0.2s, transform 0.1s;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.fs-control-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.fs-control-btn:active {
+  transform: scale(0.95);
+}
+
+.fs-play-pause-btn {
+  width: 60px; /* Botón de reproducir/pausar aún más grande */
+  height: 60px;
+  font-size: 2em;
+}
+
+/* Barra de progreso dentro de los controles de pantalla completa */
+.fs-progress-container {
+  flex-grow: 1;
+  margin: 0 10px; /* Ajusta el margen para una alineación adecuada */
+  width: auto; /* Anula el ancho predeterminado */
+  padding: 0;
+}
+
+.fs-progress-container .progress-track {
+  height: 12px; /* Pista ligeramente más pequeña */
+  border-color: rgba(255,255,255,0.4) rgba(255,255,255,0.1) rgba(255,255,255,0.1) rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.5);
+}
+
+.fs-progress-container .progress-bar {
+  background: linear-gradient(90deg, #00ffff, #ff00ff); /* Degradado más brillante */
+}
+
+.fs-progress-time {
+  color: white;
+  font-size: 1em;
+  margin-top: 5px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Slider de volumen dentro de los controles de pantalla completa */
+.fs-volume-slider {
+  width: 100px; /* Ancho fijo */
+  margin-right: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  border-radius: 4px;
+}
+
+.fs-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px #00ffff;
+  margin-top: -5px;
+}
+
+.fs-volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px #00ffff;
 }

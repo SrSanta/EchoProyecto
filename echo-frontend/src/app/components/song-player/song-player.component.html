@@ -2,7 +2,7 @@
   <div class="cd-player-header">
     <div class="cd-player-title">ECHO PLAYER</div>
     <!-- Botón para ocultar el contenido del reproductor -->
-    <button class="toggle-content-button" (click)="toggleContentVisibility()" *ngIf="isContentVisible">
+    <button class="toggle-content-button" (click)="toggleContentVisibility()" *ngIf="isContentVisible && !isFullscreen">
       Ocultar Reproductor
     </button>
   </div>
@@ -14,16 +14,63 @@
       <div class="cd-player-display">
         @if (song.videoFilename) {
           <!-- Display video when available -->
-          <video #videoPlayer
-                 [src]="videoUrl"
-                 (timeupdate)="updateProgress()"
-                 (loadedmetadata)="onMetadataLoaded()"
-                 (play)="onPlay()"
-                 (pause)="onPause()"
-                 (ended)="onSongEnded()"
-                 style="width: 100%; height: auto; display: block;"> <!-- Make video visible -->
-            Your browser does not support the video element.
-          </video>
+          <!-- Wrapper para el video y sus controles en pantalla completa -->
+          <div class="video-player-wrapper"
+               (mousemove)="onFullscreenActivity()"
+               (mouseleave)="hideFullscreenControls()"
+               (click)="onFullscreenActivity()"> <!-- Click to show controls on touch devices -->
+            <video #videoPlayer
+                   [src]="videoUrl"
+                   (timeupdate)="updateProgress()"
+                   (loadedmetadata)="onMetadataLoaded()"
+                   (play)="onPlay()"
+                   (pause)="onPause()"
+                   (ended)="onSongEnded()"
+                   style="width: 100%; height: auto; display: block;">
+              Your browser does not support the video element.
+            </video>
+
+            <!-- Overlay de Controles en Pantalla Completa -->
+            <div class="fullscreen-controls-overlay" [class.hidden]="!showFullscreenControls" *ngIf="isFullscreen">
+              <div class="fs-top-bar">
+                <div class="fs-song-info">{{ song.title || 'No title' }}</div>
+                <button class="fs-control-btn" (click)="toggleFullscreen()" title="Salir de Pantalla Completa">
+                  <span class="icon">↘️</span>
+                </button>
+              </div>
+              <div class="fs-center-controls">
+                <button class="fs-control-btn" (click)="playPrevious()" title="Anterior">
+                  <span class="icon">⏮</span>
+                </button>
+                <button class="fs-control-btn fs-play-pause-btn" (click)="playOrPause()" title="Reproducir/Pausar">
+                  <span class="icon">{{ isPlaying ? '⏸' : '▶' }}</span>
+                </button>
+                <button class="fs-control-btn" (click)="playNext()" title="Siguiente">
+                  <span class="icon">⏭</span>
+                </button>
+              </div>
+              <div class="fs-bottom-bar">
+                <div class="progress-container fs-progress-container">
+                  <div class="progress-track" (click)="seek($event)">
+                    <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+                  </div>
+                  <div class="progress-time fs-progress-time">
+                    <span>{{ currentTime || '00:00' }}</span>
+                    <span>{{ durationDisplay || '00:00' }}</span>
+                  </div>
+                </div>
+                <div class="fs-bottom-right-controls">
+                  <button class="fs-control-btn" (click)="toggleMute()" title="Silenciar/Activar Sonido">
+                    <span class="icon">{{ isMuted ? '🔇' : '🔊' }}</span>
+                  </button>
+                  <input type="range" class="fs-volume-slider" min="0" max="1" step="0.01" [value]="volume" (input)="setVolume($event)">
+                  <button class="fs-control-btn" (click)="toggleFullscreen()" title="Pantalla Completa">
+                    <span class="icon">↖️</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         } @else {
           <!-- Show track info and image for audio only -->
           <div class="track-info-container">
@@ -150,7 +197,7 @@
   </div>
 
   <!-- Botón para mostrar el contenido del reproductor (visible si isContentVisible es false) -->
-   <button class="toggle-content-button show" (click)="toggleContentVisibility()" *ngIf="!isContentVisible">
+   <button class="toggle-content-button show" (click)="toggleContentVisibility()" *ngIf="!isContentVisible && !isFullscreen">
      Mostrar Reproductor
    </button>
 
