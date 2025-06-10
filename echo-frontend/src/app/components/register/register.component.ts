@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -27,14 +28,20 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  onSubmit(): void {
-    if (!this.registrationData.username || !this.registrationData.email || !this.registrationData.password) {
-      this.errorMessage = 'Todos los campos son obligatorios.';
+  onSubmit(form: NgForm): void {
+    this.errorMessage = null;
+    if (form.invalid) {
+      if (form.controls['email'] && form.controls['email'].errors?.['email']) {
+        this.errorMessage = 'Por favor, introduce un correo electrónico válido.';
+      } else if (form.controls['password'] && form.controls['password'].errors?.['minlength']) {
+        this.errorMessage = 'La contraseña debe tener al menos 6 caracteres.';
+      } else {
+        this.errorMessage = 'Por favor, rellena todos los campos correctamente.';
+      }
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     const dataToSend = {
       ...this.registrationData,

@@ -70,6 +70,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
   }
   
+  getProfileImageUrl(artist: any): string {
+    if (artist && artist.profileImage) {
+        return `${environment.apiUrl}/api/users/profile-image/${artist.profileImage}`;
+    }
+    return 'https://ui-avatars.com/api/?name=' + (artist?.username || 'U') + '&background=cccccc&color=333333&size=128';
+  }
+
   private loadAllContent(): void {
     console.log('Loading all content...');
     this.loading = true;

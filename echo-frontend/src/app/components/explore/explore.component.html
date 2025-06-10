@@ -151,7 +151,7 @@
             @for (artist of searchResults.artists | slice:1; track artist.id) {
             <a class="artist-card" [routerLink]="['/artist', artist.username]">
               <div class="artist-avatar">
-                <img [src]="artist.avatarUrl || 'assets/images/default-avatar.png'" [alt]="'Avatar de ' + artist.name">
+                <img [src]="getProfileImageUrl(artist)" alt="Imagen de perfil de {{ artist.username }}" class="profile-image">
               </div>
               <h3 class="artist-name">{{ artist.username || 'Artista' }}</h3>
             </a>
