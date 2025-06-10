@@ -4,7 +4,8 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #008080; /* Fondo teal clásico de Windows 95 */
+  background-color: #008080;
+  /* Fondo teal clásico de Windows 95 */
   background-image: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
@@ -12,9 +13,17 @@
 }
 
 @keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Estilo de la barra de tareas */
@@ -30,7 +39,8 @@ header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  flex-shrink: 0; /* Evita que el header se encoja */
+  flex-shrink: 0;
+  /* Evita que el header se encoja */
 }
 
 header h1 a {
@@ -113,7 +123,8 @@ nav button {
 
 nav button:hover {
   background: #e0e0e0;
-  color: #ff00ff; /* Rosa vaporwave al hacer hover */
+  color: #ff00ff;
+  /* Rosa vaporwave al hacer hover */
 }
 
 nav button:active {
@@ -139,19 +150,20 @@ nav button:active {
 }
 
 .hamburger-icon:hover {
-   background: #e0e0e0;
-   color: #ff00ff; /* Rosa vaporwave al hacer hover */
+  background: #e0e0e0;
+  color: #ff00ff;
+  /* Rosa vaporwave al hacer hover */
 }
 
 .hamburger-icon:active {
-   border-color: #808080 #ffffff #ffffff #808080;
-   background: #c0c0c0;
-   box-shadow: -1px -1px 0 0 #000000;
-   padding: 6px 9px 4px 11px;
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #c0c0c0;
+  box-shadow: -1px -1px 0 0 #000000;
+  padding: 6px 9px 4px 11px;
 }
 
 main {
-  flex: 1; /* Cambiado de flex-grow: 1 a flex: 1 para mejor comportamiento */
+  flex: 0 0 auto;
   padding: 20px;
   max-width: 1200px;
   width: 100%;
@@ -170,8 +182,10 @@ footer {
   border-color: #ffffff #808080 #808080 #ffffff;
   box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
   z-index: 100;
-  margin-top: auto; /* Esto empuja el footer hacia abajo */
-  flex-shrink: 0; /* Evita que el footer se encoja */
+  margin-top: auto;
+  /* Esto empuja el footer hacia abajo */
+  flex-shrink: 0;
+  /* Evita que el footer se encoja */
 }
 
 /* Estilos para el mini reproductor */
@@ -192,7 +206,8 @@ footer {
 .vaporwave-effect {
   position: relative;
   overflow: hidden;
-  min-height: 100vh; /* Asegura que el contenedor tenga altura mínima completa */
+  min-height: 100vh;
+  /* Asegura que el contenedor tenga altura mínima completa */
   display: flex;
   flex-direction: column;
 }
@@ -204,12 +219,10 @@ footer {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 0, 255, 0.05) 0%,
-    rgba(0, 255, 255, 0.05) 50%,
-    rgba(255, 0, 255, 0.05) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 0, 255, 0.05) 0%,
+      rgba(0, 255, 255, 0.05) 50%,
+      rgba(255, 0, 255, 0.05) 100%);
   pointer-events: none;
   z-index: 1000;
   opacity: 0.1;
@@ -217,8 +230,13 @@ footer {
 }
 
 @keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
 }
 
 /* Responsive Adjustments */
@@ -237,24 +255,31 @@ footer {
   }
 
   nav {
-    display: none; /* Ocultar navegación por defecto en móvil */
+    display: none;
+    /* Ocultar navegación por defecto en móvil */
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
     gap: 5px;
     margin-top: 10px;
-    position: absolute; /* Posicionar el menú desplegable */
-    top: 100%; /* Debajo del header */
+    position: absolute;
+    /* Posicionar el menú desplegable */
+    top: 100%;
+    /* Debajo del header */
     left: 0;
-    background: #c0c0c0; /* Fondo para el menú */
+    background: #c0c0c0;
+    /* Fondo para el menú */
     border-top: 3px solid;
-    border-color: #ffffff #808080 #808080 #ffffff; /* Bordes Windows 95 */
+    border-color: #ffffff #808080 #808080 #ffffff;
+    /* Bordes Windows 95 */
     box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
-    z-index: 999; /* Asegurarse de que esté por encima del contenido principal */
+    z-index: 999;
+    /* Asegurarse de que esté por encima del contenido principal */
     padding: 10px;
   }
 
-  nav.open { /* Mostrar navegación cuando tenga la clase 'open' */
+  nav.open {
+    /* Mostrar navegación cuando tenga la clase 'open' */
     display: flex;
   }
 
@@ -264,13 +289,15 @@ footer {
   }
 
   nav a {
-    width: calc(100% - 24px); /* Adjust for padding/border */
+    width: calc(100% - 24px);
+    /* Adjust for padding/border */
     text-align: center;
     padding: 8px 12px;
   }
 
   nav a:active {
-     padding: 9px 11px 7px 13px; /* Adjust active padding */
+    padding: 9px 11px 7px 13px;
+    /* Adjust active padding */
   }
 
   nav div {
@@ -290,14 +317,15 @@ footer {
   }
 
   nav button {
-     width: 100%;
-     text-align: center;
-     padding: 8px 12px;
-     font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 1rem;
   }
 
   nav button:active {
-    padding: 9px 11px 7px 13px; /* Adjust active padding */
+    padding: 9px 11px 7px 13px;
+    /* Adjust active padding */
   }
 
   main {
@@ -307,18 +335,20 @@ footer {
   .floating-player {
     width: 100%;
     right: 0;
-    bottom: 0; /* Stick to the bottom on small screens */
+    bottom: 0;
+    /* Stick to the bottom on small screens */
     left: 0;
     max-width: none;
     border-radius: 0;
     border-left: none;
     border-right: none;
-    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000; /* Keep shadow style */
+    box-shadow: -1px -1px 0 0 #000000, 1px 1px 0 0 #000000;
+    /* Keep shadow style */
   }
 }
 
 @media (max-width: 480px) {
-   header h1 a {
+  header h1 a {
     font-size: 1.2rem;
   }
 
@@ -328,15 +358,18 @@ footer {
     padding: 6px 8px;
   }
 
-   nav a:active {
-     padding: 7px 7px 5px 9px; /* Adjust active padding */
+  nav a:active {
+    padding: 7px 7px 5px 9px;
+    /* Adjust active padding */
   }
 
-   nav button:active {
-     padding: 7px 7px 5px 9px; /* Adjust active padding */
-   }
+  nav button:active {
+    padding: 7px 7px 5px 9px;
+    /* Adjust active padding */
+  }
 
   .floating-player {
-     bottom: 0; /* Ensure it stays at the very bottom */
+    bottom: 0;
+    /* Ensure it stays at the very bottom */
   }
 }
